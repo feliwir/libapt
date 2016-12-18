@@ -5,25 +5,19 @@ compiler:
   - clang
   - gcc
 # Build matrix
-matrix:
-  include:
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
+addons:
+    apt:
+        sources:
+            - llvm-toolchain-precise
             - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env: COMPILER=g++-5
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
+        packages:
             - clang-3.7
-      env: COMPILER=clang++-3.8
+            - g++-5
+            - gcc-5
+# Install
+install:
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
+    - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
 # Build steps
 script:
   - mkdir build
