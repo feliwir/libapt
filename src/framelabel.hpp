@@ -1,5 +1,6 @@
 #pragma once
 #include "frameitem.hpp"
+#include <string>
 
 namespace libapt
 {
