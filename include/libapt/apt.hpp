@@ -1,0 +1,50 @@
+#pragma once
+#include <memory>
+#include <string>
+#include <vector>
+#include <map>
+#include "const.hpp"
+#include "dat.hpp"
+#include "error.hpp"
+#include "fileprovider.hpp"
+#include "value.hpp"
+
+namespace libapt
+{
+	class Manager;
+	class Character;
+	class Geometry;
+
+	class Apt : public std::enable_shared_from_this<Apt>
+	{
+	public:
+		Apt();
+		~Apt();
+		Error Load(const uint8_t* data, unsigned int size, std::shared_ptr<Manager> mngr, const std::string& name);
+		void Render();
+
+		std::shared_ptr<Character> GetExport(const std::string& name);
+		std::vector<std::shared_ptr<Character>> GetCharacters();
+		std::shared_ptr<Texture> GetTexture(int id);
+		uint32_t GetWidth();
+		uint32_t GetHeight();
+		Value GetConstant(uint32_t index);
+		inline const uint8_t* GetBase() 
+		{ 
+			return m_data; 
+		}
+	private:
+		Error LoadConst(const std::string name, std::shared_ptr<IFileProvider> fp);
+		Error LoadDat(const std::string name, std::shared_ptr<IFileProvider> fp);
+	private:
+		std::shared_ptr<Character> m_movie;
+		std::shared_ptr<Manager> m_manager;
+		std::map<int, std::shared_ptr<Texture>> m_textures;
+		std::vector<std::shared_ptr<Geometry>> m_geometries;
+		Const m_const;
+		Dat m_dat;
+		bool m_renderable;
+		const uint8_t* m_data;
+		
+	};
+}

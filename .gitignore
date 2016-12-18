@@ -1,0 +1,5 @@
+deps/
+.vscode/
+.vs/
+build/
+gcc_build/
