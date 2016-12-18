@@ -26,7 +26,7 @@ add_library(libapt STATIC   ${SRC_FILES}
 set_property(TARGET libapt PROPERTY CXX_STANDARD 14)
 
 target_include_directories(libapt PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_include_directories(libapt PRIVATE ${CMAKE_SOURCE_DIR}/deps/glm-0.9.8.3
+target_include_directories(libapt PRIVATE ${CMAKE_SOURCE_DIR}/deps/glm
 										  ${OPENGL_INCLUDE_DIR})
 
 target_link_libraries(libapt PUBLIC ${OPENGL_gl_LIBRARY})
