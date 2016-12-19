@@ -16,7 +16,10 @@ addons:
     sources: 
         - george-edison55-precise-backports
         - ubuntu-toolchain-r-test
-        - llvm-toolchain-trusty-3.8
+        - llvm-toolchain-precise-3.8
+        - libpthread-stubs0-dev
+        - libgl1-mesa-dev
+        - xorg-dev
     packages:
         - clang-3.8
         - g++-5
