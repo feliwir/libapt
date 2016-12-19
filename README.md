@@ -14,5 +14,5 @@ Most of the information i got about this format was found in the modding tools "
 "xml2apt" that were released by Jonwil on his homepage http://www.cncmods.net ,which is currently
 offline unfortunaly.
 
-The format is also heavily based on SWF v19. See the specification of that format here:
-http://wwwimages.adobe.com/content/dam/Adobe/en/devnet/swf/pdf/swf-file-format-spec.pdf
+The format is also heavily based on SWF v9. See the specification of that format here:
+[specification](docs/swf_file_format_spec_v9.pdf)

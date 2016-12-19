@@ -20,6 +20,9 @@ namespace libapt
 	private:
 		bool ExecuteOpcode(Bytecode::Instruction op, uint8_t*& bytestream, std::shared_ptr<Container> c);
 	private:
+		//safe pop
+		Value Pop();
+	private:
 		std::vector<Value> m_constantpool;
 		std::stack<Value> m_stack;
 		std::map<std::string, Function> m_functions;

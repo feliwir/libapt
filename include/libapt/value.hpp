@@ -29,6 +29,11 @@ namespace libapt
 			m_integer = val;
 		}
 
+		~Value()
+		{
+			
+		}
+
 		inline void Set(bool value)
 		{
 			m_type = BOOLEAN;

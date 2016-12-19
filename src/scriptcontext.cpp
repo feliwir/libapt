@@ -30,6 +30,29 @@ bool ScriptContext::ExecuteOpcode(Instruction op, uint8_t *&bs, std::shared_ptr<
     auto apt = container->GetOwner();
     switch (op)
     {
+	case ACTION_INITARRAY:
+	{
+		uint32_t nElems;
+		Pop().Get(nElems);
+		for(int i=0;i<nElems;++i)
+		{
+			//pop elements, and push back. Not implemented
+		}
+	}
+	break;
+	case ACTION_CALLMETHOD:
+	{
+		std::string name;
+		uint32_t nArgs;
+		Pop().Get(name);
+		Value object = Pop();
+		Pop().Get(nArgs);
+		for(int i=0;i<nArgs;++i)
+		{
+			Value arg = Pop();
+		}
+	}
+	break;
     case ACTION_CONSTANTPOOL:
     {
 	Align(bs);
@@ -43,6 +66,14 @@ bool ScriptContext::ExecuteOpcode(Instruction op, uint8_t *&bs, std::shared_ptr<
 	}
     }
     break;
+	case EA_PUSHBYTE:
+	{
+		uint8_t byte = read<uint8_t>(bs);
+		Value v;
+		v.Set(byte);
+		m_stack.push(v);
+	}
+	break;
     case EA_PUSHCONSTANT:
     case EA_PUSHVALUEOFVAR:
     {
@@ -56,6 +87,19 @@ bool ScriptContext::ExecuteOpcode(Instruction op, uint8_t *&bs, std::shared_ptr<
 	    m_stack.push(val);
 	}
 	break;
+	case EA_PUSHONE:
+	{
+		Value val(1);
+		m_stack.push(val);
+	}
+	break;
+	case EA_GETNAMEDMEMBER:
+	{
+		std::string member;
+		uint8_t val = read<uint8_t>(bs);
+		m_constantpool[val].Get(member);
+	}
+	break;
     case ACTION_DEFINEFUNCTION2:
     {
 	Align(bs);
@@ -65,6 +109,10 @@ bool ScriptContext::ExecuteOpcode(Instruction op, uint8_t *&bs, std::shared_ptr<
     }
     break;
     case ACTION_SETMEMBER:
+	{
+		Value val = Pop();
+		Value object = Pop();
+	}
 	break;
 	//create a new object
 	case ACTION_NEW:
@@ -87,4 +135,15 @@ bool ScriptContext::ExecuteOpcode(Instruction op, uint8_t *&bs, std::shared_ptr<
 	break;
     }
     return true;
+}
+
+Value ScriptContext::Pop()
+{
+	Value result;
+	if(m_stack.size()>0)
+	{
+		result = m_stack.top();
+		m_stack.pop();
+	}
+	return result;
 }
