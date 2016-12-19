@@ -17,15 +17,15 @@ addons:
         - george-edison55-precise-backports
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.8
-        - libpthread-stubs0-dev
-        - libgl1-mesa-dev
-        - xorg-dev
     packages:
         - clang-3.8
         - g++-5
         - gcc-5
         - cmake
         - cmake-data
+        - libpthread-stubs0-dev
+        - libgl1-mesa-dev
+        - xorg-dev
 # Install
 install:
     - if ["$CXX" = "g++"]; then export CXX="g++-5" CC="gcc-5"; fi
