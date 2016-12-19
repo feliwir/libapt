@@ -18,6 +18,16 @@ namespace libapt
 			BYTE		= 5,
 			SHORT		= 6
 		};
+		Value()
+		{
+			m_type = UNDEFINED;
+		}
+
+		Value(int32_t val)
+		{
+			m_type = INTEGER;
+			m_integer = val;
+		}
 
 		inline void Set(bool value)
 		{
