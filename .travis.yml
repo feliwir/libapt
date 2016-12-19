@@ -1,5 +1,8 @@
 # Cpp language
 language: cpp
+sudo: required
+dist: trusty
+
 # Compiler selection
 compiler:
   - clang
@@ -13,7 +16,7 @@ addons:
     sources: 
         - george-edison55-precise-backports
         - ubuntu-toolchain-r-test
-        - llvm-toolchain-precise-3.8
+        - llvm-toolchain-trusty-3.8
     packages:
         - clang-3.8
         - g++-5
@@ -24,6 +27,7 @@ addons:
 install:
     - if ["$CXX" = "g++"]; then export CXX="g++-5" CC="gcc-5"; fi
     - if ["$CXX" = "clang++"]; then export CXX="clang++-3.8" CC="clang-3.8"; fi
+
 # Build steps
 script:
   - mkdir build
