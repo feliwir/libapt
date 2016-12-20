@@ -1,5 +1,6 @@
 #pragma once
 #include "frameitem.hpp"
+#include <glm/glm.hpp>
 
 namespace libapt
 {
@@ -7,8 +8,8 @@ namespace libapt
 	{
 	public:
 		virtual void Parse(uint8_t *offset, const uint8_t *base);
-		inline uint32_t GetColor() { return m_color; }
+		inline glm::u8vec4 GetColor() { return m_color; }
 	private:
-		uint32_t m_color;
+		glm::u8vec4 m_color;
 	};
 }

@@ -5,6 +5,7 @@
 #include "../frameitems/initaction.hpp"
 #include "../frameitems/placeobject.hpp"
 #include "../frameitems/removeobject.hpp"
+#include "../graphics/flextGL.h"
 #include <iostream>
 using namespace libapt;
 
@@ -69,7 +70,9 @@ void Container::HandleRemoveObject(std::shared_ptr<FrameItem> fi)
 void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 {
 	auto bg = std::dynamic_pointer_cast<Background>(fi);
-	m_bgColor = static_cast<glm::u8vec4>(bg->GetColor());
+	m_bgColor = glm::vec4(bg->GetColor());
+	m_bgColor /= 255.0;
+	glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, m_bgColor.a);
 }
 
 void Container::Update(const Transformation& t)
