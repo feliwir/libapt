@@ -2,3 +2,5 @@
 .vs/
 build/
 gcc_build/
+./CMakeSettings.json
+test/apt

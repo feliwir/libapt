@@ -19,16 +19,16 @@ namespace libapt
 
 		inline const std::shared_ptr<Character> GetCharacter(uint32_t index) const
 		{
-			return m_characters[index];
+			return m_dictionary[index];
 		}
 		inline const std::vector<std::shared_ptr<Character>>& GetCharacters()
 		{
-			return m_characters;
+			return m_dictionary;
 		}
 	private:
 		uint32_t m_unknown;
 		uint32_t m_characterCount;
-		std::vector<std::shared_ptr<Character>> m_characters;
+		std::vector<std::shared_ptr<Character>> m_dictionary;
 		uint32_t m_screenwidth;
 		uint32_t m_screenheight;
 		uint32_t m_unknown2;

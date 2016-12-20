@@ -95,7 +95,16 @@ Error Apt::Load(const uint8_t *buffer, unsigned int size, std::shared_ptr<Manage
 			if (m_textures[texId] != nullptr)
 				continue;
 
-			std::string texPath = "art/Textures/apt_" + name + "_" + std::to_string(e.p1) + ".tga";
+			int imgId = 0;
+			if (e.type == Dat::NO_BOUNDS)
+			{
+				imgId = e.p1;
+			}
+			else
+			{
+				imgId = texId;
+			}
+			std::string texPath = "art/Textures/apt_" + name + "_" + std::to_string(imgId) + ".tga";
 			m_textures[im->GetTexture()]=mngr->GetFileprovider()->LoadTexture(texPath);
 		}
 		else if (ch->GetType() == Character::SHAPE)

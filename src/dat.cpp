@@ -33,21 +33,24 @@ Error Dat::Load(const std::string & data)
 				return INVALID_DAT;
 
 			e.type = HAS_BOUND;
+			std::string imgId = line.substr(pos + 1, line.size());
 			paramstream.str(line.substr(pos + 1, line.size()));
 		}
 		else
 		{
 			e.type = NO_BOUNDS;
-			paramstream.str(line.substr(pos+2, line.size()));
+			std::string imgId = line.substr(pos + 2, line.size());
+			e.p1 = std::stoi(imgId);
 		}
 			
 		charId = std::stoi(line.substr(0, pos));
 		paramstream >> e.p1;
 		if (e.type == HAS_BOUND)
 		{
-			paramstream >> e.p2 >> e.p3 >> e.p4;
+			paramstream >> e.p1 >> e.p2 >> e.p3 >> e.p4;
 		}
 		m_entries[charId] = e;
+		e.p1 = e.p2 = e.p3 = e.p4 = 0;
 
 	}
 

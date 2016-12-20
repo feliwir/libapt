@@ -37,6 +37,11 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 		object.rotscale = po->GetRotScale();
 		object.translate = po->GetTranslate();
 		auto c = characters[po->GetCharacter()];
+		if (c == nullptr)
+		{
+			std::cout << "Can't place null character" << std::endl;
+			return;
+		}
 		object.ch = c->MakeInstance();
 		m_displayObjects[po->GetDepth()] = object;
 	}
@@ -108,5 +113,6 @@ void Container::Update(Transformation t)
 		
 		obj.second.ch->Update(t2);
 	}
+	int a = 0;
 }
 

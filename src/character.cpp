@@ -5,6 +5,8 @@
 #include "shape.hpp"
 #include "sprite.hpp"
 #include "util.hpp"
+#include "edittext.hpp"
+#include "font.hpp"
 #include <iostream>
 using namespace libapt;
 
@@ -28,6 +30,12 @@ std::shared_ptr<Character> Character::Create(uint8_t*& iter,
 	{
 	case Character::SHAPE:
 		ch = std::make_shared<Shape>();
+		break;
+	case Character::EDITTEXT:
+		ch = std::make_shared<Edittext>();
+		break;
+	case Character::FONT:
+		ch = std::make_shared<Font>();
 		break;
 	case Character::BUTTON:
 		break;
@@ -60,14 +68,17 @@ std::shared_ptr<Character> Character::MakeInstance()
 	auto ch = shared_from_this();
 	switch (ch->GetType())
 	{
+	case Character::SHAPE:
+		result = Copy<Shape>();
+		break;
+	case Character::EDITTEXT:
+		result = Copy<Edittext>();
+		break;
 	case Character::SPRITE:
 		result = Copy<Sprite>();
 		break;
 	case Character::MOVIE:
 		result = Copy<Movie>();
-		break;
-	case Character::SHAPE:
-		result = Copy<Shape>();
 		break;
 	}
 

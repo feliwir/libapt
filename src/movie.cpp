@@ -28,15 +28,15 @@ void Movie::Parse(uint8_t *& iter)
 		{
 			uint8_t* iter = const_cast<uint8_t*>(m_owner->GetBase()) + relOffset;
 			auto ch = Character::Create(iter, m_owner);
-			m_characters.push_back(ch);
+			m_dictionary.push_back(ch);
 		}
 		else if (relOffset && relOffset == m_thisOffset)
 		{
-			m_characters.push_back(shared_from_this());
+			m_dictionary.push_back(shared_from_this());
 		}
 		else
 		{
-			m_characters.push_back(nullptr);
+			m_dictionary.push_back(nullptr);
 		}
 	}
 
@@ -63,10 +63,10 @@ void Movie::Parse(uint8_t *& iter)
 
 void Movie::SetCharacter(const std::shared_ptr<Character> ch, uint32_t index)
 {
-	if (index > m_characters.size())
+	if (index > m_dictionary.size())
 	{
 		std::cout << "Can't set character, because index is out of range" << std::endl;
 		return;
 	}
-	m_characters[index] = ch;
+	m_dictionary[index] = ch;
 }
