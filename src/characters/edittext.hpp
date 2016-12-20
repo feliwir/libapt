@@ -9,7 +9,7 @@ namespace libapt
 	public:
 		virtual void Parse(uint8_t *&iter);
 		//Update all placed objects
-		virtual void Update(Transformation t);
+		virtual void Update(const Transformation& t);
 	private:
 		glm::vec4 m_bounds;
 		uint32_t m_font;

@@ -1,6 +1,7 @@
 #include "font.hpp"
-#include "util.hpp"
 #include <libapt/apt.hpp>
+#include "../util.hpp"
+#include <iostream>
 using namespace libapt;
 
 void Font::Parse(uint8_t*& iter)
@@ -10,7 +11,7 @@ void Font::Parse(uint8_t*& iter)
 	m_glyphs = const_cast<uint8_t*>(m_owner->GetBase() + read<uint32_t>(iter));
 }
 
-void Font::Update(Transformation t)
+void Font::Update(const Transformation& t)
 {
-
+	std::cout << "WARNING: Font should not be able to be on displaylist" << std::endl;
 }

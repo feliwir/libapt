@@ -1,12 +1,12 @@
 #include "frameitem.hpp"
-#include <iostream>
 #include "action.hpp"
 #include "background.hpp"
 #include "framelabel.hpp"
 #include "initaction.hpp"
 #include "placeobject.hpp"
 #include "removeobject.hpp"
-#include "util.hpp"
+#include "../util.hpp"
+#include <iostream>
 using namespace libapt;
 
 std::shared_ptr<FrameItem> FrameItem::Create(uint8_t *& iter, const uint8_t * base)

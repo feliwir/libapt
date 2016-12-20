@@ -1,5 +1,5 @@
 #include "shape.hpp"
-#include "util.hpp"
+#include "../util.hpp"
 using namespace libapt;
 
 void Shape::Parse(uint8_t *& iter)
@@ -8,7 +8,7 @@ void Shape::Parse(uint8_t *& iter)
 	m_geometryId = read<uint32_t>(iter);
 }
 
-void Shape::Update(Transformation t)
+void Shape::Update(const Transformation& t)
 {
 	if(m_geometry)
 		m_geometry->Draw(t);

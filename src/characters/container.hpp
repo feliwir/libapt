@@ -1,12 +1,13 @@
 #pragma once
-#include "character.hpp"
-#include "frame.hpp"
 #include <libapt/scriptcontext.hpp>
+#include "character.hpp"
+#include "../frame.hpp"
+#include <glm/glm.hpp>
 #include <map>
 #include <memory>
 #include <vector>
 #include <stdint.h>
-#include <glm/glm.hpp>
+
 
 namespace libapt
 {
@@ -22,7 +23,7 @@ namespace libapt
 		};
 	public:
 		Container();
-		void Update(Transformation t);
+		void Update(const Transformation& t);
 		virtual void Parse(uint8_t *&iter) = 0;
 		inline int GetCurrentFrame() { return m_currentFrame; }
 	protected:

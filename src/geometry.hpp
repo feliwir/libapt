@@ -4,8 +4,8 @@
 #include <vector>
 #include <memory>
 #include <glm/glm.hpp>
-#include "shader.hpp"
-#include "transformation.hpp"
+#include "graphics/shader.hpp"
+#include "characters/transformation.hpp"
 
 namespace libapt
 {

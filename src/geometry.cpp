@@ -1,11 +1,11 @@
 #include "geometry.hpp"
-#include <sstream>
-#include "util.hpp"
-#include <iostream>
 #include <libapt/apt.hpp>
+#include "graphics/flextGL.h"
+#include "util.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "flextGL.h"
+#include <iostream>
+#include <sstream>
 using namespace libapt;
 
 Shader Geometry::s_shader;

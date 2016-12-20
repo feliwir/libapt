@@ -1,6 +1,5 @@
 #include "initaction.hpp"
-#include "util.hpp"
-#include <libapt/bytecode.hpp>
+#include "../util.hpp"
 using namespace libapt;
 
 void InitAction::Parse(uint8_t *offset, const uint8_t *base)

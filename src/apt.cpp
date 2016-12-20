@@ -1,13 +1,13 @@
 #include <libapt/apt.hpp>
 #include <libapt/manager.hpp>
-#include "character.hpp"
-#include <iostream>
-#include "movie.hpp"
-#include "image.hpp"
+#include "characters/character.hpp"
+#include "characters/movie.hpp"
+#include "characters/image.hpp"
+#include "characters/shape.hpp"
 #include "util.hpp"
-#include "shape.hpp"
-#include "flextGL.h"
 #include "geometry.hpp"
+
+#include <iostream>
 using namespace libapt;
 
 Apt::Apt() 
@@ -162,11 +162,8 @@ std::shared_ptr<Character> Apt::GetExport(const std::string& name)
 
 void Apt::Render()
 {
-	glDisable(GL_DEPTH_TEST);
 	auto m = std::dynamic_pointer_cast<Movie>(m_movie);
 	m_movie->Update(Transformation());
-	glEnable(GL_DEPTH_TEST);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 std::vector<std::shared_ptr<Character>> Apt::GetCharacters()

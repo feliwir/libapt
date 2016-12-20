@@ -1,11 +1,11 @@
 #include "container.hpp"
-#include <iostream>
-#include "action.hpp"
-#include "background.hpp"
-#include "initaction.hpp"
-#include "placeobject.hpp"
-#include "removeobject.hpp"
 #include <libapt/apt.hpp>
+#include "../frameitems/action.hpp"
+#include "../frameitems/background.hpp"
+#include "../frameitems/initaction.hpp"
+#include "../frameitems/placeobject.hpp"
+#include "../frameitems/removeobject.hpp"
+#include <iostream>
 using namespace libapt;
 
 Container::Container()
@@ -72,7 +72,7 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 	m_bgColor = static_cast<glm::u8vec4>(bg->GetColor());
 }
 
-void Container::Update(Transformation t)
+void Container::Update(const Transformation& t)
 {
 	if (m_currentFrame < m_framecount)
 	{

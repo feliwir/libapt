@@ -1,6 +1,6 @@
 #pragma once
 #include "character.hpp"
-#include "geometry.hpp"
+#include "../geometry.hpp"
 #include <glm/glm.hpp>
 
 namespace libapt
@@ -9,7 +9,7 @@ namespace libapt
     {
 	public:
 		virtual void Parse(uint8_t *&iter);
-		virtual void Update(Transformation t);
+		virtual void Update(const Transformation& t);
 		inline uint32_t GetGeometryId() { return m_geometryId; }
 		inline void SetGeometry(std::shared_ptr<Geometry> geom) { m_geometry = geom; }
 	private:

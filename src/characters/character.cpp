@@ -4,9 +4,9 @@
 #include "movie.hpp"
 #include "shape.hpp"
 #include "sprite.hpp"
-#include "util.hpp"
 #include "edittext.hpp"
 #include "font.hpp"
+#include "../util.hpp"
 #include <iostream>
 using namespace libapt;
 

@@ -1,6 +1,7 @@
 #include "edittext.hpp"
-#include "util.hpp"
 #include <libapt/apt.hpp>
+#include "../util.hpp"
+
 using namespace libapt;
 
 void Edittext::Parse(uint8_t *&iter)
@@ -17,7 +18,7 @@ void Edittext::Parse(uint8_t *&iter)
 	m_variable = reinterpret_cast<const char*>(m_owner->GetBase() + read<uint32_t>(iter));
 }
 
-void Edittext::Update(Transformation t)
+void Edittext::Update(const Transformation& t)
 {
 
 }

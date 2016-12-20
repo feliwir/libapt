@@ -7,6 +7,19 @@ namespace libapt
 {
 	class PlaceObject : public FrameItem
 	{
+	private:
+		struct Flags
+		{
+			uint8_t PlaceFlagMove : 1;
+			uint8_t PlaceFlagHasCharacter : 1;
+			uint8_t PlaceFlagHasMatrix : 1;
+			uint8_t PlaceFlagHasColorTransform : 1;
+			uint8_t PlaceFlagHasRatio : 1;
+			uint8_t PlaceFlagHasName : 1;
+			uint8_t PlaceFlagHasClipDepth : 1;
+			uint8_t PlaceFlagHasClipActions : 1;
+			uint16_t Reserved;
+		};
 	public:
 		virtual void Parse(uint8_t *offset, const uint8_t *base);
 
@@ -15,7 +28,7 @@ namespace libapt
 		inline glm::f32mat2 GetRotScale() { return m_rotscale; }
 		inline glm::f32vec2 GetTranslate() { return m_translate; }
 	private:
-		uint32_t m_flags;
+		Flags m_flags;
 		int32_t m_depth;
 		int32_t m_character;
 		glm::f32mat2 m_rotscale;
@@ -25,6 +38,6 @@ namespace libapt
 		glm::f32 m_ratio;
 		std::string m_name;
 		int32_t m_clipdepth;
-		Action m_action;
+		std::shared_ptr<Action> m_action;
 	};
 }

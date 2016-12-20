@@ -1,9 +1,10 @@
 #include <libapt/manager.hpp>
+#include "graphics/flextGL.h"
+#include "default_fp.hpp"
+#include "debug.hpp"
+
 #include <vector>
 #include <iostream>
-#include "default_fp.hpp"
-#include "flextGL.h"
-#include "debug.hpp"
 using namespace libapt;
 
 Manager::Manager() : m_fileprovider(nullptr), m_useFb(false)
@@ -114,6 +115,7 @@ uint32_t Manager::GetFramebuffer()
 
 void Manager::Render()
 {
+	glDisable(GL_DEPTH_TEST);
 	if (m_useFb)
 		m_target->Bind();
 	else
@@ -123,4 +125,5 @@ void Manager::Render()
 
 	if(m_useFb)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glEnable(GL_DEPTH_TEST);
 }

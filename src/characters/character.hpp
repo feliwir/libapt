@@ -27,7 +27,7 @@ namespace libapt
 
 		virtual void Parse(uint8_t *&iter) = 0;
 		//Update all placed objects
-		virtual void Update(Transformation t) = 0;
+		virtual void Update(const Transformation& t) = 0;
 		static const uint32_t SIGNATURE = 0x09876543;
 		
 		inline void SetOffset(const uint32_t offset)

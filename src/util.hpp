@@ -17,6 +17,12 @@ namespace libapt
 		return result;
 	}
 
+	template <class T>
+	inline void skip(uint8_t *&buf)
+	{
+		buf += sizeof(T);
+	}
+
 	inline char getc(uint8_t*& buf)
 	{
 		char r = *buf;
