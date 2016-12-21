@@ -131,7 +131,7 @@ bool ScriptContext::ExecuteOpcode(Instruction op, uint8_t *&bs, std::shared_ptr<
 	}
 	break;
     default:
-	std::cout << "Unimplemented opcode " << static_cast<uint32_t>(op) << std::endl;
+	//std::cout << "Unimplemented opcode " << static_cast<uint32_t>(op) << std::endl;
 	break;
     }
     return true;

@@ -199,3 +199,9 @@ Value Apt::GetConstant(uint32_t index)
 {
 	return m_const.GetItem(index);
 }
+
+std::shared_ptr<Character> Apt::GetCharacter(uint32_t id)
+{
+	auto m = std::dynamic_pointer_cast<Movie>(m_movie);
+	return m->GetCharacters()[id];
+}

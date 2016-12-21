@@ -2,6 +2,7 @@
 #include <libapt/scriptcontext.hpp>
 #include "character.hpp"
 #include "../frame.hpp"
+#include "../displaylist.hpp"
 #include <glm/glm.hpp>
 #include <map>
 #include <memory>
@@ -14,13 +15,6 @@ namespace libapt
     //the base class for movie & sprite
     class Container : public Character
     {
-	private:
-		struct DisplayObject
-		{
-			std::shared_ptr<Character> ch;
-			glm::vec2 translate;
-			glm::mat2 rotscale;
-		};
 	public:
 		Container();
 		void Update(const Transformation& t);
@@ -36,7 +30,7 @@ namespace libapt
 		void HandleRemoveObject(std::shared_ptr<FrameItem> fi);
 		void HandleInitAction(std::shared_ptr<FrameItem> fi);
     private:
-        std::map<uint32_t, DisplayObject> m_displayObjects;
+		DisplayList m_dl;
 		uint32_t m_currentFrame;
 		glm::vec4 m_bgColor;
 		ScriptContext m_sc;

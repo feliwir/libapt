@@ -116,6 +116,8 @@ uint32_t Manager::GetFramebuffer()
 void Manager::Render()
 {
 	glDisable(GL_DEPTH_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
 	if (m_useFb)
 		m_target->Bind();
 	else
@@ -125,5 +127,6 @@ void Manager::Render()
 
 	if(m_useFb)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 }

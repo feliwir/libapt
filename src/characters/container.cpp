@@ -28,35 +28,20 @@ void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi)
 void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 {
 	auto po = std::dynamic_pointer_cast<PlaceObject>(fi);
-	auto characters = m_owner->GetCharacters();
-	auto it = m_displayObjects.find(po->GetDepth());
-
-	DisplayObject object;
-	//add the displayobject
-	if (it == m_displayObjects.end())
+	if (po->HasMove())
 	{
-		object.rotscale = po->GetRotScale();
-		object.translate = po->GetTranslate();
-		auto c = characters[po->GetCharacter()];
-		if (c == nullptr)
-		{
-			std::cout << "Can't place null character" << std::endl;
-			return;
-		}
-		object.ch = c->MakeInstance();
-		m_displayObjects[po->GetDepth()] = object;
+		if(po->HasMatrix())
+			m_dl.Move(po->GetDepth(), po->GetTranslate(), po->GetRotScale());
 	}
-	//object already exists
 	else
 	{
-		if (po->GetCharacter() != -1)
+		auto ch = m_owner->GetCharacter(po->GetCharacter());
+		if (ch != nullptr)
 		{
-			std::cout << "Can't place another character at depth " << po->GetDepth() << std::endl;
-			return;
+			m_dl.Insert(po->GetDepth(), ch, po->GetTranslate(),
+				po->GetRotScale(), po->GetName());
 		}
-
-		it->second.rotscale = po->GetRotScale();
-		it->second.translate = po->GetTranslate();
+		
 	}
 	
 }
@@ -64,7 +49,7 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 void Container::HandleRemoveObject(std::shared_ptr<FrameItem> fi)
 {
 	auto ro = std::dynamic_pointer_cast<RemoveObject>(fi);
-	m_displayObjects.erase(ro->GetDepth());
+	m_dl.Erase(ro->GetDepth());
 }
 
 void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
@@ -108,14 +93,6 @@ void Container::Update(const Transformation& t)
 		m_currentFrame++;
 	}
 	
-	for (auto& obj : m_displayObjects)
-	{
-		Transformation t2;
-		t2.rotscale = t.rotscale*obj.second.rotscale;
-		t2.translate = t.translate + obj.second.translate;
-		
-		obj.second.ch->Update(t2);
-	}
-	int a = 0;
+	m_dl.Render(t);
 }
 

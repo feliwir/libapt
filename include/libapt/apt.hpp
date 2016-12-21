@@ -24,11 +24,19 @@ namespace libapt
 		void Render();
 
 		std::shared_ptr<Character> GetExport(const std::string& name);
+
 		std::vector<std::shared_ptr<Character>> GetCharacters();
+
+		std::shared_ptr<Character> GetCharacter(uint32_t id);
+
 		std::shared_ptr<Texture> GetTexture(int id);
+
 		uint32_t GetWidth();
+
 		uint32_t GetHeight();
+
 		Value GetConstant(uint32_t index);
+
 		inline const uint8_t* GetBase() 
 		{ 
 			return m_data; 

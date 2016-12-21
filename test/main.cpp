@@ -27,17 +27,19 @@ int main(int argc, char** argv)
 	}
 	glfwMakeContextCurrent(window);
 	glfwShowWindow(window);
-
+	int frame = 0;
 	std::shared_ptr<libapt::Manager> mngr = std::make_shared<libapt::Manager>();
 	mngr->AddApt("GuiTest");
 	mngr->SetActive("GuiTest");
 	while (!glfwWindowShouldClose(window))
 	{
+		std::cout << "--Current frame: " << frame << std::endl;
 		glClear(GL_COLOR_BUFFER_BIT);
 		mngr->Render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-		std::this_thread::sleep_for(1s);
+		std::cin.get();
+		frame++;
 	}
 	return 0;
 }
