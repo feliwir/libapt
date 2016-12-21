@@ -29,8 +29,8 @@ int main(int argc, char** argv)
 	glfwShowWindow(window);
 
 	std::shared_ptr<libapt::Manager> mngr = std::make_shared<libapt::Manager>();
-	mngr->AddApt("MainMenu");
-	mngr->SetActive("MainMenu");
+	mngr->AddApt("GuiTest");
+	mngr->SetActive("GuiTest");
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
