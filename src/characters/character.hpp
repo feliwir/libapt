@@ -1,13 +1,14 @@
 #pragma once
+#include "transformation.hpp"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 #include <glm/glm.hpp>
-#include "transformation.hpp"
 
 namespace libapt
 {
 	class Apt;
+	class DisplayObject;
 
 	class Character : public std::enable_shared_from_this<Character>
 	{
@@ -26,8 +27,8 @@ namespace libapt
 		};
 
 		virtual void Parse(uint8_t *&iter) = 0;
-		//Update all placed objects
-		virtual void Update(const Transformation& t) = 0;
+		//Update all placed objects 
+		virtual void Update(const Transformation& t, DisplayObject& dispO) = 0;
 		static const uint32_t SIGNATURE = 0x09876543;
 		
 		inline void SetOffset(const uint32_t offset)

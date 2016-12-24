@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	//glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_FALSE);
 	GLFWwindow* window = glfwCreateWindow(800, 600, "Apt player", NULL, NULL);
 	if (window == NULL)
 	{
@@ -29,8 +29,8 @@ int main(int argc, char** argv)
 	glfwShowWindow(window);
 	int frame = 0;
 	std::shared_ptr<libapt::Manager> mngr = std::make_shared<libapt::Manager>();
-	mngr->AddApt("GuiTest");
-	mngr->SetActive("GuiTest");
+	mngr->AddApt("MainMenu");
+	mngr->SetActive("MainMenu");
 	while (!glfwWindowShouldClose(window))
 	{
 		std::cout << "--Current frame: " << frame << std::endl;

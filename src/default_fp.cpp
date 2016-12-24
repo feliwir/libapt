@@ -49,7 +49,6 @@ const std::string DefaultFp::LoadText(const std::string& name,bool& fail)
 		return "";
 	}
 		
-
 	std::string str;
 
 	t.seekg(0, std::ios::end);

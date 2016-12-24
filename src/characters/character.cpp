@@ -7,6 +7,7 @@
 #include "edittext.hpp"
 #include "font.hpp"
 #include "../util.hpp"
+#include "../displayobject.hpp"
 #include <iostream>
 using namespace libapt;
 

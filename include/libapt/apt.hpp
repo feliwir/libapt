@@ -7,12 +7,12 @@
 #include "dat.hpp"
 #include "error.hpp"
 #include "fileprovider.hpp"
-#include "value.hpp"
 
 namespace libapt
 {
 	class Manager;
 	class Character;
+	class DisplayObject;
 	class Geometry;
 
 	class Apt : public std::enable_shared_from_this<Apt>
@@ -35,7 +35,7 @@ namespace libapt
 
 		uint32_t GetHeight();
 
-		Value GetConstant(uint32_t index);
+		Const::Entry GetConstant(uint32_t index);
 
 		inline const uint8_t* GetBase() 
 		{ 
@@ -45,7 +45,7 @@ namespace libapt
 		Error LoadConst(const std::string name, std::shared_ptr<IFileProvider> fp);
 		Error LoadDat(const std::string name, std::shared_ptr<IFileProvider> fp);
 	private:
-		std::shared_ptr<Character> m_movie;
+		std::shared_ptr<DisplayObject> m_movieclip;
 		std::shared_ptr<Manager> m_manager;
 		std::map<int, std::shared_ptr<Texture>> m_textures;
 		std::vector<std::shared_ptr<Geometry>> m_geometries;

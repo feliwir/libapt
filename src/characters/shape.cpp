@@ -8,7 +8,7 @@ void Shape::Parse(uint8_t *& iter)
 	m_geometryId = read<uint32_t>(iter);
 }
 
-void Shape::Update(const Transformation& t)
+void Shape::Update(const Transformation& t, DisplayObject& dObj)
 {
 	if(m_geometry)
 		m_geometry->Draw(t);

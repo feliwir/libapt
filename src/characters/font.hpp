@@ -8,7 +8,7 @@ namespace libapt
 	{
 	public:
 		virtual void Parse(uint8_t*& iter);
-		virtual void Update(const Transformation& t);
+		virtual void Update(const Transformation& t, DisplayObject& dObj);
 	private:
 		const char* m_name;
 		uint32_t m_glyphcount;

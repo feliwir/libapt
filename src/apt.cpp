@@ -1,12 +1,12 @@
 #include <libapt/apt.hpp>
 #include <libapt/manager.hpp>
+#include "displayobject.hpp"
 #include "characters/character.hpp"
 #include "characters/movie.hpp"
 #include "characters/image.hpp"
 #include "characters/shape.hpp"
 #include "util.hpp"
 #include "geometry.hpp"
-
 #include <iostream>
 using namespace libapt;
 
@@ -58,13 +58,13 @@ Error Apt::Load(const uint8_t *buffer, unsigned int size, std::shared_ptr<Manage
 	iter -= 0x08;
 	iter += m_const.GetAptOffset();
 
-	m_movie = Character::Create(iter ,shared_from_this());
-	if (m_movie->GetType() != Character::MOVIE)
+	auto ch = Character::Create(iter ,shared_from_this());
+	if (ch->GetType() != Character::MOVIE)
 	{
 		std::cout << "An apt MUST contain a movie as first character!" << std::endl;
 		return MISSING_MOVIE;
 	}
-	auto m = std::dynamic_pointer_cast<Movie>(m_movie);
+	auto m = std::dynamic_pointer_cast<Movie>(ch);
 
 	uint32_t width = m->GetWidth();
 	uint32_t height = m->GetHeight();
@@ -136,6 +136,9 @@ Error Apt::Load(const uint8_t *buffer, unsigned int size, std::shared_ptr<Manage
 			m_geometries.push_back(geom);
 		}
 	}
+	//set character of our display object
+	m_movieclip = std::make_shared<DisplayObject>();
+	m_movieclip->SetCharacter(ch);
 
 	//compile all geometries
 	for (const auto& g : m_geometries)
@@ -147,7 +150,7 @@ Error Apt::Load(const uint8_t *buffer, unsigned int size, std::shared_ptr<Manage
 
 std::shared_ptr<Character> Apt::GetExport(const std::string& name)
 {
-	auto m = std::dynamic_pointer_cast<Movie>(m_movie);
+	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
 	const auto& exports = m->GetExports();
 	for (const auto& ex : exports)
 	{
@@ -162,13 +165,12 @@ std::shared_ptr<Character> Apt::GetExport(const std::string& name)
 
 void Apt::Render()
 {
-	auto m = std::dynamic_pointer_cast<Movie>(m_movie);
-	m_movie->Update(Transformation());
+	m_movieclip->Render(Transformation());
 }
 
 std::vector<std::shared_ptr<Character>> Apt::GetCharacters()
 {
-	auto m = std::dynamic_pointer_cast<Movie>(m_movie);
+	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
 	return m->GetCharacters();
 }
 
@@ -185,23 +187,23 @@ std::shared_ptr<Texture> Apt::GetTexture(int id)
 
 uint32_t Apt::GetWidth()
 {
-	auto m = std::dynamic_pointer_cast<Movie>(m_movie);
+	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
 	return m->GetWidth();
 }
 
 uint32_t Apt::GetHeight()
 {
-	auto m = std::dynamic_pointer_cast<Movie>(m_movie);
+	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
 	return m->GetHeight();
 }
 
-Value Apt::GetConstant(uint32_t index)
+Const::Entry Apt::GetConstant(uint32_t index)
 {
 	return m_const.GetItem(index);
 }
 
 std::shared_ptr<Character> Apt::GetCharacter(uint32_t id)
 {
-	auto m = std::dynamic_pointer_cast<Movie>(m_movie);
+	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
 	return m->GetCharacters()[id];
 }

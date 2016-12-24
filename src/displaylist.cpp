@@ -3,12 +3,14 @@
 using namespace libapt;
 
 void DisplayList::Insert(uint32_t depth, std::shared_ptr<Character> ch,
-	const glm::vec2 & translate, const glm::mat2 & rotscale, const std::string & name)
+	const glm::vec2 & translate, const glm::mat2 & rotscale, const std::string& name,
+	std::shared_ptr<Container> parent)
 {
 	DisplayObject obj;
-	obj.Create(ch,translate,rotscale,name);
+	obj.Create(ch,translate,rotscale,name,parent);
 	m_objects[depth] = obj;
 	std::cout << "Placed object at depth: " << depth << std::endl;
+	std::cout << "Name: " << name << std::endl;
 }
 
 void DisplayList::Erase(uint32_t depth)

@@ -22,17 +22,17 @@ Error Const::Load(const uint8_t* buffer, unsigned int size)
 
 	for (uint32_t i = 0;i < m_itemCount;++i)
 	{
-		Value entry;
-		Type type = static_cast<Type>(read<uint32_t>(iter));
+		Entry e;
+		e.type = static_cast<Type>(read<uint32_t>(iter));
 		uint32_t value = read<uint32_t>(iter);
-		std::string test;
-		switch (type)
+
+		switch (e.type)
 		{
 		case STRING:
-			entry.Set(std::string(reinterpret_cast<const char*>(buffer + value)));
+			e.stringVal = std::string(reinterpret_cast<const char*>(buffer + value));
 			break;
 		case NUMBER:
-			entry.Set(value);
+			e.numVal = value;
 			break;
 		case UNDEF:
 			std::cout << "Undefined constant entry at position " << i << std::endl;
@@ -41,7 +41,7 @@ Error Const::Load(const uint8_t* buffer, unsigned int size)
 			break;
 		}
 
-		m_items.push_back(entry);
+		m_items.push_back(e);
 	}
 	
 	return NO_ERROR;

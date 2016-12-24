@@ -2,16 +2,12 @@ find_package(OpenGL REQUIRED)
 
 set(HEADER_DIR ${CMAKE_SOURCE_DIR}/include/libapt)
 set(PUBLIC_HEADERS  ${HEADER_DIR}/apt.hpp
-					${HEADER_DIR}/bytecode.hpp
 					${HEADER_DIR}/const.hpp
 					${HEADER_DIR}/dat.hpp
 					${HEADER_DIR}/error.hpp	
 					${HEADER_DIR}/fileprovider.hpp
 					${HEADER_DIR}/manager.hpp
-					${HEADER_DIR}/scriptcontext.hpp
-					${HEADER_DIR}/scriptfunction.hpp
-					${HEADER_DIR}/texture.hpp
-					${HEADER_DIR}/value.hpp)
+					${HEADER_DIR}/texture.hpp)
 
 file(GLOB_RECURSE SRC_FILES
 	"*.c"

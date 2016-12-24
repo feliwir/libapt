@@ -8,21 +8,22 @@
 #include "../graphics/flextGL.h"
 #include <iostream>
 using namespace libapt;
+as::Engine Container::s_engine;
 
 Container::Container()
 {
 }
 
-void Container::HandleAction(std::shared_ptr<FrameItem> fi)
+void Container::HandleAction(std::shared_ptr<FrameItem> fi,DisplayObject& dispO)
 {
 	auto action = std::dynamic_pointer_cast<Action>(fi);
-	m_sc.Execute(action->GetBytecode(),shared_from_this());
+	s_engine.Execute(dispO,action->GetBytecode(),m_owner);
 }
 
 void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi)
 {
 	auto action = std::dynamic_pointer_cast<InitAction>(fi);
-	m_sc.Execute(action->GetBytecode(), shared_from_this());
+
 }
 
 void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
@@ -39,11 +40,10 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 		if (ch != nullptr)
 		{
 			m_dl.Insert(po->GetDepth(), ch, po->GetTranslate(),
-				po->GetRotScale(), po->GetName());
-		}
-		
-	}
-	
+				po->GetRotScale(), po->GetName(),
+				std::dynamic_pointer_cast<Container>(shared_from_this()));
+		}	
+	}	
 }
 
 void Container::HandleRemoveObject(std::shared_ptr<FrameItem> fi)
@@ -60,7 +60,7 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 	glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, m_bgColor.a);
 }
 
-void Container::Update(const Transformation& t)
+void Container::Update(const Transformation& t, DisplayObject& dispO)
 {
 	if (m_currentFrame < m_framecount)
 	{
@@ -74,7 +74,7 @@ void Container::Update(const Transformation& t)
 			switch (fi->GetType())
 			{
 			case FrameItem::ACTION:
-				HandleAction(fi);
+				HandleAction(fi,dispO);
 				break;
 			case FrameItem::PLACEOBJECT:
 				HandlePlaceObject(fi);

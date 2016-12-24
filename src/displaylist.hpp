@@ -1,6 +1,7 @@
 #pragma once
 #include "displayobject.hpp"
 #include <map>
+#include <string>
 #include <stdint.h>
 
 namespace libapt
@@ -9,8 +10,8 @@ namespace libapt
 	{
 	public:
 		void Insert(uint32_t depth, std::shared_ptr<Character> ch, 
-			const glm::vec2& translate,
-			const glm::mat2& rotscale, const std::string& name);
+			const glm::vec2& translate,	const glm::mat2& rotscale, 
+			const std::string& name, std::shared_ptr<Container> parent);
 
 		void Erase(uint32_t depth);
 
