@@ -19,6 +19,7 @@ The parsing works pretty well, but the actionscript part needs much more work.
 Below I'll add screenshots on how the file should look and how it is looking at the moment.
 Battle for Middleearth II:
 ![Image of Mainmenu](img/mainmenu2.png)
+
 The apt player using libapt:
 ![Image of Mainmenu](img/mainmenu.png)
 
