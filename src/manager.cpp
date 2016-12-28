@@ -2,12 +2,12 @@
 #include "graphics/flextGL.h"
 #include "default_fp.hpp"
 #include "debug.hpp"
-
 #include <vector>
 #include <iostream>
+
 using namespace libapt;
 
-Manager::Manager() : m_fileprovider(nullptr), m_useFb(false)
+Manager::Manager() : m_fileprovider(nullptr), m_useFb(false), m_fps(30)
 {
 	if (flextInit() == GL_FALSE)
 	{
@@ -23,7 +23,7 @@ Manager::Manager() : m_fileprovider(nullptr), m_useFb(false)
 	m_target = std::make_unique<RenderTarget>();
 }
 
-Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp), m_useFb(false)
+Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp), m_useFb(false), m_fps(30)
 {
 	if (flextInit() == GL_FALSE)
 	{
@@ -129,4 +129,14 @@ void Manager::Render()
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
+}
+
+void Manager::Update()
+{
+
+}
+
+void Manager::SetFps(uint32_t fps)
+{
+	m_fps = fps;
 }

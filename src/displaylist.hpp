@@ -19,6 +19,11 @@ namespace libapt
 			const glm::mat2& rotscale);
 
 		void Render(const Transformation& t);
+
+		DisplayObject& GetObject(uint32_t depth)
+		{
+			return m_objects[depth];
+		}
 	private:
 		std::map<uint32_t, DisplayObject> m_objects;
 	};

@@ -1,8 +1,8 @@
 #pragma once
+#include "error.hpp"
 #include <string>
 #include <memory>
 #include <map>
-#include "error.hpp"
 
 namespace libapt
 {

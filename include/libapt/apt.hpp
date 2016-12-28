@@ -1,12 +1,12 @@
 #pragma once
-#include <memory>
-#include <string>
-#include <vector>
-#include <map>
 #include "const.hpp"
 #include "dat.hpp"
 #include "error.hpp"
 #include "fileprovider.hpp"
+#include <memory>
+#include <string>
+#include <vector>
+#include <map>
 
 namespace libapt
 {
@@ -48,6 +48,7 @@ namespace libapt
 		std::shared_ptr<DisplayObject> m_movieclip;
 		std::shared_ptr<Manager> m_manager;
 		std::map<int, std::shared_ptr<Texture>> m_textures;
+		std::map<int, int> m_imageMap;
 		std::vector<std::shared_ptr<Geometry>> m_geometries;
 		Const m_const;
 		Dat m_dat;

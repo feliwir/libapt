@@ -54,17 +54,27 @@ void PlaceObject::Parse(uint8_t* iter, const uint8_t *base)
 		m_name = readString(base+nameOffset);
 
 	m_clipdepth = read<int32_t>(iter);
-	uint32_t poaOffset = read<uint32_t>(iter);
 	
-	if (m_flags.PlaceFlagHasClipActions && poaOffset)
+	
+	if (m_flags.PlaceFlagHasClipActions)
 	{
-		uint8_t* poa_offset = const_cast<uint8_t*>(base) + poaOffset;
-		auto fi = FrameItem::Create(poa_offset, base);
-		if (fi->GetType() != ACTION)
-		{
-			std::cout << "WTF mate" << std::endl;
-		}
+		ParseClipActions(iter, base);
+	}
+	else
+		skip<uint64_t>(iter);
+}
 
-		m_action = std::dynamic_pointer_cast<Action>(fi);
+void PlaceObject::ParseClipActions(uint8_t*& iter, const uint8_t *base)
+{
+	uint8_t* poaOffset = const_cast<uint8_t*>(base) + read<uint32_t>(iter);
+
+	m_clipactions.count = read<uint32_t>(iter);
+	uint8_t* actionsOffset = const_cast<uint8_t*>(base) + read<uint32_t>(iter);
+	for (uint32_t i = 0; i < m_clipactions.count; ++i)
+	{
+		ClipAction ca;
+		skip<uint32_t>(actionsOffset);
+		ca.flags = read<ClipEventFlags>(actionsOffset);
+		ca.bytes = const_cast<uint8_t*>(base) + read<uint32_t>(actionsOffset);
 	}
 }

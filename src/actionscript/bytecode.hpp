@@ -1,6 +1,6 @@
 #pragma once
 #include <stdint.h>
-#include <array>
+
 namespace libapt
 {
 	namespace as

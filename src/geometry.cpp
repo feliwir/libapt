@@ -37,7 +37,7 @@ std::string Geometry::s_fragSrc =
 "{\n"
 "	ivec2 ts = textureSize(tex,0);\n"
 "	if(textured) {\n"
-"	vec2 tc = vec2(fragVert.x/ts.x,fragVert.y/ts.y);\n"
+"	vec2 tc = vec2(fragVert.x/ts.x,-fragVert.y/ts.y);\n"
 "	fragColor = texture(tex,tc);\n"
 "	}\n"
 "	else{\n"

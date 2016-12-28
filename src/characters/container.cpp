@@ -17,7 +17,7 @@ Container::Container()
 void Container::HandleAction(std::shared_ptr<FrameItem> fi,DisplayObject& dispO)
 {
 	auto action = std::dynamic_pointer_cast<Action>(fi);
-	s_engine.Execute(dispO,action->GetBytecode(),m_owner);
+	//s_engine.Execute(dispO,action->GetBytecode(),m_owner);
 }
 
 void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi)
@@ -42,6 +42,13 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 			m_dl.Insert(po->GetDepth(), ch, po->GetTranslate(),
 				po->GetRotScale(), po->GetName(),
 				std::dynamic_pointer_cast<Container>(shared_from_this()));
+
+			if (po->HasClipActions())
+			{
+				auto action = po->GetClipAction();
+				/*auto& dispO = m_dl.GetObject(po->GetDepth());
+				s_engine.Execute(dispO, action->GetBytecode(), m_owner);*/
+			}
 		}	
 	}	
 }

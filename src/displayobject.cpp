@@ -20,6 +20,7 @@ void DisplayObject::Render(const Transformation& t)
 	m_character->Update(cTransform,*this);
 }
 
+
 void DisplayObject::OnPropertyChanged(const std::string& property, as::Value v)
 {
 

@@ -1,11 +1,11 @@
 #pragma once
+#include "graphics/shader.hpp"
+#include "characters/transformation.hpp"
 #include <libapt/error.hpp>
 #include <string>
 #include <vector>
 #include <memory>
 #include <glm/glm.hpp>
-#include "graphics/shader.hpp"
-#include "characters/transformation.hpp"
 
 namespace libapt
 {

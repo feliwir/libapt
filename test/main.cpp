@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 		mngr->Render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-		std::cin.get();
+		std::this_thread::sleep_for(1s);
 		frame++;
 	}
 	return 0;

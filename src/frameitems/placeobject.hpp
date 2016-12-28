@@ -8,17 +8,63 @@ namespace libapt
 	class PlaceObject : public FrameItem
 	{
 	private:
-		struct Flags
+		union Flags
 		{
-			uint8_t PlaceFlagMove : 1;
-			uint8_t PlaceFlagHasCharacter : 1;
-			uint8_t PlaceFlagHasMatrix : 1;
-			uint8_t PlaceFlagHasColorTransform : 1;
-			uint8_t PlaceFlagHasRatio : 1;
-			uint8_t PlaceFlagHasName : 1;
-			uint8_t PlaceFlagHasClipDepth : 1;
-			uint8_t PlaceFlagHasClipActions : 1;
-			uint16_t Reserved;
+			struct
+			{
+				uint8_t PlaceFlagMove : 1;
+				uint8_t PlaceFlagHasCharacter : 1;
+				uint8_t PlaceFlagHasMatrix : 1;
+				uint8_t PlaceFlagHasColorTransform : 1;
+				uint8_t PlaceFlagHasRatio : 1;
+				uint8_t PlaceFlagHasName : 1;
+				uint8_t PlaceFlagHasClipDepth : 1;
+				uint8_t PlaceFlagHasClipActions : 1;
+				uint16_t Reserved;
+			};
+
+			uint32_t Data;
+		};
+
+		union ClipEventFlags
+		{
+			struct
+			{
+				uint8_t ClipEventKeyUp			: 1;
+				uint8_t ClipEventKeyDown		: 1;
+				uint8_t ClipEventMouseUp		: 1;
+				uint8_t ClipEventMouseDown		: 1;
+				uint8_t ClipEventMouseMove		: 1;
+				uint8_t ClipEventUnload			: 1;
+				uint8_t ClipEventEnterFrame		: 1;
+				uint8_t ClipEventLoad			: 1;
+				uint8_t ClipEventDragOver		: 1;
+				uint8_t ClipEventRollOut		: 1;
+				uint8_t ClipEventRollOver		: 1;
+				uint8_t ClipEventReleaseOutside : 1;
+				uint8_t ClipEventRelease		: 1;
+				uint8_t ClipEventPress			: 1;
+				uint8_t ClipEventInitialize		: 1;
+				uint8_t ClipEventData			: 1;
+				uint8_t Reserved				: 5;
+				uint8_t ClipEventConstruct		: 1;
+				uint8_t ClipEventKeyPress		: 1;
+				uint8_t ClipEventDragOut		: 1;
+				uint8_t Reserved2				: 8;
+			};
+			uint32_t Data;
+		};
+
+		struct ClipAction
+		{
+			ClipEventFlags flags;
+			uint8_t* bytes;
+		};
+
+		struct ClipActions
+		{
+			uint32_t count;
+			std::vector<ClipAction> actions;
 		};
 	public:
 		PlaceObject();
@@ -59,6 +105,18 @@ namespace libapt
 		{
 			return m_flags.PlaceFlagHasName;
 		}
+
+		inline bool HasClipActions()
+		{
+			return m_flags.PlaceFlagHasClipActions;
+		}
+
+		std::shared_ptr<Action> GetClipAction()
+		{
+			return 0;
+		}
+	private:
+		void ParseClipActions(uint8_t*& offset, const uint8_t *base);
 	private:
 		Flags m_flags;
 		int32_t m_depth;
@@ -70,6 +128,7 @@ namespace libapt
 		glm::f32 m_ratio;
 		std::string m_name;
 		int32_t m_clipdepth;
-		std::shared_ptr<Action> m_action;
+		ClipActions m_clipactions;
+
 	};
 }

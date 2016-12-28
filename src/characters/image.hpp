@@ -7,9 +7,9 @@ namespace libapt
 	{
 	public:
 		virtual void Parse(uint8_t*& iter);
-		inline uint32_t GetTexture() { return m_texture; }
+		inline uint32_t GetImage() { return m_image; }
 		virtual void Update(const Transformation& t, DisplayObject& dObj);
 	private:
-		uint32_t m_texture;
+		uint32_t m_image;
 	};
 }

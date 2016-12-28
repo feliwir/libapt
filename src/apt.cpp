@@ -90,22 +90,32 @@ Error Apt::Load(const uint8_t *buffer, unsigned int size, std::shared_ptr<Manage
 		if (ch->GetType() == Character::IMAGE)
 		{
 			auto im = std::dynamic_pointer_cast<Image>(ch);
-			int texId = im->GetTexture();
-			Dat::Entry e = m_dat.GetEntry(im->GetTexture());
-			if (m_textures[texId] != nullptr)
-				continue;
+			int imgId = im->GetImage();
+			Dat::Entry e = m_dat.GetEntry(imgId);
+			
 
-			int imgId = 0;
+			int texId = 0;
 			if (e.type == Dat::NO_BOUNDS)
 			{
-				imgId = e.p1;
+				texId = e.p1;
 			}
 			else
 			{
-				imgId = texId;
+				texId = imgId;
 			}
-			std::string texPath = "art/Textures/apt_" + name + "_" + std::to_string(imgId) + ".tga";
-			m_textures[im->GetTexture()]=mngr->GetFileprovider()->LoadTexture(texPath);
+
+			m_imageMap[imgId] = texId;
+
+			if (m_textures[texId] != nullptr)
+				continue;
+
+			std::string texPath = "art/Textures/apt_" + name + "_" + std::to_string(texId) + ".tga";
+			auto tex = std::make_shared<Texture>();
+			uint32_t fSize = 0;
+			const uint8_t* buffer = mngr->GetFileprovider()->LoadBinary(texPath,fSize);
+			tex->Load(buffer, fSize);
+			delete[] buffer;		
+			m_textures[texId] = tex;
 		}
 		else if (ch->GetType() == Character::SHAPE)
 		{
@@ -168,12 +178,12 @@ void Apt::Render()
 	m_movieclip->Render(Transformation());
 }
 
+
 std::vector<std::shared_ptr<Character>> Apt::GetCharacters()
 {
 	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
 	return m->GetCharacters();
 }
-
 
 Apt::~Apt()
 {
@@ -182,7 +192,8 @@ Apt::~Apt()
 
 std::shared_ptr<Texture> Apt::GetTexture(int id)
 {
-	return m_textures[id];
+	int texId = m_imageMap[id];
+	return m_textures[texId];
 }
 
 uint32_t Apt::GetWidth()

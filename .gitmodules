@@ -7,3 +7,6 @@
 [submodule "deps/asmjit"]
 	path = deps/asmjit
 	url = https://github.com/asmjit/asmjit.git
+[submodule "deps/gli"]
+	path = deps/gli
+	url = https://github.com/g-truc/gli.git
