@@ -56,7 +56,6 @@ Geometry::Geometry(uint32_t width, uint32_t height)
 		s_shader.addUniform("protscale");
 		s_shader.addUniform("ortho");
 		s_shader.addUniform("color");
-		s_shader.addUniform("tex");
 		s_shader.addUniform("textured");
 		glGenVertexArrays(1, &s_vao);
 		glBindVertexArray(s_vao);

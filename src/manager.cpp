@@ -4,10 +4,10 @@
 #include "debug.hpp"
 #include <vector>
 #include <iostream>
-
 using namespace libapt;
+using namespace std::chrono_literals;
 
-Manager::Manager() : m_fileprovider(nullptr), m_useFb(false), m_fps(30)
+Manager::Manager() : m_fileprovider(nullptr), m_fps(30)
 {
 	if (flextInit() == GL_FALSE)
 	{
@@ -21,9 +21,10 @@ Manager::Manager() : m_fileprovider(nullptr), m_useFb(false), m_fps(30)
 
 	m_fileprovider = std::make_shared<DefaultFp>();
 	m_target = std::make_unique<RenderTarget>();
+	m_last = std::chrono::system_clock::now();
 }
 
-Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp), m_useFb(false), m_fps(30)
+Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp),  m_fps(30)
 {
 	if (flextInit() == GL_FALSE)
 	{
@@ -36,6 +37,7 @@ Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp), m_useF
 	}
 
 	m_target = std::make_unique<RenderTarget>();
+	m_last = std::chrono::system_clock::now();
 }
 
 Error Manager::AddApt(const std::string& name)
@@ -98,14 +100,12 @@ Error Manager::SetActive(const std::string& name)
 	if (m_active == nullptr)
 		return INVALID_APT;
 
-	m_target->SetDimension(m_active->GetWidth(), m_active->GetHeight());
 	return NO_ERROR;
 }
 
-void Manager::UseFramebuffer(bool useFb)
+void Manager::SetDimension(uint32_t width, uint32_t height)
 {
-	m_target->Bind();
-	m_useFb = useFb;
+	m_target->SetDimension(width, height);
 }
 
 uint32_t Manager::GetFramebuffer()
@@ -113,20 +113,26 @@ uint32_t Manager::GetFramebuffer()
 	return m_target->GetFramebuffer();
 }
 
-void Manager::Render()
+void Manager::Render(const bool window)
 {
 	glDisable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
-	if (m_useFb)
-		m_target->Bind();
-	else
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	m_target->Bind();
+	
+	auto now = std::chrono::system_clock::now();
+	if ((now - m_last) > (1000ms/m_fps))
+	{
+		std::cout << "Rendering" << std::endl;
+		glClear(GL_COLOR_BUFFER_BIT);
+		m_active->Render();
+		m_last = now;
+	}
+		
+	if (window)
+		m_target->Render();
 
-	m_active->Render();
-
-	if(m_useFb)
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 }
@@ -136,7 +142,7 @@ void Manager::Update()
 
 }
 
-void Manager::SetFps(uint32_t fps)
+void Manager::SetFps(const uint32_t fps)
 {
 	m_fps = fps;
 }

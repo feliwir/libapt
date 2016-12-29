@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <chrono>
 #include <stdint.h>
 
 namespace libapt
@@ -18,18 +19,16 @@ namespace libapt
 		Error AddApt(const std::string& name);
 		Error SetActive(const std::string& name);
 		uint32_t GetFramebuffer();
-		void UseFramebuffer(bool use);
-
+		void SetDimension(uint32_t width, uint32_t height);
+		void SetFps(const uint32_t fps);
 		void Update();
-		void Render();
+		void Render(const bool window = true);
 
 		inline std::shared_ptr<IFileProvider> GetFileprovider() { return m_fileprovider; }
 
 		std::shared_ptr<Character> ImportCharacter(const std::string& movie, const std::string& name);
 
 		std::shared_ptr<Apt> GetApt(const std::string& name);
-
-		void SetFps(uint32_t fps);
 	private:
 		std::map<std::string, std::shared_ptr<Apt>> m_apts;
 		std::map<uint32_t, Texture> m_textures;
@@ -37,7 +36,7 @@ namespace libapt
 		std::map<uint32_t,Texture> m_textureList;
 		std::shared_ptr<Apt> m_active;
 		std::unique_ptr<RenderTarget> m_target;
-		bool m_useFb;
+		std::chrono::system_clock::time_point m_last;
 		uint32_t m_fps;
 	};
 }

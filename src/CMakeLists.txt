@@ -7,6 +7,7 @@ set(PUBLIC_HEADERS  ${HEADER_DIR}/apt.hpp
 					${HEADER_DIR}/error.hpp	
 					${HEADER_DIR}/fileprovider.hpp
 					${HEADER_DIR}/manager.hpp
+					${HEADER_DIR}/rendertarget.hpp
 					${HEADER_DIR}/texture.hpp)
 
 file(GLOB_RECURSE SRC_FILES

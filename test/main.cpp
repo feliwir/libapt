@@ -1,9 +1,7 @@
 #include <libapt/manager.hpp>
 #include <iostream>
 #include <GLFW/glfw3.h>
-#include <chrono>
 #include <thread>
-using namespace std::chrono_literals;
 
 static void error_callback(int error, const char* description)
 {
@@ -29,16 +27,18 @@ int main(int argc, char** argv)
 	glfwShowWindow(window);
 	int frame = 0;
 	std::shared_ptr<libapt::Manager> mngr = std::make_shared<libapt::Manager>();
+	mngr->SetDimension(800, 600);
 	mngr->AddApt("MainMenu");
 	mngr->SetActive("MainMenu");
+	mngr->SetFps(1);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		std::cout << "--Current frame: " << frame << std::endl;
 		glClear(GL_COLOR_BUFFER_BIT);
-		mngr->Render();
+		mngr->Render(true);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-		std::this_thread::sleep_for(1s);
 		frame++;
 	}
 	return 0;
