@@ -15,20 +15,26 @@ namespace libapt
 	{
 	public:
 		Manager();
+
 		Manager(std::shared_ptr<IFileProvider> fp);
 		Error AddApt(const std::string& name);
 		Error SetActive(const std::string& name);
+		//getters
 		uint32_t GetFramebuffer();
-		void SetDimension(uint32_t width, uint32_t height);
+		inline std::shared_ptr<IFileProvider> GetFileprovider() { return m_fileprovider; }
+		std::shared_ptr<Apt> GetApt(const std::string& name);
+		uint32_t GetWidth();
+		uint32_t GetHeight();
+		//setters
+		void SetWidth(uint32_t width);
+		void SetHeight(uint32_t height);
 		void SetFps(const uint32_t fps);
-		void Update();
+
 		void Render(const bool window = true);
 
-		inline std::shared_ptr<IFileProvider> GetFileprovider() { return m_fileprovider; }
+		std::shared_ptr<Character> ImportCharacter(const std::string& movie, const std::string& name);	
 
-		std::shared_ptr<Character> ImportCharacter(const std::string& movie, const std::string& name);
-
-		std::shared_ptr<Apt> GetApt(const std::string& name);
+		void UpdateDimensions();
 	private:
 		std::map<std::string, std::shared_ptr<Apt>> m_apts;
 		std::map<uint32_t, Texture> m_textures;
@@ -38,5 +44,7 @@ namespace libapt
 		std::unique_ptr<RenderTarget> m_target;
 		std::chrono::system_clock::time_point m_last;
 		uint32_t m_fps;
+		uint32_t m_width;
+		uint32_t m_height;
 	};
 }

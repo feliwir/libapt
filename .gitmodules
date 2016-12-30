@@ -10,3 +10,6 @@
 [submodule "deps/gli"]
 	path = deps/gli
 	url = https://github.com/g-truc/gli.git
+[submodule "deps/cxxopts"]
+	path = deps/cxxopts
+	url = https://github.com/jarro2783/cxxopts.git

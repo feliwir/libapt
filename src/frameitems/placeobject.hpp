@@ -111,9 +111,9 @@ namespace libapt
 			return m_flags.PlaceFlagHasClipActions;
 		}
 
-		std::shared_ptr<Action> GetClipAction()
+		const ClipActions& GetClipActions()
 		{
-			return 0;
+			return m_clipactions;
 		}
 	private:
 		void ParseClipActions(uint8_t*& offset, const uint8_t *base);

@@ -23,6 +23,12 @@ namespace libapt
 		{ 
 			return m_currentFrame; 
 		}
+
+		inline void SetPlaying(bool state)
+		{
+			m_playing = state;
+		}
+
 	protected:
 		uint32_t m_framecount;
 		std::vector<Frame> m_frames;
@@ -36,6 +42,7 @@ namespace libapt
 		DisplayList m_dl;
 		uint32_t m_currentFrame;
 		glm::vec4 m_bgColor;
+		bool m_playing;
 	private:
 		static as::Engine s_engine;
     };

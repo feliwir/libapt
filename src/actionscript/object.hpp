@@ -12,12 +12,22 @@ namespace libapt
         class Object
         {
 		public:
+			enum PlayState
+			{
+				PLAYING = 0,
+				STOPPED = 1
+			};
+		public:
 			Value GetProperty(const std::string& property);
 			void SetProperty(const std::string& property,Value v);
+
+			void SetPlaystate(const PlayState ps);
 		protected:
-			virtual void OnPropertyChanged(const std::string& property, Value v) = 0;
+			virtual void OnPropertyChanged(const std::string& property) = 0;
+			virtual void OnPlayStateChanged() = 0;
 		protected:
 			std::map<std::string, Value> m_properties;
+			PlayState m_ps;
         };
     }
 }

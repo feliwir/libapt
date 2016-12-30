@@ -71,6 +71,9 @@ RenderTarget::RenderTarget() : m_fbId(0), m_texId(0), m_dbId(0)
 
 bool RenderTarget::SetDimension(uint32_t width, uint32_t height)
 {
+	if (width == m_width && height == m_height)
+		return true;
+
 	m_width = width;
 	m_height = height;
 	glBindTexture(GL_TEXTURE_2D, m_texId);
@@ -119,7 +122,6 @@ void RenderTarget::Bind()
 
 void RenderTarget::Render()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	quad_shader.Use();
 	glBindVertexArray(quad_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, quad_vbo);

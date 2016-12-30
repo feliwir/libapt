@@ -20,8 +20,15 @@ namespace libapt
 				INTEGER = 7,
 				CONSTANT = 8
 			};
-
+		public:
+			Value();
+			void FromFloat(const float n);
 			void FromConstant(const Const::Entry& e);
+			void FromByte(const uint8_t n);
+			void FromBoolean(const bool c);
+
+			float ToFloat();
+			bool ToBoolean();
 		private:
 			Type m_type;
 			bool m_boolean;

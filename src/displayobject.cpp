@@ -10,6 +10,7 @@ void DisplayObject::Create(std::shared_ptr<Character> ch, const glm::vec2 & tran
 	m_translate = translate;
 	m_name = name;
 	m_parent = parent;
+	m_ps = PLAYING;
 }
 
 void DisplayObject::Render(const Transformation& t)
@@ -21,7 +22,13 @@ void DisplayObject::Render(const Transformation& t)
 }
 
 
-void DisplayObject::OnPropertyChanged(const std::string& property, as::Value v)
+void DisplayObject::OnPropertyChanged(const std::string& property)
 {
 
+}
+
+void DisplayObject::OnPlayStateChanged()
+{
+	auto c = std::dynamic_pointer_cast<Container>(m_character);
+	c->SetPlaying((m_ps == PLAYING));
 }

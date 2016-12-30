@@ -10,14 +10,14 @@
 using namespace libapt;
 as::Engine Container::s_engine;
 
-Container::Container()
+Container::Container() : m_playing(true)
 {
 }
 
 void Container::HandleAction(std::shared_ptr<FrameItem> fi,DisplayObject& dispO)
 {
 	auto action = std::dynamic_pointer_cast<Action>(fi);
-	//s_engine.Execute(dispO,action->GetBytecode(),m_owner);
+	s_engine.Execute(dispO,action->GetBytecode(),m_owner);
 }
 
 void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi)
@@ -31,6 +31,9 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 	auto po = std::dynamic_pointer_cast<PlaceObject>(fi);
 	if (po->HasMove())
 	{
+		if (po->HasColortransform())
+			int a = 0;
+
 		if(po->HasMatrix())
 			m_dl.Move(po->GetDepth(), po->GetTranslate(), po->GetRotScale());
 	}
@@ -45,9 +48,11 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 
 			if (po->HasClipActions())
 			{
-				auto action = po->GetClipAction();
-				/*auto& dispO = m_dl.GetObject(po->GetDepth());
-				s_engine.Execute(dispO, action->GetBytecode(), m_owner);*/
+				auto action = po->GetClipActions();
+			}
+			if (po->HasColortransform())
+			{
+				int a = 0;
 			}
 		}	
 	}	
@@ -69,7 +74,7 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 
 void Container::Update(const Transformation& t, DisplayObject& dispO)
 {
-	if (m_currentFrame < m_framecount)
+	if (m_currentFrame < m_framecount && m_playing)
 	{
 		Frame& cFrame = m_frames[m_currentFrame];
 
@@ -97,6 +102,7 @@ void Container::Update(const Transformation& t, DisplayObject& dispO)
 				break;
 			}
 		}
+
 		m_currentFrame++;
 	}
 	

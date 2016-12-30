@@ -37,7 +37,8 @@ namespace libapt
 			return m_character;
 		}
 
-		virtual void OnPropertyChanged(const std::string& property, as::Value v);
+		virtual void OnPropertyChanged(const std::string& property);
+		virtual void OnPlayStateChanged();
 	private:
 		std::shared_ptr<Character> m_character;
 		std::shared_ptr<Container> m_parent;

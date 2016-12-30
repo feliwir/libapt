@@ -7,7 +7,8 @@
 using namespace libapt;
 using namespace std::chrono_literals;
 
-Manager::Manager() : m_fileprovider(nullptr), m_fps(30)
+Manager::Manager() : m_fileprovider(nullptr), m_fps(30),
+m_width(800),m_height(600)
 {
 	if (flextInit() == GL_FALSE)
 	{
@@ -15,12 +16,15 @@ Manager::Manager() : m_fileprovider(nullptr), m_fps(30)
 	}
 	if (FLEXT_KHR_debug)
 	{
+		#ifndef NDEBUG
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(debugCallback, nullptr);
+		#endif
 	}
 
 	m_fileprovider = std::make_shared<DefaultFp>();
 	m_target = std::make_unique<RenderTarget>();
+	m_target->SetDimension(m_width, m_height);
 	m_last = std::chrono::system_clock::now();
 }
 
@@ -37,6 +41,7 @@ Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp),  m_fps
 	}
 
 	m_target = std::make_unique<RenderTarget>();
+	m_target->SetDimension(m_width, m_height);
 	m_last = std::chrono::system_clock::now();
 }
 
@@ -103,11 +108,6 @@ Error Manager::SetActive(const std::string& name)
 	return NO_ERROR;
 }
 
-void Manager::SetDimension(uint32_t width, uint32_t height)
-{
-	m_target->SetDimension(width, height);
-}
-
 uint32_t Manager::GetFramebuffer()
 {
 	return m_target->GetFramebuffer();
@@ -129,20 +129,40 @@ void Manager::Render(const bool window)
 		m_last = now;
 	}
 		
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	if (window)
 		m_target->Render();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
-}
-
-void Manager::Update()
-{
-
 }
 
 void Manager::SetFps(const uint32_t fps)
 {
 	m_fps = fps;
+}
+
+void Manager::SetWidth(const uint32_t width)
+{
+	m_width = width;
+}
+
+void Manager::SetHeight(const uint32_t height)
+{
+	m_height = height;
+}
+
+uint32_t Manager::GetWidth()
+{
+	return m_width;
+}
+
+uint32_t Manager::GetHeight()
+{
+	return m_height;
+}
+
+void Manager::UpdateDimensions()
+{
+	//m_target->SetDimension(m_width, m_height);
 }
