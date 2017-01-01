@@ -21,7 +21,7 @@ add_library(libapt STATIC   ${SRC_FILES}
 							${PUBLIC_HEADERS})
 
 set_property(TARGET libapt PROPERTY CXX_STANDARD 14)
-
+set_property(TARGET libapt PROPERTY PREFIX "")
 target_include_directories(libapt PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_include_directories(libapt PRIVATE ${CMAKE_SOURCE_DIR}/deps/glm
 										  ${CMAKE_SOURCE_DIR}/deps/gli
