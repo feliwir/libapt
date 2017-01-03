@@ -1,6 +1,6 @@
 #include "player.hpp"
+#include "provider.hpp"
 #include <iostream>
-
 
 void Player::Error(int error, const char* description)
 {
@@ -30,13 +30,21 @@ Player::Player()
 	glfwMakeContextCurrent(m_window);
 	glfwSwapInterval(0);
 	
-	m_mngr = std::make_shared<libapt::Manager>();
+	m_mngr = std::make_shared<libapt::Manager>(std::make_shared<FileProvider>());
 }
 
 void Player::Run()
 {
+	libapt::Error result = libapt::NO_ERROR;
 	m_mngr->UpdateDimensions();
-	m_mngr->SetActive(m_input);
+	result = m_mngr->SetActive(m_input);
+
+	if (result != libapt::NO_ERROR)
+	{
+		std::cout << "Could not run apt player! Error code: " << result << std::endl;
+		return;
+	}
+
 	glfwShowWindow(m_window);
 
 	while (!glfwWindowShouldClose(m_window))

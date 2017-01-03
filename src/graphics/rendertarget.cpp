@@ -39,7 +39,8 @@ static bool quad_initialized = false;
 static GLuint quad_vao = 0;
 static GLuint quad_vbo = 0;
 
-RenderTarget::RenderTarget() : m_fbId(0), m_texId(0), m_dbId(0)
+RenderTarget::RenderTarget() : m_fbId(0), m_texId(0), m_dbId(0),
+m_width(0), m_height(0)
 {
 	if (!quad_initialized)
 	{

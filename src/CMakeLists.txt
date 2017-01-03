@@ -1,6 +1,6 @@
 find_package(OpenGL REQUIRED)
 
-set(HEADER_DIR ${CMAKE_SOURCE_DIR}/include/libapt)
+set(HEADER_DIR ${LIBAPT_ROOT}/include/libapt)
 set(PUBLIC_HEADERS  ${HEADER_DIR}/apt.hpp
 					${HEADER_DIR}/const.hpp
 					${HEADER_DIR}/dat.hpp
@@ -22,9 +22,9 @@ add_library(libapt STATIC   ${SRC_FILES}
 
 set_property(TARGET libapt PROPERTY CXX_STANDARD 14)
 set_property(TARGET libapt PROPERTY PREFIX "")
-target_include_directories(libapt PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_include_directories(libapt PRIVATE ${CMAKE_SOURCE_DIR}/deps/glm
-										  ${CMAKE_SOURCE_DIR}/deps/gli
+target_include_directories(libapt PUBLIC ${LIBAPT_ROOT}/include)
+target_include_directories(libapt PRIVATE ${LIBAPT_ROOT}/deps/glm
+										  ${LIBAPT_ROOT}/deps/gli
 										  ${OPENGL_INCLUDE_DIR})
 
 target_link_libraries(libapt PUBLIC ${OPENGL_gl_LIBRARY})

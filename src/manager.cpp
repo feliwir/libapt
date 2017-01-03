@@ -28,7 +28,8 @@ m_width(800),m_height(600)
 	m_last = std::chrono::system_clock::now();
 }
 
-Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp),  m_fps(30)
+Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp),  m_fps(30),
+m_width(800), m_height(600)
 {
 	if (flextInit() == GL_FALSE)
 	{
