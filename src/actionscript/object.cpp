@@ -17,3 +17,9 @@ void Object::SetPlaystate(const PlayState ps)
 	m_ps = ps;
 	OnPlayStateChanged();
 }
+
+void Object::SetCurrentFrame(const uint32_t frame)
+{
+	m_cf = frame;
+	OnFrameChanged();
+}

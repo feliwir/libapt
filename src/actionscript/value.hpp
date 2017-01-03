@@ -26,6 +26,7 @@ namespace libapt
 			void FromConstant(const Const::Entry& e);
 			void FromByte(const uint8_t n);
 			void FromBoolean(const bool c);
+			void FromString(const std::string& s);
 
 			float ToFloat();
 			bool ToBoolean();

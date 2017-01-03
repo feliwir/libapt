@@ -32,3 +32,9 @@ void DisplayObject::OnPlayStateChanged()
 	auto c = std::dynamic_pointer_cast<Container>(m_character);
 	c->SetPlaying((m_ps == PLAYING));
 }
+
+void DisplayObject::OnFrameChanged()
+{
+	auto c = std::dynamic_pointer_cast<Container>(m_character);
+	c->SetFrame(m_cf);
+}

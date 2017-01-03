@@ -24,9 +24,14 @@ namespace libapt
 			return m_currentFrame; 
 		}
 
-		inline void SetPlaying(bool state)
+		inline void SetPlaying(const bool state)
 		{
 			m_playing = state;
+		}
+
+		inline void SetFrame(const uint32_t frame)
+		{
+			m_currentFrame = frame;
 		}
 
 	protected:

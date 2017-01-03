@@ -104,8 +104,13 @@ void Container::Update(const Transformation& t, DisplayObject& dispO)
 		}
 
 		m_currentFrame++;
+
+		if (m_currentFrame == m_frames.size())
+		{
+			m_currentFrame = 0;
+		}
 	}
-	
+
 	m_dl.Render(t);
 }
 

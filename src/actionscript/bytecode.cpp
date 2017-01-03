@@ -7,9 +7,12 @@ bool libapt::as::RequireAlign(const Action a)
 {
 	switch (a)
 	{
+	case GOTOFRAME:
 	case DEFINEFUNCTION:
 	case DEFINEFUNCTION2:
 	case CONSTANTPOOL:
+	case EA_PUSHSTRING:
+	case EA_GETSTRINGVAR:
 		return true;
 	}
 

@@ -1,10 +1,7 @@
 #pragma once
-#include "object.hpp"
-#include "stack.hpp"
-#include "function.hpp"
-#include <libapt/apt.hpp>
+#include "context.hpp"
 #include <stdint.h>
-#include <memory>
+
 
 namespace libapt
 {
@@ -16,20 +13,24 @@ namespace libapt
 			//Execute bytecode on the current scope
 			static void Execute(Object& scope, const uint8_t* bc,std::shared_ptr<Apt> owner);
 		private:
-			static bool Opcode(Object& scope, uint8_t*& bs, Stack& s, std::vector<Value>& cp, std::shared_ptr<Apt> owner);
+			static bool Opcode(Context& c, uint8_t*& bs);
 			///--Opcodes
-			static void Constantpool(uint8_t*& bs, std::vector<Value>& cp,std::shared_ptr<Apt> owner);
-			//Functions
-			static Function& DefineFunction(uint8_t*& bs, std::shared_ptr<Apt> owner);
+			static void Constantpool(Context& c,uint8_t*& bs);
+			//Functions			
+			static Function& DefineFunction(Context& c, uint8_t*& bs);
+			static Function& DefineFunction2(Context& c, uint8_t*& bs);
 			//Setters
-			static void SetMember(Stack& s);
-			static void SetVariable(Stack& s);
+			static void SetMember(Context& c);
+			static void SetVariable(Context& c);
+			static void SetProperty(Context& c);
+			//Getters
+			static void GetVariable(Context& c);
 			//Arithmetic functions
-			static void Add(Stack& s);
+			static void Add(Context& c);
 			//Logical operators
-			static void LogicalNot(Stack& s);
+			static void LogicalNot(Context& c);
 			//Branching
-			static void BranchIfTrue(Stack& s, uint8_t*& bs);
+			static void BranchIfTrue(Context& c, uint8_t*& bs);
 		};
 	}
 }

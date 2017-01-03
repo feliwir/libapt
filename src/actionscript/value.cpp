@@ -43,6 +43,12 @@ void Value::FromBoolean(const bool c)
 	m_boolean = c;
 }
 
+void Value::FromString(const std::string& s)
+{
+	m_type = STRING;
+	m_string = s;
+}
+
 float Value::ToFloat()
 {
 	switch (m_type)

@@ -8,11 +8,17 @@ namespace libapt
     {
         struct Function
         {
-			std::string name;
+			std::string Name;
 			uint32_t nParams;
-			std::vector<std::string> params;
-			uint32_t size;
-			uint8_t* bc;
+			std::vector<std::string> Params;
+			uint32_t Size;
+			uint8_t* Code;
         };
+
+		struct Argument
+		{
+			uint32_t Register;
+			std::string Name;
+		};
     }
 }

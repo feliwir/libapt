@@ -1,5 +1,6 @@
 #pragma once
 #include "character.hpp"
+#include <libapt/texture.hpp>
 #include <vector>
 
 namespace libapt
