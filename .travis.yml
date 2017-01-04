@@ -35,4 +35,4 @@ install:
 script:
   - mkdir build
   - cd build
-  - cmake .. && make
+  - cmake -DLIBAPT_BUILD_TEST=FALSE .. && make
