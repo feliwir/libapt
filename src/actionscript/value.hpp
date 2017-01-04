@@ -30,6 +30,7 @@ namespace libapt
 
 			float ToFloat();
 			bool ToBoolean();
+			std::string ToString();
 		private:
 			Type m_type;
 			bool m_boolean;

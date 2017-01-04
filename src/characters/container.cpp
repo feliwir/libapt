@@ -20,10 +20,10 @@ void Container::HandleAction(std::shared_ptr<FrameItem> fi,DisplayObject& dispO)
 	s_engine.Execute(dispO,action->GetBytecode(),m_owner);
 }
 
-void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi)
+void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi, DisplayObject& dispO)
 {
 	auto action = std::dynamic_pointer_cast<InitAction>(fi);
-
+	s_engine.Execute(dispO, action->GetBytecode(), m_owner);
 }
 
 void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
@@ -36,6 +36,11 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 
 		if(po->HasMatrix())
 			m_dl.Move(po->GetDepth(), po->GetTranslate(), po->GetRotScale());
+
+		if (po->HasClipActions())
+		{
+			auto action = po->GetClipActions();
+		}
 	}
 	else
 	{
@@ -98,7 +103,7 @@ void Container::Update(const Transformation& t, DisplayObject& dispO)
 				HandleBackground(fi);
 				break;
 			case FrameItem::INITACTION:
-				HandleInitAction(fi);
+				HandleInitAction(fi,dispO);
 				break;
 			}
 		}

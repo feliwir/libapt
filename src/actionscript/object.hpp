@@ -9,6 +9,9 @@ namespace libapt
     namespace as
     {
         //An object in Actionscript
+		//PROPERTIES:
+		//bool	Initialized
+		//Func	InitFunc
         class Object
         {
 		public:

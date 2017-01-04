@@ -3,7 +3,7 @@
 using namespace libapt;
 using namespace libapt::as;
 
-Value::Value() : m_type(UNDEFINED), m_boolean(true),
+Value::Value() : m_type(UNDEFINED), m_boolean(false),
 m_float(0.0), m_number(0), m_string("")
 {
 }
@@ -79,4 +79,9 @@ bool Value::ToBoolean()
 		return 0.0;
 		break;
 	}
+}
+
+std::string Value::ToString()
+{
+	return m_string;
 }

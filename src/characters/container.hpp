@@ -42,7 +42,7 @@ namespace libapt
 		void HandleBackground(std::shared_ptr<FrameItem> fi);
 		void HandlePlaceObject(std::shared_ptr<FrameItem> fi);
 		void HandleRemoveObject(std::shared_ptr<FrameItem> fi);
-		void HandleInitAction(std::shared_ptr<FrameItem> fi);
+		void HandleInitAction(std::shared_ptr<FrameItem> fi, DisplayObject& dispO);
     private:
 		DisplayList m_dl;
 		uint32_t m_currentFrame;

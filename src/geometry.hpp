@@ -50,7 +50,7 @@ namespace libapt
 			Entry();
 		};
 
-		struct BufferObject
+		struct Object
 		{
 			uint32_t numVerts;
 			//uniforms
@@ -59,10 +59,10 @@ namespace libapt
 			glm::mat2 rotscale;
 			glm::vec2 translate;
 			std::shared_ptr<Texture> texture;
-			//attributes
-			uint32_t vbo;
+			//start in the vbo
+			uint32_t start;
 
-			BufferObject();
+			Object();
 		};
 	public:
 		Geometry(uint32_t width,uint32_t height);
@@ -80,12 +80,14 @@ namespace libapt
 		uint32_t CreateVbo(const std::vector<Triangle>& triangles);
 	private:
 		std::vector<Entry> m_entries;
-		std::vector<BufferObject> m_buffers;
+		uint32_t m_vbo;
+		std::vector<Object> m_objects;
 		glm::mat4 m_ortho;
 		//Shader stuff
 		static Shader s_shader;
 		static std::string s_vertSrc;
 		static std::string s_fragSrc;
 		static uint32_t s_vao;
+		 
 	};
 }

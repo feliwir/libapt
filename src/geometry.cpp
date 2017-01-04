@@ -261,13 +261,15 @@ Geometry::Entry::Entry() : thickness(0), image(0),style(UNDEFINED)
 //compile to OpenGL buffer objects
 void Geometry::Compile(std::shared_ptr<Apt> apt)
 {
+	std::vector<Triangle> tris;
+
 	for (auto& e : m_entries)
 	{
-		BufferObject bo;
-		bo.color = glm::vec4(e.color.r / 255.0, e.color.g / 255.0,
+		Object obj;
+		obj.color = glm::vec4(e.color.r / 255.0, e.color.g / 255.0,
 			e.color.b / 255.0, e.color.a / 255.0);
-		bo.rotscale = e.rotscale;
-		bo.translate = e.translate;
+		obj.rotscale = e.rotscale;
+		obj.translate = e.translate;
 
 		switch (e.style)
 		{
@@ -279,14 +281,19 @@ void Geometry::Compile(std::shared_ptr<Apt> apt)
 			}
 			break;
 		case TEXTURED_TRIS:
-			bo.textured = true;
-			bo.texture = apt->GetTexture(e.image);
+			obj.textured = true;
+			obj.texture = apt->GetTexture(e.image);
 			break;
 		}
-		bo.vbo = CreateVbo(e.triangles);
-		bo.numVerts = e.triangles.size() * 3;
-		m_buffers.push_back(bo);
+		//store offset in the vbo
+		obj.start = tris.size();
+		//add triangles of this object to the vbo
+		tris.insert(tris.end(), e.triangles.begin(), e.triangles.end());
+		obj.numVerts = e.triangles.size() * 3;
+		m_objects.push_back(obj);
 	}
+
+	m_vbo = CreateVbo(tris);
 }
 
 std::vector<Geometry::Triangle> Geometry::TriangulateLine(Line l, uint32_t thickness)
@@ -324,9 +331,10 @@ void Geometry::Draw(Transformation t)
 	glUniform2fv(s_shader.uniform("ptranslate"), 1, glm::value_ptr(t.translate));
 
 	glUniformMatrix4fv(s_shader.uniform("ortho"), 1, GL_FALSE, glm::value_ptr(m_ortho));
-	for (const auto& bo : m_buffers)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, bo.vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	
+	for (const auto& obj : m_objects)
+	{	
 		glVertexAttribPointer(
 			0,
 			2,
@@ -335,18 +343,20 @@ void Geometry::Draw(Transformation t)
 			0,
 			(void*)0
 		);
-		glUniform1i(s_shader.uniform("textured"), bo.textured);
-		if (bo.textured)
-			bo.texture->Bind();
+		glUniform1i(s_shader.uniform("textured"), obj.textured);
+		
+		if (obj.textured)
+			obj.texture->Bind();
 
-		glUniform4fv(s_shader.uniform("color"),1,glm::value_ptr(bo.color));
-		glUniformMatrix2fv(s_shader.uniform("rotscale"), 1, GL_FALSE, glm::value_ptr(bo.rotscale));
-		glUniform2fv(s_shader.uniform("translate"), 1, glm::value_ptr(bo.translate));
-		glDrawArrays(GL_TRIANGLES, 0, bo.numVerts);
+		glUniform4fv(s_shader.uniform("color"),1,glm::value_ptr(obj.color));
+		glUniformMatrix2fv(s_shader.uniform("rotscale"), 1, GL_FALSE, glm::value_ptr(obj.rotscale));
+		glUniform2fv(s_shader.uniform("translate"), 1, glm::value_ptr(obj.translate));
+		glDrawArrays(GL_TRIANGLES, obj.start, obj.numVerts);
 	}
+
 	glBindVertexArray(0);
 }
 
-Geometry::BufferObject::BufferObject() : textured(false),texture(nullptr),vbo(0)
+Geometry::Object::Object() : textured(false),texture(nullptr),start(0)
 {
 }

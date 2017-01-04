@@ -31,6 +31,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	auto& cp = c.GetConstants();
 	auto& owner = c.GetOwner();
 	uint32_t num = 0;
+	Function f;
 	std::string str;
 	Value v;
 	Action a = static_cast<Action>(read<uint8_t>(bs));
@@ -79,10 +80,12 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		Constantpool(c,bs);
 		break;
 	case DEFINEFUNCTION2:
-		DefineFunction2(c, bs);
+		f = DefineFunction2(c, bs);
 		break;
 	case DEFINEFUNCTION:
-		DefineFunction(c, bs);
+		f = DefineFunction(c, bs);
+		if (f.Name.size() > 0)
+			c.AddFunction(f.Name, f);
 		break;
 	case BRANCHIFTRUE:
 		BranchIfTrue(c, bs);
@@ -93,8 +96,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		s.Push(v);
 		break;
 	case EA_PUSHCONSTANT:
- 		num = read<uint8_t>(bs);
-		v = cp[num];
+		v = GetConstant(c, read<uint8_t>(bs));
 		s.Push(v);
 		break;
 	case EA_GETSTRINGVAR:
@@ -104,6 +106,12 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		s.Push(v);
 		break;
 	case EA_GETNAMEDMEMBER:
+		v = GetConstant(c,read<uint8_t>(bs));
+		s.Push(c.GetScope()->GetProperty(v.ToString()));
+		break;
+	case EA_CALLNAMEDFUNCTIONPOP:
+		num = read<uint8_t>(bs);
+		v = GetConstant(c, read<uint8_t>(bs));
 		break;
 	case END:
 		return true;
@@ -119,16 +127,16 @@ void Engine::SetMember(Context& c)
 {
 	auto& s = c.GetStack();
 	Value value = s.Pop();
-	Value obj = s.Pop();
-	int a = 0;
+	Value member = s.Pop();
+	c.GetScope()->SetProperty(member.ToString(), value);
 }
 
 void Engine::SetVariable(Context& c)
 {
 	auto& s = c.GetStack();
 	Value value = s.Pop();
-	Value varname = s.Pop();
-	int a = 0;
+	Value name = s.Pop();
+	c.SetVariable(name.ToString(), value);
 }
 
 void Engine::SetProperty(Context& c)
@@ -136,7 +144,17 @@ void Engine::SetProperty(Context& c)
 	auto& s = c.GetStack();
 	Value value = s.Pop();
 	Value varname = s.Pop();
+	c.GetScope()->SetProperty(varname.ToString(), value);
 	int a = 0;
+}
+
+Value Engine::GetConstant(Context & c,const uint8_t num)
+{
+	auto& cp = c.GetConstants();
+	if (cp.size() > num)
+		return cp[num];
+
+	return Value();
 }
 
 void Engine::Add(Context& c)
@@ -154,13 +172,9 @@ void Engine::LogicalNot(Context& c)
 {
 	auto& s = c.GetStack();
 	Value v = s.Pop();
-	float number = v.ToFloat();
+	bool b = v.ToBoolean();
 	Value result;
-	if (number == 0)
-		result.FromBoolean(true);
-	else
-		result.FromBoolean(false);
-
+	result.FromBoolean(!b);
 	s.Push(result);
 }
 
@@ -192,7 +206,7 @@ void Engine::Constantpool(Context& c, uint8_t*& bs)
 	}
 }
 
-Function& Engine::DefineFunction(Context& c, uint8_t*& bs)
+const Function Engine::DefineFunction(Context& c, uint8_t*& bs)
 {
 	auto owner = c.GetOwner();
 	Function f;
@@ -218,7 +232,7 @@ Function& Engine::DefineFunction(Context& c, uint8_t*& bs)
 	return f;
 }
 
-Function& Engine::DefineFunction2(Context& c, uint8_t*& bs)
+const Function Engine::DefineFunction2(Context& c, uint8_t*& bs)
 {
 	auto owner = c.GetOwner();
 	Function f;

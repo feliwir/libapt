@@ -17,14 +17,16 @@ namespace libapt
 			///--Opcodes
 			static void Constantpool(Context& c,uint8_t*& bs);
 			//Functions			
-			static Function& DefineFunction(Context& c, uint8_t*& bs);
-			static Function& DefineFunction2(Context& c, uint8_t*& bs);
+			static const Function DefineFunction(Context& c, uint8_t*& bs);
+			static const Function DefineFunction2(Context& c, uint8_t*& bs);
 			//Setters
 			static void SetMember(Context& c);
 			static void SetVariable(Context& c);
 			static void SetProperty(Context& c);
 			//Getters
 			static void GetVariable(Context& c);
+			
+			static Value GetConstant(Context& c, const uint8_t num);
 			//Arithmetic functions
 			static void Add(Context& c);
 			//Logical operators
