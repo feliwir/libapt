@@ -12,9 +12,16 @@ namespace libapt
 	class DisplayObject : public as::Object
 	{
 	public:
+		DisplayObject();
+
 		void Create(std::shared_ptr<Character> ch, const glm::vec2& translate,
 			const glm::mat2& rotscale, const std::string& name,
 			std::shared_ptr<Container> parent);
+
+		void CreateClipLayer(std::shared_ptr<Character> ch, const glm::vec2& translate,
+			const glm::mat2& rotscale, const std::string& name,
+			std::shared_ptr<Container> parent, uint32_t clipdepth);
+
 		void Render(const Transformation& t);
 
 		inline void SetTranslate(const glm::vec2& t)
@@ -37,15 +44,22 @@ namespace libapt
 			return m_character;
 		}
 
+		inline bool IsClippingLayer()
+		{
+			return m_isClipLayer;
+		}
+
 		virtual void OnPropertyChanged(const std::string& property);
 		virtual void OnPlayStateChanged();
 		virtual void OnFrameChanged();
-	private:
+	private:	
 		std::shared_ptr<Character> m_character;
 		std::shared_ptr<Container> m_parent;
 		glm::u8vec4 m_color;
 		glm::vec2 m_translate;
 		glm::mat2 m_rotscale;
 		std::string m_name;
+		bool m_isClipLayer;
+		uint32_t m_clipDepth;
 	};
 }

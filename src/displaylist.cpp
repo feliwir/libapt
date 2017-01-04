@@ -15,6 +15,19 @@ void DisplayList::Insert(uint32_t depth, std::shared_ptr<Character> ch,
 	#endif // ! NDEBUG
 }
 
+void DisplayList::AddClipLayer(uint32_t depth, uint32_t clipdepth, std::shared_ptr<Character> ch, 
+	const glm::vec2 & translate, const glm::mat2 & rotscale, const 
+	std::string & name, std::shared_ptr<Container> parent)
+{
+	DisplayObject obj;
+	obj.CreateClipLayer(ch, translate, rotscale, name, parent,clipdepth);
+	m_objects[depth] = obj;
+#ifndef  NDEBUG
+	std::cout << "Placed clipping layer at depth: " << depth << " with clipdepth: "<< clipdepth << std::endl;
+	std::cout << "Name: " << name << std::endl;
+#endif // ! NDEBUG
+}
+
 void DisplayList::Erase(uint32_t depth)
 {
 	m_objects.erase(depth);
@@ -38,6 +51,12 @@ void DisplayList::Render(const Transformation & t)
 {
 	for (auto& pair : m_objects)
 	{
-		pair.second.Render(t);
+		auto& dispO = pair.second;
+		if(!dispO.IsClippingLayer())
+			pair.second.Render(t);
+		else
+		{
+
+		}
 	}
 }

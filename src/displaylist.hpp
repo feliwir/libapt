@@ -13,6 +13,10 @@ namespace libapt
 			const glm::vec2& translate,	const glm::mat2& rotscale, 
 			const std::string& name, std::shared_ptr<Container> parent);
 
+		void AddClipLayer(uint32_t depth, uint32_t clipdepth, std::shared_ptr<Character> ch,
+			const glm::vec2& translate, const glm::mat2& rotscale,
+			const std::string& name, std::shared_ptr<Container> parent);
+
 		void Erase(uint32_t depth);
 
 		void Move(uint32_t depth, const glm::vec2& translate,

@@ -286,7 +286,7 @@ void Geometry::Compile(std::shared_ptr<Apt> apt)
 			break;
 		}
 		//store offset in the vbo
-		obj.start = tris.size();
+		obj.start = tris.size() *3;
 		//add triangles of this object to the vbo
 		tris.insert(tris.end(), e.triangles.begin(), e.triangles.end());
 		obj.numVerts = e.triangles.size() * 3;

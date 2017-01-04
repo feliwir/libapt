@@ -70,51 +70,23 @@ namespace libapt
 		PlaceObject();
 		virtual void Parse(uint8_t *offset, const uint8_t *base);
 
-		inline int32_t GetDepth() { return m_depth; }
-		inline uint32_t GetCharacter() { return m_character; }
-		inline glm::f32mat2 GetRotScale() { return m_rotscale; }
-		inline glm::f32vec2 GetTranslate() { return m_translate; }
-		inline const std::string& GetName() { return m_name; }
+		inline int32_t GetDepth()					{ return m_depth; }
+		inline uint32_t GetCharacter()				{ return m_character; }
+		inline glm::f32mat2 GetRotScale()			{ return m_rotscale; }
+		inline glm::f32vec2 GetTranslate()			{ return m_translate; }
+		inline const std::string& GetName()			{ return m_name; }
+		inline const ClipActions& GetClipActions()	{ return m_clipactions;	}
+		inline uint32_t GetClipDepth()				{ return m_clipdepth; }
+		inline bool HasMove()			{ return m_flags.PlaceFlagMove; }
+		inline bool HasCharacter()		{ return m_flags.PlaceFlagHasCharacter;	}
+		inline bool HasMatrix()			{ return m_flags.PlaceFlagHasMatrix; }
+		inline bool HasColortransform()	{ return m_flags.PlaceFlagHasColorTransform; }
+		inline bool HasRatio()			{ return m_flags.PlaceFlagHasRatio;	}
+		inline bool HasName()			{ return m_flags.PlaceFlagHasName; }
+		inline bool HasClipActions()	{ return m_flags.PlaceFlagHasClipActions; }
+		inline bool HasClipDepth()		{ return m_flags.PlaceFlagHasClipDepth;	}
 
-		inline bool HasMove()
-		{
-			return m_flags.PlaceFlagMove;
-		}
-
-		inline bool HasCharacter()
-		{
-			return m_flags.PlaceFlagHasCharacter;
-		}
-
-		inline bool HasMatrix()
-		{
-			return m_flags.PlaceFlagHasMatrix;
-		}
-
-		inline bool HasColortransform()
-		{
-			return m_flags.PlaceFlagHasColorTransform;
-		}
-
-		inline bool HasRatio()
-		{
-			return m_flags.PlaceFlagHasRatio;
-		}
-
-		inline bool HasName()
-		{
-			return m_flags.PlaceFlagHasName;
-		}
-
-		inline bool HasClipActions()
-		{
-			return m_flags.PlaceFlagHasClipActions;
-		}
-
-		const ClipActions& GetClipActions()
-		{
-			return m_clipactions;
-		}
+		
 	private:
 		void ParseClipActions(uint8_t*& offset, const uint8_t *base);
 	private:

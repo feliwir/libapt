@@ -29,21 +29,46 @@ void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi, DisplayObject& 
 void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 {
 	auto po = std::dynamic_pointer_cast<PlaceObject>(fi);
-	if (po->HasMove())
+	/*if (po->HasClipDepth())
+		return;*/
+
+	//Move character
+	if (po->HasMove() && !po->HasCharacter())
 	{
 		if (po->HasColortransform())
 			int a = 0;
 
 		if(po->HasMatrix())
 			m_dl.Move(po->GetDepth(), po->GetTranslate(), po->GetRotScale());
-
-		if (po->HasClipActions())
-		{
-			auto action = po->GetClipActions();
-		}
-	}
-	else
+	} 
+	//New character
+	else if(!po->HasMove() && po->HasCharacter())
 	{
+		auto ch = m_owner->GetCharacter(po->GetCharacter());
+		if (ch != nullptr)
+		{
+			if (po->HasClipDepth())
+			{
+				m_dl.AddClipLayer(po->GetDepth(),po->GetClipDepth(),ch,po->GetTranslate(),
+					po->GetRotScale(), po->GetName(), 
+					std::dynamic_pointer_cast<Container>(shared_from_this()));
+			}
+			else
+			{
+				m_dl.Insert(po->GetDepth(), ch, po->GetTranslate(),
+					po->GetRotScale(), po->GetName(),
+					std::dynamic_pointer_cast<Container>(shared_from_this()));
+			}
+
+			if (po->HasClipActions())
+			{
+				auto action = po->GetClipActions();
+			}
+		}	
+	}
+	else if (po->HasMove() && po->HasCharacter())
+	{
+		m_dl.Erase(po->GetDepth());
 		auto ch = m_owner->GetCharacter(po->GetCharacter());
 		if (ch != nullptr)
 		{
@@ -55,12 +80,8 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 			{
 				auto action = po->GetClipActions();
 			}
-			if (po->HasColortransform())
-			{
-				int a = 0;
-			}
-		}	
-	}	
+		}
+	}
 }
 
 void Container::HandleRemoveObject(std::shared_ptr<FrameItem> fi)
