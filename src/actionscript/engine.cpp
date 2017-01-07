@@ -24,7 +24,6 @@ void Engine::Execute(Object& scope, const uint8_t* bc, std::shared_ptr<Apt> owne
 	}
 }
 
-
 bool Engine::Opcode(Context& c, uint8_t*& bs)
 {
 	auto& s = c.GetStack();
@@ -57,6 +56,9 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	case SETPROPERTY:
 		SetProperty(c);
 		break;
+	case NEWEQUALS:
+		NewEquals(c);
+		break;
 	case SETMEMBER:
 		SetMember(c);
 		break;
@@ -70,6 +72,9 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		break;
 	case EA_PUSHFALSE:
 		v.FromBoolean(false);
+		s.Push(v);
+		break;
+	case EA_PUSHUNDEFINED:
 		s.Push(v);
 		break;
 	case GOTOFRAME:
@@ -117,7 +122,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		return true;
 		break;
 	default:
-		//std::cout << "Unimplemented opcode: " << static_cast<int>(a) << std::endl;
+		std::cout << "Unimplemented opcode: " << static_cast<int>(a) << std::endl;
 		break;
 	}
 	return false;
@@ -148,6 +153,10 @@ void Engine::SetProperty(Context& c)
 	int a = 0;
 }
 
+void Engine::GetVariable(Context & c)
+{
+}
+
 Value Engine::GetConstant(Context & c,const uint8_t num)
 {
 	auto& cp = c.GetConstants();
@@ -175,6 +184,16 @@ void Engine::LogicalNot(Context& c)
 	bool b = v.ToBoolean();
 	Value result;
 	result.FromBoolean(!b);
+	s.Push(result);
+}
+
+void Engine::NewEquals(Context& c)
+{
+	auto& s = c.GetStack();
+	Value a = s.Pop();
+	Value b = s.Pop();
+	Value result;
+	result.FromBoolean(a == b);
 	s.Push(result);
 }
 

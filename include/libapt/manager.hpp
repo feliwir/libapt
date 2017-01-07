@@ -35,6 +35,11 @@ namespace libapt
 		std::shared_ptr<Character> ImportCharacter(const std::string& movie, const std::string& name);	
 
 		void UpdateDimensions();
+
+		inline const bool HasResized()
+		{
+			return m_dimChanged;
+		}
 	private:
 		std::map<std::string, std::shared_ptr<Apt>> m_apts;
 		std::map<uint32_t, Texture> m_textures;
@@ -46,5 +51,6 @@ namespace libapt
 		uint32_t m_fps;
 		uint32_t m_width;
 		uint32_t m_height;
+		bool m_dimChanged;
 	};
 }

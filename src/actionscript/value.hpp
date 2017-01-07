@@ -31,6 +31,16 @@ namespace libapt
 			float ToFloat();
 			bool ToBoolean();
 			std::string ToString();
+
+			inline const Type GetType() const
+			{
+				return m_type;
+			}
+
+			bool operator==(const Value& a)
+			{
+				return (m_type == a.GetType());
+			}
 		private:
 			Type m_type;
 			bool m_boolean;

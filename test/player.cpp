@@ -7,6 +7,13 @@ void Player::Error(int error, const char* description)
 	std::cerr << "Error: " << description << std::endl;
 }
 
+void Player::Resize(GLFWwindow* win,int width, int height)
+{
+	Player* instance = reinterpret_cast<Player*>(glfwGetWindowUserPointer(win));
+	instance->SetWidth(width,false);
+	instance->SetHeight(height,false);
+}
+
 Player::Player()
 {
 	glfwSetErrorCallback(Error);
@@ -21,12 +28,14 @@ Player::Player()
 	glfwWindowHint(GLFW_CONTEXT_NO_ERROR, GL_TRUE);
 	#else
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-	#endif
+	#endif	
 
 	m_window = glfwCreateWindow(800, 600, "Apt player", NULL, NULL);
 	if (m_window == NULL)
 		exit(EXIT_FAILURE);
 
+	glfwSetWindowSizeCallback(m_window, Resize);
+	glfwSetWindowUserPointer(m_window,this);
 	glfwMakeContextCurrent(m_window);
 	glfwSwapInterval(0);
 	
@@ -76,14 +85,18 @@ void Player::SetFps(const unsigned int fps)
 	m_mngr->SetFps(fps);
 }
 
-void Player::SetWidth(const unsigned int width)
+void Player::SetWidth(const unsigned int width,bool set)
 {
-	glfwSetWindowSize(m_window, width, m_mngr->GetHeight());
+	if (set)
+		glfwSetWindowSize(m_window, width, m_mngr->GetHeight());
+
 	m_mngr->SetWidth(width);
 }
 
-void Player::SetHeight(const unsigned int height)
+void Player::SetHeight(const unsigned int height, bool set)
 {
-	glfwSetWindowSize(m_window, m_mngr->GetWidth(), height);
+	if(set)
+		glfwSetWindowSize(m_window, m_mngr->GetWidth(), height);
+
 	m_mngr->SetHeight(height);
 }

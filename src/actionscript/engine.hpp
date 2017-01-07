@@ -24,13 +24,13 @@ namespace libapt
 			static void SetVariable(Context& c);
 			static void SetProperty(Context& c);
 			//Getters
-			static void GetVariable(Context& c);
-			
+			static void GetVariable(Context& c);		
 			static Value GetConstant(Context& c, const uint8_t num);
 			//Arithmetic functions
 			static void Add(Context& c);
 			//Logical operators
 			static void LogicalNot(Context& c);
+			static void NewEquals(Context& c);
 			//Branching
 			static void BranchIfTrue(Context& c, uint8_t*& bs);
 		};

@@ -217,3 +217,8 @@ std::shared_ptr<Character> Apt::GetCharacter(uint32_t id)
 	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
 	return m->GetCharacters()[id];
 }
+
+const bool Apt::HasResized()
+{
+	return m_manager->HasResized();
+}

@@ -66,6 +66,30 @@ void ClipMask::UnbindFb()
 	glBindFramebuffer(GL_FRAMEBUFFER, m_prevFb);
 }
 
+void ClipMask::ResizeFb(uint32_t width,uint32_t height)
+{
+	if (width == m_width && height == m_height)
+		return;
+
+	m_width = width;
+	m_height = height;
+	glBindTexture(GL_TEXTURE_2D, m_texId);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_fbId);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindRenderbuffer(GL_RENDERBUFFER, m_dbId);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_dbId);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_texId, 0);
+
+	// Set the list of draw buffers.
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		std::cout << "Can't resize clipmask!" << std::endl;
+	}
+}
+
 void ClipMask::BindMask()
 {
 	glBindTexture(GL_TEXTURE_2D, m_texId);

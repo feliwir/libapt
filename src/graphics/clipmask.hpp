@@ -13,6 +13,8 @@ namespace libapt
 		void BindFb();
 		void UnbindFb();
 
+		void ResizeFb(uint32_t width, uint32_t height);
+
 		void BindMask();
 	private:
 		uint32_t	m_fbId;

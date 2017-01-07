@@ -43,6 +43,11 @@ void DisplayObject::Render(const Transformation& t)
 {
 	if (IsClippingLayer())
 	{
+		if (m_character->GetOwner()->HasResized())
+		{
+			m_mask->ResizeFb(m_character->GetOwner()->GetWidth(),
+				m_character->GetOwner()->GetHeight());
+		}
 		m_mask->BindFb();
 		m_mask->Clear();
 	}

@@ -8,7 +8,7 @@ using namespace libapt;
 using namespace std::chrono_literals;
 
 Manager::Manager() : m_fileprovider(nullptr), m_fps(30),
-m_width(800),m_height(600)
+m_width(800),m_height(600), m_dimChanged(false)
 {
 	if (flextInit() == GL_FALSE)
 	{
@@ -118,6 +118,12 @@ uint32_t Manager::GetFramebuffer()
 
 void Manager::Render(const bool window)
 {
+	if (m_dimChanged)
+	{
+		glViewport(0, 0, m_width, m_height);
+		UpdateDimensions();
+	}
+		
 	glDisable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
@@ -137,6 +143,9 @@ void Manager::Render(const bool window)
 
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
+
+	if(m_dimChanged)
+		m_dimChanged = false;
 }
 
 void Manager::SetFps(const uint32_t fps)
@@ -146,11 +155,13 @@ void Manager::SetFps(const uint32_t fps)
 
 void Manager::SetWidth(const uint32_t width)
 {
+	m_dimChanged = true;
 	m_width = width;
 }
 
 void Manager::SetHeight(const uint32_t height)
 {
+	m_dimChanged = true;
 	m_height = height;
 }
 
@@ -166,5 +177,5 @@ uint32_t Manager::GetHeight()
 
 void Manager::UpdateDimensions()
 {
-	//m_target->SetDimension(m_width, m_height);
+	m_target->SetDimension(m_width, m_height);
 }

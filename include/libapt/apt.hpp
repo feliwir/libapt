@@ -41,6 +41,8 @@ namespace libapt
 		{ 
 			return m_data; 
 		}
+
+		const bool HasResized();
 	private:
 		Error LoadConst(const std::string name, std::shared_ptr<IFileProvider> fp);
 		Error LoadDat(const std::string name, std::shared_ptr<IFileProvider> fp);

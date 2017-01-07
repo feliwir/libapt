@@ -80,15 +80,17 @@ void DisplayList::Render(const Transformation & t)
 		auto& dispO = pair.second;
 		dispO.Render(ct);
 
+		if (pair.first > clipdepth && mask!=nullptr)
+		{
+			ct.mask = nullptr;
+			clipdepth = 0;
+
+		}
 		if (dispO.IsClippingLayer())
 		{
 			ct.mask = dispO.GetClippingLayer();
 			clipdepth = dispO.GetClipDepth();
 		}
-		else if(pair.first > clipdepth)
-		{
-			ct.mask = nullptr;
-			clipdepth = 0;
-		}
+		
 	}
 }
