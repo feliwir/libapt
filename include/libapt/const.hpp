@@ -21,6 +21,7 @@ namespace libapt
 			Type type;
 			std::string stringVal;
 			uint32_t numVal;
+			Entry();
 		};
 	public:
 		Const();
@@ -28,6 +29,9 @@ namespace libapt
 
 		inline Entry GetItem(const uint32_t index)
 		{
+			if (index > m_items.size())
+				return Entry();
+
 			return m_items[index];
 		}
 

@@ -77,6 +77,7 @@ namespace libapt
 		inline const std::string& GetName()			{ return m_name; }
 		inline const ClipActions& GetClipActions()	{ return m_clipactions;	}
 		inline uint32_t GetClipDepth()				{ return m_clipdepth; }
+		inline glm::u8vec4 GetColor()				{ return m_color; }
 		inline bool HasMove()			{ return m_flags.PlaceFlagMove; }
 		inline bool HasCharacter()		{ return m_flags.PlaceFlagHasCharacter;	}
 		inline bool HasMatrix()			{ return m_flags.PlaceFlagHasMatrix; }

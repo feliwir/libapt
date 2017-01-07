@@ -1,5 +1,8 @@
 #pragma once
+#include "../graphics/clipmask.hpp"
+#include <memory>
 #include <glm/glm.hpp>
+
 
 namespace libapt
 {
@@ -7,7 +10,8 @@ namespace libapt
 		{
 			glm::vec2 translate;
 			glm::mat2 rotscale;
-
+			glm::vec4 color;
+			std::shared_ptr<ClipMask> mask;
 			Transformation();
 		};
 }

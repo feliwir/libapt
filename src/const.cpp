@@ -3,6 +3,10 @@
 #include <iostream>
 using namespace libapt;
 
+Const::Entry::Entry() : type(UNDEF), numVal(0)
+{
+}
+
 Const::Const() : m_aptOffset(0), m_itemCount(0)
 {
 }

@@ -2,7 +2,7 @@
 #include "characters/container.hpp"
 using namespace libapt;
 
-DisplayObject::DisplayObject() : m_character(0), m_clipDepth(0),
+DisplayObject::DisplayObject() : m_character(nullptr), m_clipDepth(0), m_color(1.0),
 m_isClipLayer(false)
 {
 }
@@ -31,14 +31,31 @@ void DisplayObject::CreateClipLayer(std::shared_ptr<Character> ch, const glm::ve
 	m_ps = PLAYING;
 	m_isClipLayer = true;
 	m_clipDepth = clipdepth;
+	m_mask = std::make_shared<ClipMask>(ch->GetOwner()->GetWidth(), ch->GetOwner()->GetHeight());
+}
+
+bool IsProblem(const std::string& bla)
+{
+	return (bla == "NavFrameFive");
 }
 
 void DisplayObject::Render(const Transformation& t)
 {
+	if (IsClippingLayer())
+	{
+		m_mask->BindFb();
+		m_mask->Clear();
+	}
+
 	Transformation cTransform;
 	cTransform.rotscale = t.rotscale*m_rotscale;
 	cTransform.translate = t.translate + m_translate;
+	cTransform.color = t.color * m_color;
+	cTransform.mask = t.mask;
 	m_character->Update(cTransform,*this);
+
+	if (IsClippingLayer())
+		m_mask->UnbindFb();
 }
 
 

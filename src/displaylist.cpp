@@ -30,6 +30,12 @@ void DisplayList::AddClipLayer(uint32_t depth, uint32_t clipdepth, std::shared_p
 
 void DisplayList::Erase(uint32_t depth)
 {
+	if (m_objects.find(depth) == m_objects.end())
+	{
+		std::cout << "Error: cannot remove at depth: " << depth << std::endl;
+		return;
+	}
+
 	m_objects.erase(depth);
 	#ifndef  NDEBUG
 	std::cout << "Removed object at depth: " << depth << std::endl;
@@ -47,16 +53,42 @@ void DisplayList::Move(uint32_t depth, const glm::vec2 & translate, const glm::m
 	#endif // !NDEBUG
 }
 
+void DisplayList::Colortransform(uint32_t depth, glm::u8vec4 color)
+{
+	if (m_objects.find(depth) == m_objects.end())
+	{
+		std::cout << "Error: cannot colortransform at depth: " << depth << std::endl;
+		return;
+	}	
+
+	auto& obj = m_objects[depth];
+	obj.SetColor(color);
+#ifndef NDEBUG
+	std::cout << "Colortransform at depth: " << depth <<
+		" Color: (" << color.r << "-" << color.g << "-" << color.b << "-" << color.a<< ")" << std::endl;
+#endif // !NDEBUG
+}
+
 void DisplayList::Render(const Transformation & t)
 {
+	std::shared_ptr<ClipMask> mask;
+	uint32_t clipdepth = 0;
+	Transformation ct = t;
+
 	for (auto& pair : m_objects)
 	{
 		auto& dispO = pair.second;
-		if(!dispO.IsClippingLayer())
-			pair.second.Render(t);
-		else
-		{
+		dispO.Render(ct);
 
+		if (dispO.IsClippingLayer())
+		{
+			ct.mask = dispO.GetClippingLayer();
+			clipdepth = dispO.GetClipDepth();
+		}
+		else if(pair.first > clipdepth)
+		{
+			ct.mask = nullptr;
+			clipdepth = 0;
 		}
 	}
 }

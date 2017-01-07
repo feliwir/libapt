@@ -29,17 +29,18 @@ void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi, DisplayObject& 
 void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 {
 	auto po = std::dynamic_pointer_cast<PlaceObject>(fi);
-	/*if (po->HasClipDepth())
-		return;*/
+
+	if (po->GetDepth() == 6)
+	{
+		int a = 0;
+	}
 
 	//Move character
 	if (po->HasMove() && !po->HasCharacter())
-	{
-		if (po->HasColortransform())
-			int a = 0;
-
+	{	
 		if(po->HasMatrix())
 			m_dl.Move(po->GetDepth(), po->GetTranslate(), po->GetRotScale());
+
 	} 
 	//New character
 	else if(!po->HasMove() && po->HasCharacter())
@@ -47,6 +48,7 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 		auto ch = m_owner->GetCharacter(po->GetCharacter());
 		if (ch != nullptr)
 		{
+
 			if (po->HasClipDepth())
 			{
 				m_dl.AddClipLayer(po->GetDepth(),po->GetClipDepth(),ch,po->GetTranslate(),
@@ -64,8 +66,13 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 			{
 				auto action = po->GetClipActions();
 			}
-		}	
+		}
+		else
+		{
+			std::cout << "Missing character" << std::endl;
+		}
 	}
+	//Erase and place new
 	else if (po->HasMove() && po->HasCharacter())
 	{
 		m_dl.Erase(po->GetDepth());
@@ -82,6 +89,15 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 			}
 		}
 	}
+	else
+	{
+		int a = 0;
+	}
+	if (po->HasColortransform())
+	{
+		m_dl.Colortransform(po->GetDepth(), po->GetColor());
+	}
+
 }
 
 void Container::HandleRemoveObject(std::shared_ptr<FrameItem> fi)

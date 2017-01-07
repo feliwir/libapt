@@ -117,7 +117,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		return true;
 		break;
 	default:
-		std::cout << "Unimplemented opcode: " << static_cast<int>(a) << std::endl;
+		//std::cout << "Unimplemented opcode: " << static_cast<int>(a) << std::endl;
 		break;
 	}
 	return false;

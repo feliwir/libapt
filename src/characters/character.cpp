@@ -6,6 +6,7 @@
 #include "sprite.hpp"
 #include "edittext.hpp"
 #include "font.hpp"
+#include "button.hpp"
 #include "../util.hpp"
 #include "../displayobject.hpp"
 #include <iostream>
@@ -39,6 +40,7 @@ std::shared_ptr<Character> Character::Create(uint8_t*& iter,
 		ch = std::make_shared<Font>();
 		break;
 	case Character::BUTTON:
+		ch = std::make_shared<Button>();
 		break;
 	case Character::SPRITE:
 		ch = std::make_shared<Sprite>();
@@ -74,6 +76,9 @@ std::shared_ptr<Character> Character::MakeInstance()
 		break;
 	case Character::EDITTEXT:
 		result = Copy<Edittext>();
+		break;
+	case Character::BUTTON:
+		result = Copy<Button>();
 		break;
 	case Character::SPRITE:
 		result = Copy<Sprite>();

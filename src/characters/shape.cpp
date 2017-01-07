@@ -1,4 +1,5 @@
 #include "shape.hpp"
+#include "../displayobject.hpp"
 #include "../util.hpp"
 using namespace libapt;
 

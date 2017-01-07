@@ -11,6 +11,7 @@ namespace libapt
 {
 	class Apt;
 	class Texture;
+	class ClipMask;
 
 	class Geometry
 	{

@@ -22,6 +22,8 @@ namespace libapt
 		void Move(uint32_t depth, const glm::vec2& translate,
 			const glm::mat2& rotscale);
 
+		void Colortransform(uint32_t depth,glm::u8vec4 color);
+
 		void Render(const Transformation& t);
 
 		DisplayObject& GetObject(uint32_t depth)

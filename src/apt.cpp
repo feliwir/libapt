@@ -41,6 +41,7 @@ Error Apt::LoadDat(const std::string name, std::shared_ptr<IFileProvider> fp)
 Error Apt::Load(const uint8_t *buffer, unsigned int size, std::shared_ptr<Manager> mngr, const std::string &name)
 {
 	m_data = buffer;
+	m_manager = mngr;
 
 	//get the const file
 	Error err = LoadConst(name,mngr->GetFileprovider());
@@ -198,14 +199,12 @@ std::shared_ptr<Texture> Apt::GetTexture(int id)
 
 uint32_t Apt::GetWidth()
 {
-	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
-	return m->GetWidth();
+	return m_manager->GetWidth();
 }
 
 uint32_t Apt::GetHeight()
 {
-	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
-	return m->GetHeight();
+	return m_manager->GetHeight();
 }
 
 Const::Entry Apt::GetConstant(uint32_t index)

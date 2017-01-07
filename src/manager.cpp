@@ -37,8 +37,10 @@ m_width(800), m_height(600)
 	}
 	if (FLEXT_KHR_debug)
 	{
+		#ifndef NDEBUG
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(debugCallback, nullptr);
+		#endif
 	}
 
 	m_target = std::make_unique<RenderTarget>();
@@ -124,7 +126,6 @@ void Manager::Render(const bool window)
 	auto now = std::chrono::system_clock::now();
 	if ((now - m_last) > (1000ms/m_fps))
 	{
-		std::cout << "Rendering" << std::endl;
 		glClear(GL_COLOR_BUFFER_BIT);
 		m_active->Render();
 		m_last = now;

@@ -1,6 +1,7 @@
 #include "geometry.hpp"
 #include <libapt/apt.hpp>
 #include "graphics/flextGL.h"
+#include "graphics/clipmask.hpp"
 #include "util.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -32,17 +33,24 @@ std::string Geometry::s_fragSrc =
 "out vec4 fragColor;\n"
 "uniform vec4 color;\n"
 "uniform sampler2D tex;\n"
+"uniform sampler2D mask;\n"
 "uniform bool textured;\n"
+"uniform bool masked;\n"
 "void main()\n"
 "{\n"
-"	ivec2 ts = textureSize(tex,0);\n"
-"	if(textured) {\n"
-"	vec2 tc = vec2(fragVert.x/ts.x,-fragVert.y/ts.y);\n"
-"	fragColor = texture(tex,tc);\n"
-"	}\n"
-"	else{\n"
+"	ivec2 ts = textureSize(tex,0);\n"						//texture size
+"	ivec2 ms = textureSize(mask,0);\n"						//mask size
 "	fragColor = color;\n"
+"	if(textured) {\n"										//if shape is textured
+"	vec2 tc = vec2(fragVert.x/ts.x,-fragVert.y/ts.y);\n"	//calculate texture coordinates
+"	fragColor *= texture(tex,tc);\n"						//get texture color
 "	}\n"
+"   if(masked) {\n"
+"   vec4 fc = gl_FragCoord;\n"								//masked shape
+"	vec2 tc = vec2(fc.x/ms.x,fc.y/ms.y);\n"					//calculate texture coords
+"   vec4 maskColor = texture(mask,tc);\n"
+"   fragColor.a *= maskColor.a;\n"							//mask alpha channel
+"   }\n"
 "}";
 
 Geometry::Geometry(uint32_t width, uint32_t height)
@@ -56,7 +64,11 @@ Geometry::Geometry(uint32_t width, uint32_t height)
 		s_shader.addUniform("protscale");
 		s_shader.addUniform("ortho");
 		s_shader.addUniform("color");
+		s_shader.addUniform("tex");
 		s_shader.addUniform("textured");
+		s_shader.addUniform("mask");
+		s_shader.addUniform("masked");
+
 		glGenVertexArrays(1, &s_vao);
 		glBindVertexArray(s_vao);
 		glEnableVertexAttribArray(0);
@@ -329,10 +341,22 @@ void Geometry::Draw(Transformation t)
 	glBindVertexArray(s_vao);
 	glUniformMatrix2fv(s_shader.uniform("protscale"), 1, GL_FALSE, glm::value_ptr(t.rotscale));
 	glUniform2fv(s_shader.uniform("ptranslate"), 1, glm::value_ptr(t.translate));
-
 	glUniformMatrix4fv(s_shader.uniform("ortho"), 1, GL_FALSE, glm::value_ptr(m_ortho));
+	glUniform1i(s_shader.uniform("tex"), 0);
+
+	if (t.mask != nullptr)
+	{
+		glUniform1i(s_shader.uniform("mask"), 1);
+		glUniform1i(s_shader.uniform("masked"), true);
+		glActiveTexture(GL_TEXTURE1);
+		t.mask->BindMask();
+	}
+	else
+	{
+		glUniform1i(s_shader.uniform("masked"), false);
+	}
+
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	
 	for (const auto& obj : m_objects)
 	{	
 		glVertexAttribPointer(
@@ -341,14 +365,19 @@ void Geometry::Draw(Transformation t)
 			GL_FLOAT,
 			GL_FALSE,
 			0,
-			(void*)0
+			nullptr
 		);
-		glUniform1i(s_shader.uniform("textured"), obj.textured);
-		
-		if (obj.textured)
-			obj.texture->Bind();
 
-		glUniform4fv(s_shader.uniform("color"),1,glm::value_ptr(obj.color));
+		glUniform1i(s_shader.uniform("textured"), obj.textured);
+			
+		if (obj.textured)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			obj.texture->Bind();
+		}
+				
+		glm::vec4 finalColor = obj.color * t.color;
+		glUniform4fv(s_shader.uniform("color"),1,glm::value_ptr(finalColor));
 		glUniformMatrix2fv(s_shader.uniform("rotscale"), 1, GL_FALSE, glm::value_ptr(obj.rotscale));
 		glUniform2fv(s_shader.uniform("translate"), 1, glm::value_ptr(obj.translate));
 		glDrawArrays(GL_TRIANGLES, obj.start, obj.numVerts);
