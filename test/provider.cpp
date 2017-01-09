@@ -4,7 +4,8 @@
 #include <filesystem>
 namespace fs = std::tr2::sys;
 #else
-namespace fs = boost::fs;
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
 #endif
 FileProvider::FileProvider()
 {

@@ -122,6 +122,8 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 			case FrameItem::ACTION:
 				HandleAction(fi, instance);
 				break;
+			case FrameItem::FRAMELABEL:
+				break;
 			case FrameItem::PLACEOBJECT:
 				HandlePlaceObject(fi,instance);
 				break;

@@ -86,6 +86,8 @@ std::shared_ptr<Character> Character::MakeInstance()
 	case Character::MOVIE:
 		result = Copy<Movie>();
 		break;
+	default:
+		std::cout << "Not instanceable character of type: "<<ch->GetType() << std::endl;
 	}
 
 	return result;
