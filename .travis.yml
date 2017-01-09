@@ -25,6 +25,8 @@ addons:
         - cmake-data
         - libpthread-stubs0-dev
         - libgl1-mesa-dev
+        - libboost-system-dev
+        - libboost-filesystem-dev
         - xorg-dev
 # Install
 install:
@@ -35,4 +37,4 @@ install:
 script:
   - mkdir build
   - cd build
-  - cmake -DLIBAPT_BUILD_TEST=FALSE .. && make
+  - cmake .. && make

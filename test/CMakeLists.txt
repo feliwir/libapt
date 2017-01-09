@@ -4,6 +4,13 @@ add_executable(apt_player   main.cpp
                             provider.cpp
                             provider.hpp)
 set_property(TARGET apt_player PROPERTY CXX_STANDARD 14)
+
+if (NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    find_package(Boost COMPONENTS system filesystem REQUIRED)
+    target_link_libraries(apt_player ${Boost_LIBRARIES})
+    target_include_directories(apt_player PRIVATE ${Boost_INCLUDE_DIRS})
+endif()
+
 target_link_libraries(apt_player libapt libbig glfw)
 target_include_directories(apt_player PRIVATE glfw 
                         ${LIBAPT_ROOT}/deps/cxxopts/src)
