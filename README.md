@@ -4,7 +4,7 @@ The .apt file format is heavily based on SWF files (adobe flash). There are a co
 EA Games did expand this with their own custom Bytecodes, see the bytecode.hpp for reference
 
 # Build status
-[![Build Status](https://travis-ci.org/feliwir/libapt.svg?branch=master)](https://travis-ci.org/feliwir/libapt)
+[![Build Status](https://travis-ci.org/feliwir/libapt.svg?branch=master)](https://travis-ci.org/feliwir/libapt) [![Build status](https://ci.appveyor.com/api/projects/status/e4rk2pd7dljs1777?svg=true)](https://ci.appveyor.com/project/feliwir/libapt)
 
 # Format specificaiton
 Most of the information i got about this format was found in the modding tools "apt2xml" and
