@@ -6,8 +6,8 @@ Context::Context() : m_scope(nullptr)
 {
 }
 
-void Context::Create(Object& scope, std::shared_ptr<Apt> owner)
+void Context::Create(std::shared_ptr<Object> scope, std::shared_ptr<Apt> owner)
 {
-	m_scope = &scope;
+	m_scope = scope;
 	m_owner = owner;
 }

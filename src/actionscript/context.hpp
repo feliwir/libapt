@@ -13,16 +13,16 @@ namespace libapt
         {
             public:
 				Context();
-				void Create(Object& scope, std::shared_ptr<Apt> owner);
+				void Create(std::shared_ptr<Object> scope, std::shared_ptr<Apt> owner);
 
 				Value GetVariable(const std::string& name)
 				{
-					return m_variables[name];
+					return m_scope->GetVariable(name);
 				}
 
 				void SetVariable(const std::string& name, Value v)
 				{
-					m_variables[name] = v;
+					m_scope->SetVariable(name, v);
 				}
 
 				inline Stack& GetStack()
@@ -40,7 +40,7 @@ namespace libapt
 					return m_owner;
 				}
 
-				inline Object* GetScope()
+				inline std::shared_ptr<Object> GetScope()
 				{
 					return m_scope;
 				}
@@ -59,9 +59,8 @@ namespace libapt
 				std::shared_ptr<Apt> m_owner;
 				Stack m_stack;
 				std::vector<Value> m_constants;
-				std::map<std::string, Value> m_variables;
 				std::map<std::string, Function> m_functions;
-				Object* m_scope;
+				std::shared_ptr<Object> m_scope;
         };
     }
 }

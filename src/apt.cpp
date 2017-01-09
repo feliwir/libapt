@@ -156,6 +156,10 @@ Error Apt::Load(const uint8_t *buffer, unsigned int size, std::shared_ptr<Manage
 	{
 		g->Compile(shared_from_this());
 	}
+
+	//set root element
+	m_namedObjects["_root"] = m_movieclip;
+
 	return NO_ERROR;
 }
 
@@ -178,7 +182,6 @@ void Apt::Render()
 {
 	m_movieclip->Render(Transformation());
 }
-
 
 std::vector<std::shared_ptr<Character>> Apt::GetCharacters()
 {

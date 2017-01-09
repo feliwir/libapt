@@ -11,11 +11,11 @@ namespace libapt
 	public:
 		void Insert(uint32_t depth, std::shared_ptr<Character> ch, 
 			const glm::vec2& translate,	const glm::mat2& rotscale, 
-			const std::string& name, std::shared_ptr<Container> parent);
+			const std::string& name, std::shared_ptr<DisplayObject> parent);
 
 		void AddClipLayer(uint32_t depth, uint32_t clipdepth, std::shared_ptr<Character> ch,
 			const glm::vec2& translate, const glm::mat2& rotscale,
-			const std::string& name, std::shared_ptr<Container> parent);
+			const std::string& name, std::shared_ptr<DisplayObject> parent);
 
 		void Erase(uint32_t depth);
 
@@ -26,11 +26,11 @@ namespace libapt
 
 		void Render(const Transformation& t);
 
-		DisplayObject& GetObject(uint32_t depth)
+		std::shared_ptr<DisplayObject> GetObject(uint32_t depth)
 		{
 			return m_objects[depth];
 		}
 	private:
-		std::map<uint32_t, DisplayObject> m_objects;
+		std::map<uint32_t, std::shared_ptr<DisplayObject>> m_objects;
 	};
 }

@@ -9,6 +9,9 @@ void Stack::Push(Value v)
 
 const Value Stack::Pop()
 {
+	if (m_stack.size() == 0)
+		return Value();
+
 	const auto v = m_stack.top();
 	m_stack.pop();
 	return v;

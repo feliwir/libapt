@@ -9,7 +9,7 @@ namespace libapt
     {
 	public:
 		virtual void Parse(uint8_t *&iter);
-		virtual void Update(const Transformation& t, DisplayObject& dObj);
+		virtual void Update(const Transformation& t, std::shared_ptr<DisplayObject> instance);
 		inline uint32_t GetGeometryId() { return m_geometryId; }
 		inline void SetGeometry(std::shared_ptr<Geometry> geom) { m_geometry = geom; }
 	private:

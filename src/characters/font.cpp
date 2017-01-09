@@ -11,7 +11,7 @@ void Font::Parse(uint8_t*& iter)
 	m_glyphs = const_cast<uint8_t*>(m_owner->GetBase() + read<uint32_t>(iter));
 }
 
-void Font::Update(const Transformation& t, DisplayObject& dObj)
+void Font::Update(const Transformation& t, std::shared_ptr<DisplayObject> dObj)
 {
 	std::cout << "WARNING: Font should not be able to be on displaylist" << std::endl;
 }

@@ -9,7 +9,7 @@ void Shape::Parse(uint8_t *& iter)
 	m_geometryId = read<uint32_t>(iter);
 }
 
-void Shape::Update(const Transformation& t, DisplayObject& dObj)
+void Shape::Update(const Transformation& t, std::shared_ptr<DisplayObject> dObj)
 {
 	if(m_geometry)
 		m_geometry->Draw(t);

@@ -14,26 +14,21 @@ Container::Container() : m_playing(true)
 {
 }
 
-void Container::HandleAction(std::shared_ptr<FrameItem> fi,DisplayObject& dispO)
+void Container::HandleAction(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance)
 {
 	auto action = std::dynamic_pointer_cast<Action>(fi);
-	s_engine.Execute(dispO,action->GetBytecode(),m_owner);
+	s_engine.Execute(instance,action->GetBytecode(),m_owner);
 }
 
-void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi, DisplayObject& dispO)
+void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance)
 {
 	auto action = std::dynamic_pointer_cast<InitAction>(fi);
-	s_engine.Execute(dispO, action->GetBytecode(), m_owner);
+	s_engine.Execute(instance, action->GetBytecode(), m_owner);
 }
 
-void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
+void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance)
 {
 	auto po = std::dynamic_pointer_cast<PlaceObject>(fi);
-
-	if (po->GetDepth() == 6)
-	{
-		int a = 0;
-	}
 
 	//Move character
 	if (po->HasMove() && !po->HasCharacter())
@@ -52,14 +47,12 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 			if (po->HasClipDepth())
 			{
 				m_dl.AddClipLayer(po->GetDepth(),po->GetClipDepth(),ch,po->GetTranslate(),
-					po->GetRotScale(), po->GetName(), 
-					std::dynamic_pointer_cast<Container>(shared_from_this()));
+					po->GetRotScale(), po->GetName(), instance);
 			}
 			else
 			{
 				m_dl.Insert(po->GetDepth(), ch, po->GetTranslate(),
-					po->GetRotScale(), po->GetName(),
-					std::dynamic_pointer_cast<Container>(shared_from_this()));
+					po->GetRotScale(), po->GetName(), instance);
 			}
 
 			if (po->HasClipActions())
@@ -80,8 +73,7 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi)
 		if (ch != nullptr)
 		{
 			m_dl.Insert(po->GetDepth(), ch, po->GetTranslate(),
-				po->GetRotScale(), po->GetName(),
-				std::dynamic_pointer_cast<Container>(shared_from_this()));
+				po->GetRotScale(), po->GetName(), instance);
 
 			if (po->HasClipActions())
 			{
@@ -114,7 +106,7 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 	glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, m_bgColor.a);
 }
 
-void Container::Update(const Transformation& t, DisplayObject& dispO)
+void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> instance)
 {
 	if (m_currentFrame < m_framecount && m_playing)
 	{
@@ -128,10 +120,10 @@ void Container::Update(const Transformation& t, DisplayObject& dispO)
 			switch (fi->GetType())
 			{
 			case FrameItem::ACTION:
-				HandleAction(fi,dispO);
+				HandleAction(fi, instance);
 				break;
 			case FrameItem::PLACEOBJECT:
-				HandlePlaceObject(fi);
+				HandlePlaceObject(fi,instance);
 				break;
 			case FrameItem::REMOVEOBJECT:
 				HandleRemoveObject(fi);
@@ -140,7 +132,7 @@ void Container::Update(const Transformation& t, DisplayObject& dispO)
 				HandleBackground(fi);
 				break;
 			case FrameItem::INITACTION:
-				HandleInitAction(fi,dispO);
+				HandleInitAction(fi, instance);
 				break;
 			}
 		}

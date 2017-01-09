@@ -8,7 +8,7 @@ m_isClipLayer(false)
 }
 
 void DisplayObject::Create(std::shared_ptr<Character> ch, const glm::vec2 & translate,
-	const glm::mat2& rotscale, const std::string & name, std::shared_ptr<Container> parent)
+	const glm::mat2& rotscale, const std::string & name, std::shared_ptr<DisplayObject> parent)
 {
 	m_character = ch->MakeInstance();
 	m_rotscale = rotscale;
@@ -17,11 +17,14 @@ void DisplayObject::Create(std::shared_ptr<Character> ch, const glm::vec2 & tran
 	m_parent = parent;
 	m_ps = PLAYING;
 	m_isClipLayer = false;
+	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
+	if (m_name.size()>0)
+		m_character->GetOwner()->AddNamed(m_name, this_ptr);
 }
 
 void DisplayObject::CreateClipLayer(std::shared_ptr<Character> ch, const glm::vec2 & translate, 
 	const glm::mat2 & rotscale, const std::string & name, 
-	std::shared_ptr<Container> parent, uint32_t clipdepth)
+	std::shared_ptr<DisplayObject> parent, uint32_t clipdepth)
 {
 	m_character = ch->MakeInstance();
 	m_rotscale = rotscale;
@@ -32,6 +35,9 @@ void DisplayObject::CreateClipLayer(std::shared_ptr<Character> ch, const glm::ve
 	m_isClipLayer = true;
 	m_clipDepth = clipdepth;
 	m_mask = std::make_shared<ClipMask>(ch->GetOwner()->GetWidth(), ch->GetOwner()->GetHeight());
+	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
+	if(m_name.size()>0)
+		m_character->GetOwner()->AddNamed(m_name, this_ptr);
 }
 
 bool IsProblem(const std::string& bla)
@@ -57,7 +63,8 @@ void DisplayObject::Render(const Transformation& t)
 	cTransform.translate = t.translate + m_translate;
 	cTransform.color = t.color * m_color;
 	cTransform.mask = t.mask;
-	m_character->Update(cTransform,*this);
+	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
+	m_character->Update(cTransform, this_ptr);
 
 	if (IsClippingLayer())
 		m_mask->UnbindFb();
@@ -79,4 +86,10 @@ void DisplayObject::OnFrameChanged()
 {
 	auto c = std::dynamic_pointer_cast<Container>(m_character);
 	c->SetFrame(m_cf);
+}
+
+void DisplayObject::Delete()
+{
+	if (m_name.size()>0)
+		m_character->GetOwner()->RemoveNamed(m_name);
 }

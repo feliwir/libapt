@@ -17,7 +17,7 @@ namespace libapt
     {
 	public:
 		Container();
-		void Update(const Transformation& t, DisplayObject& dispO);
+		void Update(const Transformation& trans, std::shared_ptr<DisplayObject> instance);
 		virtual void Parse(uint8_t *&iter) = 0;
 		inline int GetCurrentFrame() 
 		{ 
@@ -38,11 +38,11 @@ namespace libapt
 		uint32_t m_framecount;
 		std::vector<Frame> m_frames;
 	private:
-		void HandleAction(std::shared_ptr<FrameItem> fi, DisplayObject& dispO);
+		void HandleAction(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance);
 		void HandleBackground(std::shared_ptr<FrameItem> fi);
-		void HandlePlaceObject(std::shared_ptr<FrameItem> fi);
+		void HandlePlaceObject(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance);
 		void HandleRemoveObject(std::shared_ptr<FrameItem> fi);
-		void HandleInitAction(std::shared_ptr<FrameItem> fi, DisplayObject& dispO);
+		void HandleInitAction(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance);
     private:
 		DisplayList m_dl;
 		uint32_t m_currentFrame;

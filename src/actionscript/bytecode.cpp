@@ -14,6 +14,7 @@ bool libapt::as::RequireAlign(const Action a)
 	case BRANCHIFTRUE:
 	case EA_PUSHSTRING:
 	case EA_GETSTRINGVAR:
+	case EA_GETSTRINGMEMBER:
 		return true;
 	}
 

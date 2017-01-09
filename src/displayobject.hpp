@@ -8,8 +8,6 @@
 
 namespace libapt
 {
-	class Container;
-
 	class DisplayObject : public as::Object
 	{
 	public:
@@ -17,11 +15,13 @@ namespace libapt
 
 		void Create(std::shared_ptr<Character> ch, const glm::vec2& translate,
 			const glm::mat2& rotscale, const std::string& name,
-			std::shared_ptr<Container> parent);
+			std::shared_ptr<DisplayObject> parent);
+
+		void Delete();
 
 		void CreateClipLayer(std::shared_ptr<Character> ch, const glm::vec2& translate,
 			const glm::mat2& rotscale, const std::string& name,
-			std::shared_ptr<Container> parent, uint32_t clipdepth);
+			std::shared_ptr<DisplayObject> parent, uint32_t clipdepth);
 
 		void Render(const Transformation& t);
 
@@ -76,7 +76,7 @@ namespace libapt
 		virtual void OnFrameChanged();
 	private:	
 		std::shared_ptr<Character> m_character;
-		std::shared_ptr<Container> m_parent;
+		std::shared_ptr<DisplayObject> m_parent;
 		glm::vec4 m_color;
 		glm::vec2 m_translate;
 		glm::mat2 m_rotscale;

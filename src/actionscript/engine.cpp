@@ -1,6 +1,7 @@
 #include "engine.hpp"
 #include "stack.hpp"
 #include "bytecode.hpp"
+#include "../displayobject.hpp"
 #include "../util.hpp"
 #include <iostream>
 using namespace libapt;
@@ -11,7 +12,7 @@ inline void Align(uint8_t *&ptr)
 	ptr = reinterpret_cast<uint8_t *>(4 * ((reinterpret_cast<uintptr_t>(ptr) + 3) / 4));
 }
 
-void Engine::Execute(Object& scope, const uint8_t* bc, std::shared_ptr<Apt> owner)
+void Engine::Execute(std::shared_ptr<Object> scope, const uint8_t* bc, std::shared_ptr<Apt> owner)
 {
 	uint8_t* bs = const_cast<uint8_t*>(bc);
 	//create the execution context
@@ -32,6 +33,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	uint32_t num = 0;
 	Function f;
 	std::string str;
+	std::shared_ptr<Object> obj;
 	Value v;
 	Action a = static_cast<Action>(read<uint8_t>(bs));
 	bool align = RequireAlign(a);
@@ -41,6 +43,9 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 
 	switch (a)
 	{
+	case NEXTFRAME:
+		c.GetScope()->NextFrame();
+		break;
 	case STOP:
 		c.GetScope()->SetPlaystate(Object::STOPPED);
 		break;
@@ -74,6 +79,10 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		v.FromBoolean(false);
 		s.Push(v);
 		break;
+	case EA_PUSHTHIS:
+		v.FromObject(c.GetScope());
+		s.Push(v);
+		break;
 	case EA_PUSHUNDEFINED:
 		s.Push(v);
 		break;
@@ -105,6 +114,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		s.Push(v);
 		break;
 	case EA_GETSTRINGVAR:
+		GetNamedObject(c, bs);
 		break;
 	case EA_PUSHVALUEOFVAR:
 		v.FromByte(read<uint8_t>(bs));
@@ -114,7 +124,14 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		v = GetConstant(c,read<uint8_t>(bs));
 		s.Push(c.GetScope()->GetProperty(v.ToString()));
 		break;
+	case EA_GETSTRINGMEMBER:
+		str = readString(c.GetOwner()->GetBase() + read<uint32_t>(bs));
+		break;
 	case EA_CALLNAMEDFUNCTIONPOP:
+		num = read<uint8_t>(bs);
+		v = GetConstant(c, read<uint8_t>(bs));
+		break;
+	case EA_CALLNAMEDMETHODPOP:
 		num = read<uint8_t>(bs);
 		v = GetConstant(c, read<uint8_t>(bs));
 		break;
@@ -153,11 +170,16 @@ void Engine::SetProperty(Context& c)
 	int a = 0;
 }
 
-void Engine::GetVariable(Context & c)
+void Engine::GetNamedObject(Context& c,uint8_t*& bs)
 {
+	Value v;
+	std::string str = readString(c.GetOwner()->GetBase() + read<uint32_t>(bs));
+	std::shared_ptr<DisplayObject> obj = c.GetOwner()->GetObject(str);
+	v.FromObject(obj);
+	c.GetStack().Push(v);
 }
 
-Value Engine::GetConstant(Context & c,const uint8_t num)
+Value Engine::GetConstant(Context& c,const uint8_t num)
 {
 	auto& cp = c.GetConstants();
 	if (cp.size() > num)

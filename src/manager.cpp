@@ -135,6 +135,9 @@ void Manager::Render(const bool window)
 		glClear(GL_COLOR_BUFFER_BIT);
 		m_active->Render();
 		m_last = now;
+
+		if (m_dimChanged)
+			m_dimChanged = false;
 	}
 		
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -144,8 +147,6 @@ void Manager::Render(const bool window)
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 
-	if(m_dimChanged)
-		m_dimChanged = false;
 }
 
 void Manager::SetFps(const uint32_t fps)

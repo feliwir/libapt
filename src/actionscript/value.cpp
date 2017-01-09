@@ -4,7 +4,7 @@ using namespace libapt;
 using namespace libapt::as;
 
 Value::Value() : m_type(UNDEFINED), m_boolean(false),
-m_float(0.0), m_number(0), m_string("")
+m_float(0.0), m_number(0), m_string(""), m_object(nullptr)
 {
 }
 
@@ -47,6 +47,12 @@ void Value::FromString(const std::string& s)
 {
 	m_type = STRING;
 	m_string = s;
+}
+
+void Value::FromObject(std::shared_ptr<Object> obj)
+{
+	m_type = OBJECT;
+	m_object = obj;
 }
 
 float Value::ToFloat()

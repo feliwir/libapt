@@ -11,7 +11,7 @@ namespace libapt
 		{
 		public:
 			//Execute bytecode on the current scope
-			static void Execute(Object& scope, const uint8_t* bc,std::shared_ptr<Apt> owner);
+			static void Execute(std::shared_ptr<Object> scope, const uint8_t* bc,std::shared_ptr<Apt> owner);
 		private:
 			static bool Opcode(Context& c, uint8_t*& bs);
 			///--Opcodes
@@ -24,7 +24,7 @@ namespace libapt
 			static void SetVariable(Context& c);
 			static void SetProperty(Context& c);
 			//Getters
-			static void GetVariable(Context& c);		
+			static void GetNamedObject(Context& c,uint8_t*& bs);
 			static Value GetConstant(Context& c, const uint8_t num);
 			//Arithmetic functions
 			static void Add(Context& c);

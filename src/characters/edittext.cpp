@@ -18,7 +18,7 @@ void Edittext::Parse(uint8_t *&iter)
 	m_variable = reinterpret_cast<const char*>(m_owner->GetBase() + read<uint32_t>(iter));
 }
 
-void Edittext::Update(const Transformation& t, DisplayObject& dObj)
+void Edittext::Update(const Transformation& t, std::shared_ptr<DisplayObject> dObj)
 {
 
 }

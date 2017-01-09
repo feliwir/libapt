@@ -4,10 +4,10 @@ using namespace libapt;
 
 void DisplayList::Insert(uint32_t depth, std::shared_ptr<Character> ch,
 	const glm::vec2 & translate, const glm::mat2 & rotscale, const std::string& name,
-	std::shared_ptr<Container> parent)
+	std::shared_ptr<DisplayObject> parent)
 {
-	DisplayObject obj;
-	obj.Create(ch,translate,rotscale,name,parent);
+	std::shared_ptr<DisplayObject> obj = std::make_shared<DisplayObject>();
+	obj->Create(ch,translate,rotscale,name,parent);
 	m_objects[depth] = obj;
 	#ifndef  NDEBUG
 	std::cout << "Placed object at depth: " << depth << std::endl;
@@ -17,10 +17,10 @@ void DisplayList::Insert(uint32_t depth, std::shared_ptr<Character> ch,
 
 void DisplayList::AddClipLayer(uint32_t depth, uint32_t clipdepth, std::shared_ptr<Character> ch, 
 	const glm::vec2 & translate, const glm::mat2 & rotscale, const 
-	std::string & name, std::shared_ptr<Container> parent)
+	std::string & name, std::shared_ptr<DisplayObject> parent)
 {
-	DisplayObject obj;
-	obj.CreateClipLayer(ch, translate, rotscale, name, parent,clipdepth);
+	std::shared_ptr<DisplayObject> obj = std::make_shared<DisplayObject>();
+	obj->CreateClipLayer(ch, translate, rotscale, name, parent,clipdepth);
 	m_objects[depth] = obj;
 #ifndef  NDEBUG
 	std::cout << "Placed clipping layer at depth: " << depth << " with clipdepth: "<< clipdepth << std::endl;
@@ -35,7 +35,7 @@ void DisplayList::Erase(uint32_t depth)
 		std::cout << "Error: cannot remove at depth: " << depth << std::endl;
 		return;
 	}
-
+	m_objects[depth]->Delete();
 	m_objects.erase(depth);
 	#ifndef  NDEBUG
 	std::cout << "Removed object at depth: " << depth << std::endl;
@@ -45,8 +45,8 @@ void DisplayList::Erase(uint32_t depth)
 void DisplayList::Move(uint32_t depth, const glm::vec2 & translate, const glm::mat2 & rotscale)
 {
 	auto& obj = m_objects[depth];
-	obj.SetRotscale(rotscale);
-	obj.SetTranslate(translate);
+	obj->SetRotscale(rotscale);
+	obj->SetTranslate(translate);
 	#ifndef NDEBUG
 	std::cout << "Moved object at depth: " << depth <<
 		" Translate: (" << translate.x << "-" << translate.y << ")" << std::endl;
@@ -62,7 +62,7 @@ void DisplayList::Colortransform(uint32_t depth, glm::u8vec4 color)
 	}	
 
 	auto& obj = m_objects[depth];
-	obj.SetColor(color);
+	obj->SetColor(color);
 #ifndef NDEBUG
 	std::cout << "Colortransform at depth: " << depth <<
 		" Color: (" << color.r << "-" << color.g << "-" << color.b << "-" << color.a<< ")" << std::endl;
@@ -77,8 +77,8 @@ void DisplayList::Render(const Transformation & t)
 
 	for (auto& pair : m_objects)
 	{
-		auto& dispO = pair.second;
-		dispO.Render(ct);
+		auto& object = pair.second;
+		object->Render(ct);
 
 		if (pair.first > clipdepth && mask!=nullptr)
 		{
@@ -86,10 +86,10 @@ void DisplayList::Render(const Transformation & t)
 			clipdepth = 0;
 
 		}
-		if (dispO.IsClippingLayer())
+		if (object->IsClippingLayer())
 		{
-			ct.mask = dispO.GetClippingLayer();
-			clipdepth = dispO.GetClipDepth();
+			ct.mask = object->GetClippingLayer();
+			clipdepth = object->GetClipDepth();
 		}
 		
 	}
