@@ -133,6 +133,9 @@ Error Geometry::Load(const std::string & data)
 			case TEXTURED_TRIS:
 				AddTexturedTriangles(triangles, color, image, rotscale, translate);
 				break;
+			case UNDEFINED:
+				//don't do anything in this case
+				break;
 			}
 			break;
 		case 's':
@@ -227,6 +230,9 @@ Error Geometry::Load(const std::string & data)
 	case TEXTURED_TRIS:
 		AddTexturedTriangles(triangles, color, image, rotscale, translate);
 		break;
+	case UNDEFINED:
+		//do nothing
+		break;
 	}
 	return NO_ERROR;
 }
@@ -295,6 +301,12 @@ void Geometry::Compile(std::shared_ptr<Apt> apt)
 		case TEXTURED_TRIS:
 			obj.textured = true;
 			obj.texture = apt->GetTexture(e.image);
+			break;
+		case SOLID_TRIS:
+			//nothing to do
+			break;
+		case UNDEFINED:
+			std::cout << "Can't compile undefined geometry" << std::endl;
 			break;
 		}
 		//store offset in the vbo

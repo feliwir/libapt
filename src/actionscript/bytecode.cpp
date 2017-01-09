@@ -15,7 +15,7 @@ bool libapt::as::RequireAlign(const Action a)
 	case EA_PUSHSTRING:
 	case EA_GETSTRINGVAR:
 		return true;
+	default:
+		return false;
 	}
-
-	return false;
 }

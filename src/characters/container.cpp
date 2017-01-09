@@ -130,6 +130,8 @@ void Container::Update(const Transformation& t, DisplayObject& dispO)
 			case FrameItem::ACTION:
 				HandleAction(fi,dispO);
 				break;
+			case FrameItem::FRAMELABEL:
+				break;
 			case FrameItem::PLACEOBJECT:
 				HandlePlaceObject(fi);
 				break;

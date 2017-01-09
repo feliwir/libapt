@@ -34,7 +34,7 @@ namespace libapt
 	{
 		std::string result;
 		char c;
-		while (c = getc(buf))
+		while ((c = getc(buf)))
 			result.push_back(c);
 
 		return result;
@@ -45,13 +45,12 @@ namespace libapt
 		std::string result;
 		int i = 0;
 		char c;
-		while (c = static_cast<char>(buf[i]))
+		while ((c = static_cast<char>(buf[i])))
 		{
 			result.push_back(c);
 			++i;
 		}
 			
-
 		return result;
 	}
 
