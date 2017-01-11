@@ -25,13 +25,36 @@ void Engine::Execute(std::shared_ptr<Object> scope, const uint8_t* bc, std::shar
 	}
 }
 
+void Engine::Execute(Context& context, Function& f, std::vector<Value>& args, std::shared_ptr<Apt> owner)
+{
+	uint8_t* bs = f.Code;
+	//create the execution context
+	context.ResizeRegisters(f.nRegisters);
+
+	for (int i=0;i<f.nParams;++i)
+	{
+		Value p;
+		if (i < args.size())
+			p = args[i];
+		else
+			p.FromString("");
+		context.SetParameter(f.Params[i], p);
+	}
+
+	uint32_t location = 0;
+	while (location<f.Size && !Opcode(context, bs))
+	{
+		location = (bs - f.Code);
+	}
+	context.ClearParams();
+}
+
 bool Engine::Opcode(Context& c, uint8_t*& bs)
 {
 	auto& s = c.GetStack();
 	auto& cp = c.GetConstants();
 	auto& owner = c.GetOwner();
 	uint32_t num = 0;
-	Function f;
 	std::string str;
 	std::shared_ptr<Object> obj;
 	Value v;
@@ -46,6 +69,9 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	case NEXTFRAME:
 		c.GetScope()->NextFrame();
 		break;
+	case PLAY:
+		c.GetScope()->SetPlaystate(Object::PLAYING);
+		break;
 	case STOP:
 		c.GetScope()->SetPlaystate(Object::STOPPED);
 		break;
@@ -55,14 +81,32 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	case LOGICALNOT:
 		LogicalNot(c);
 		break;
+	case POP:
+		s.Pop();
+		break;
 	case SETVARIABLE:
 		SetVariable(c);
+		break;
+	case STRINGCONCAT:
+		StringConcat(c);
 		break;
 	case SETPROPERTY:
 		SetProperty(c);
 		break;
+	case TRACE:
+		v = s.Pop();
+		std::cout << "TRACE: " << v.ToString() << std::endl;
+		break;
+	case NEWADD:
+		NewAdd(c);
+		break;
 	case NEWEQUALS:
 		NewEquals(c);
+		break;
+	case DUP:
+		v = s.Pop();
+		s.Push(v);
+		s.Push(v);
 		break;
 	case SETMEMBER:
 		SetMember(c);
@@ -75,12 +119,20 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		v.FromByte(1);
 		s.Push(v);
 		break;
-	case EA_PUSHFALSE:
-		v.FromBoolean(false);
-		s.Push(v);
-		break;
 	case EA_PUSHTHIS:
 		v.FromObject(c.GetScope());
+		s.Push(v);
+		break;
+	case EA_PUSHGLOBAL:
+		v.FromObject(c.GetGlobal());
+		s.Push(v);
+		break;
+	case EA_PUSHTRUE:
+		v.FromBoolean(true);
+		s.Push(v);
+		break;
+	case EA_PUSHFALSE:
+		v.FromBoolean(false);
 		s.Push(v);
 		break;
 	case EA_PUSHUNDEFINED:
@@ -90,16 +142,23 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		num = read<uint32_t>(bs);
 		c.GetScope()->SetCurrentFrame(num);
 		break;
+	case SETREGISTER:
+		SetRegister(c,bs );
+		break;
 	case CONSTANTPOOL:
 		Constantpool(c,bs);
 		break;
 	case DEFINEFUNCTION2:
-		f = DefineFunction2(c, bs);
+		DefineFunction2(c, bs);
+		break;
+	case PUSHDATA:
+		PushData(c, bs);
+		break;
+	case GETURL2:
+		GetUrl2(c);
 		break;
 	case DEFINEFUNCTION:
-		f = DefineFunction(c, bs);
-		if (f.Name.size() > 0)
-			c.AddFunction(f.Name, f);
+		DefineFunction(c, bs);
 		break;
 	case BRANCHIFTRUE:
 		BranchIfTrue(c, bs);
@@ -114,26 +173,22 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		s.Push(v);
 		break;
 	case EA_GETSTRINGVAR:
-		GetNamedObject(c, bs);
+		GetStringVar(c, bs);
 		break;
 	case EA_PUSHVALUEOFVAR:
-		v.FromByte(read<uint8_t>(bs));
-		s.Push(v);
+		PushValue(c, bs);
 		break;
 	case EA_GETNAMEDMEMBER:
-		v = GetConstant(c,read<uint8_t>(bs));
-		s.Push(c.GetScope()->GetProperty(v.ToString()));
+		GetNamedMember(c, bs);
 		break;
 	case EA_GETSTRINGMEMBER:
 		str = readString(c.GetOwner()->GetBase() + read<uint32_t>(bs));
 		break;
 	case EA_CALLNAMEDFUNCTIONPOP:
-		num = read<uint8_t>(bs);
-		v = GetConstant(c, read<uint8_t>(bs));
+		CallNamedFunctionPop(c, bs);
 		break;
 	case EA_CALLNAMEDMETHODPOP:
-		num = read<uint8_t>(bs);
-		v = GetConstant(c, read<uint8_t>(bs));
+		CallNamedMethodPop(c, bs);
 		break;
 	case END:
 		return true;
@@ -150,7 +205,8 @@ void Engine::SetMember(Context& c)
 	auto& s = c.GetStack();
 	Value value = s.Pop();
 	Value member = s.Pop();
-	c.GetScope()->SetProperty(member.ToString(), value);
+	Value object = s.Pop();
+	object.ToObject()->SetProperty(member.ToString(), value);
 }
 
 void Engine::SetVariable(Context& c)
@@ -167,16 +223,14 @@ void Engine::SetProperty(Context& c)
 	Value value = s.Pop();
 	Value varname = s.Pop();
 	c.GetScope()->SetProperty(varname.ToString(), value);
-	int a = 0;
 }
 
-void Engine::GetNamedObject(Context& c,uint8_t*& bs)
+void Engine::SetRegister(Context& c, uint8_t*& bs)
 {
-	Value v;
-	std::string str = readString(c.GetOwner()->GetBase() + read<uint32_t>(bs));
-	std::shared_ptr<DisplayObject> obj = c.GetOwner()->GetObject(str);
-	v.FromObject(obj);
-	c.GetStack().Push(v);
+	auto& s = c.GetStack();
+	Value value = s.Pop();
+	uint32_t reg = read<uint32_t>(bs);
+	c.SetRegister(reg, value);
 }
 
 Value Engine::GetConstant(Context& c,const uint8_t num)
@@ -197,6 +251,38 @@ void Engine::Add(Context& c)
 	Value r;
 	r.FromFloat(result);
 	s.Push(r);
+}
+
+void Engine::NewAdd(Context& c)
+{
+	auto& s = c.GetStack();
+	Value a = s.Pop();
+	Value b = s.Pop();
+	Value result;
+
+	if (a.GetType() == Value::STRING &&
+		b.GetType() == Value::STRING)
+	{
+		std::string concStr = b.ToString() + a.ToString();
+		result.FromString(concStr);
+	}
+	else
+	{
+		assert(0);
+	}
+
+	s.Push(result);
+}
+
+void Engine::StringConcat(Context & c)
+{
+	auto& s = c.GetStack();
+	Value a = s.Pop();
+	Value b = s.Pop();
+	Value result;
+	std::string concStr = b.ToString() + a.ToString();
+	result.FromString(concStr);
+	s.Push(result);
 }
 
 void Engine::LogicalNot(Context& c)
@@ -247,10 +333,11 @@ void Engine::Constantpool(Context& c, uint8_t*& bs)
 	}
 }
 
-const Function Engine::DefineFunction(Context& c, uint8_t*& bs)
+void Engine::DefineFunction(Context& c, uint8_t*& bs)
 {
 	auto owner = c.GetOwner();
 	Function f;
+	f.nRegisters = 4;
 	uint32_t strOffset = read<uint32_t>(bs);
 	if (strOffset)
 		f.Name = readString(owner->GetBase() + strOffset);
@@ -270,10 +357,18 @@ const Function Engine::DefineFunction(Context& c, uint8_t*& bs)
 	bs += 8;
 	f.Code = bs;	
 	bs += f.Size;
-	return f;
+	
+	Value v;
+	v.FromFunction(f);
+	//member of current scope
+	if (f.Name.size() > 0)
+		c.GetScope()->SetVariable(f.Name, v);
+	//anonymous function, pushed onto the stack
+	else
+		c.GetStack().Push(v);
 }
 
-const Function Engine::DefineFunction2(Context& c, uint8_t*& bs)
+void Engine::DefineFunction2(Context& c, uint8_t*& bs)
 {
 	auto owner = c.GetOwner();
 	Function f;
@@ -282,6 +377,8 @@ const Function Engine::DefineFunction2(Context& c, uint8_t*& bs)
 		f.Name = readString(owner->GetBase() + strOffset);
 
 	f.nParams = read<uint32_t>(bs);
+	f.nRegisters = 256;
+
 	//regCount
 	read<uint8_t>(bs);
 	//flags
@@ -303,8 +400,192 @@ const Function Engine::DefineFunction2(Context& c, uint8_t*& bs)
 			p.Name = readString(owner->GetBase() + read<uint32_t>(params));
 		}
 	}
-
+	
 	bs += 8;
 	bs += f.Size;
-	return f;
+	Value v;
+	v.FromFunction(f);
+	//member of current scope
+	if (f.Name.size() > 0)
+		c.GetScope()->SetVariable(f.Name, v);
+	//anonymous function, pushed onto the stack
+	else
+		c.GetStack().Push(v);
+}
+
+void Engine::CallNamedFunctionPop(Context& c, uint8_t *& bs)
+{
+	auto& s = c.GetStack();
+	std::string func;
+	uint32_t argCount;
+	Value v;
+	v = GetConstant(c, read<uint8_t>(bs));
+	func = v.ToString();
+	v = s.Pop();
+	argCount = v.ToInteger();
+	std::vector<Value> args;
+	for (int i = 0; i < argCount; ++i)
+	{
+		args.push_back(s.Pop());
+	}
+	v = c.GetScope()->GetVariable(func);
+	if (v.GetType() == Value::UNDEFINED)
+		assert(0);
+
+	Function f = v.ToFunction();
+	Execute(c, f, args, c.GetOwner());
+}
+
+void Engine::GetUrl2(Context & c)
+{
+	auto& s = c.GetStack();
+	Value target = s.Pop();
+	Value url = s.Pop();
+	//TODO call some engine function
+}
+
+void Engine::CallNamedMethodPop(Context& c, uint8_t *& bs)
+{
+	auto& s = c.GetStack();
+	std::string func;
+	std::shared_ptr<Object> obj;
+	uint32_t argCount;
+	Value v;
+	v = GetConstant(c, read<uint8_t>(bs));
+	func = v.ToString();
+	v = c.GetStack().Pop();
+	obj = v.ToObject();
+	v = s.Pop();
+	argCount = v.ToInteger();
+	std::vector<Value> args;
+	for (int i = 0; i < argCount;++i)
+	{
+		args.push_back(s.Pop());
+	}
+
+	if (func == "stop")
+	{
+		obj->SetPlaystate(Object::STOPPED);
+	}
+	else
+	{
+		v = obj->GetProperty(func);
+		if (v.GetType() == Value::UNDEFINED)
+			assert(0);
+
+		Function f = v.ToFunction();
+		Execute(c, f, args, c.GetOwner());
+	}
+}
+
+void Engine::GetNamedMember(Context & c, uint8_t *& bs)
+{
+	Value v;
+	auto& s = c.GetStack();
+	v = s.Pop();
+	auto obj = v.ToObject();
+	v = GetConstant(c, read<uint8_t>(bs));
+	s.Push(obj->GetProperty(v.ToString()));
+}
+
+void Engine::GetStringVar(Context& c, uint8_t*& bs)
+{
+	Value v;
+	std::shared_ptr<Object> obj = nullptr;
+
+	std::string str = readString(c.GetOwner()->GetBase() + read<uint32_t>(bs));
+	// get root object
+	if (str == "_root")
+		obj = GetRoot(c);
+	// get parent object
+	else if (str == "_parent")
+		obj = GetParent(c);
+	else if (str == "extern")
+		obj = c.GetExtern();
+	//get another object
+	else
+	{
+		auto current = std::dynamic_pointer_cast<DisplayObject>(c.GetScope());
+		obj = current->GetChildren(str);
+	}
+
+	v.FromObject(obj);
+	c.GetStack().Push(v);
+}
+
+void Engine::PushValue(Context& c, uint8_t*& bs)
+{
+	Value v;
+	auto& cp = c.GetConstants();
+	std::shared_ptr<Object> obj = nullptr;
+
+	std::string str = cp[read<uint8_t>(bs)].ToString();
+	if (c.CheckParam(str))
+	{
+		v = c.GetParameter(str);
+	}
+	// get root object
+	else if (str == "_root")
+	{
+		obj = GetRoot(c);
+		v.FromObject(obj);
+	}
+	// get parent object
+	else if (str == "_parent")
+	{
+		obj = GetParent(c);
+		v.FromObject(obj);
+	}
+	else if (str == "extern")
+	{
+		obj = c.GetExtern();
+		v.FromObject(obj);
+	}
+	//get another object
+	else
+	{
+		auto current = std::dynamic_pointer_cast<DisplayObject>(c.GetScope());
+		obj = current->GetChildren(str);
+		v.FromObject(obj);
+	}
+
+	c.GetStack().Push(v);
+}
+
+void Engine::PushData(Context & c, uint8_t *& bs)
+{
+	Value v;
+	auto& s = c.GetStack();
+	auto& owner = c.GetOwner();
+	uint32_t count = read<uint32_t>(bs);
+	uint8_t* constants = const_cast<uint8_t*>(owner->GetBase()) + read<uint32_t>(bs);
+	
+	//push constants to the stack
+	for (int i = 0; i < count; ++i)
+	{
+		uint32_t index = read<uint32_t>(constants);
+		auto entry = owner->GetConstant(index);
+		v.FromConstant(entry);
+		v = c.GetRegister(v.ToInteger());
+		s.Push(v);
+	}
+}
+
+std::shared_ptr<Object> Engine::GetRoot(Context& c)
+{
+	std::shared_ptr<Object> root = nullptr;
+	auto current = std::dynamic_pointer_cast<DisplayObject>(c.GetScope());
+	while (current->GetParent() != nullptr)
+	{
+		current = current->GetParent();
+	}
+
+	root = current;
+	return root;
+}
+
+std::shared_ptr<Object> Engine::GetParent(Context& c)
+{
+	auto current = std::dynamic_pointer_cast<DisplayObject>(c.GetScope());
+	return current->GetParent();
 }

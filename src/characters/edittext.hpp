@@ -7,9 +7,8 @@ namespace libapt
 	class Edittext : public Character
 	{
 	public:
-		virtual void Parse(uint8_t *&iter);
-		//Update all placed objects
-		virtual void Update(const Transformation& t, std::shared_ptr<DisplayObject> instance);
+		virtual void Parse(uint8_t *&iter) override;
+		virtual void Update(const Transformation& t, std::shared_ptr<DisplayObject> instance) override;
 	private:
 		glm::vec4 m_bounds;
 		uint32_t m_font;

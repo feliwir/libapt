@@ -21,19 +21,22 @@ namespace libapt
 				STOPPED = 1
 			};
 		public:
-			Value GetProperty(const std::string& property);
-			void SetProperty(const std::string& property,Value v);
+			Object();
 
-			Value GetVariable(const std::string& name);
-			void SetVariable(const std::string& name, Value v);
+			virtual Value GetProperty(const std::string& property);
+			virtual void SetProperty(const std::string& property,Value v);
+			std::map<std::string, Value>& GetProperties();
+
+			virtual Value GetVariable(const std::string& name);
+			virtual void SetVariable(const std::string& name, Value v);
+			std::map<std::string, Value>& GetVariables();
 
 			void SetPlaystate(const PlayState ps);
 			void SetCurrentFrame(const uint32_t cf);
 			void NextFrame();
 		protected:
-			virtual void OnPropertyChanged(const std::string& property) = 0;
-			virtual void OnPlayStateChanged() = 0;
-			virtual void OnFrameChanged() = 0;
+			virtual void OnPropertyChanged(const std::string& property);
+			virtual void OnPlayStateChanged();
 		protected:
 			std::map<std::string, Value> m_properties;
 			std::vector<Value> m_constants;

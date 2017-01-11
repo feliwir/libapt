@@ -13,6 +13,7 @@ namespace libapt
 			std::vector<std::string> Params;
 			uint32_t Size;
 			uint8_t* Code;
+			uint32_t nRegisters;
         };
 
 		struct Argument

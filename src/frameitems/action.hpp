@@ -6,7 +6,7 @@ namespace libapt
 	class Action : public FrameItem
 	{		
 	public:
-		virtual void Parse(uint8_t *offset, const uint8_t *base);
+		virtual void Parse(uint8_t *offset, const uint8_t *base) override;
 		inline const uint8_t* GetBytecode()
 		{
 			return m_bytes;

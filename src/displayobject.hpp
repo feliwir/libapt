@@ -17,8 +17,6 @@ namespace libapt
 			const glm::mat2& rotscale, const std::string& name,
 			std::shared_ptr<DisplayObject> parent);
 
-		void Delete();
-
 		void CreateClipLayer(std::shared_ptr<Character> ch, const glm::vec2& translate,
 			const glm::mat2& rotscale, const std::string& name,
 			std::shared_ptr<DisplayObject> parent, uint32_t clipdepth);
@@ -46,10 +44,22 @@ namespace libapt
 			m_character = ch;
 		}
 
+		inline void SetName(const std::string& name)
+		{
+			m_name = name;
+		}
+
 		inline const std::shared_ptr<Character> GetCharacter()
 		{
 			return m_character;
 		}
+
+		inline const std::shared_ptr<DisplayObject> GetParent()
+		{
+			return m_parent;
+		}
+
+		const std::shared_ptr<DisplayObject> GetChildren(const std::string& name);
 
 		inline bool IsClippingLayer()
 		{
@@ -70,10 +80,19 @@ namespace libapt
 		{
 			return m_clipDepth;
 		}
+		
+		inline uint32_t GetCurrentFrame()
+		{
+			return m_cf;
+		}
 
-		virtual void OnPropertyChanged(const std::string& property);
-		virtual void OnPlayStateChanged();
-		virtual void OnFrameChanged();
+		inline void SetCurrentFrame(uint32_t cf)
+		{
+			m_cf = cf;
+		}
+
+		virtual void OnPropertyChanged(const std::string& property) override;
+		virtual void OnPlayStateChanged() override;
 	private:	
 		std::shared_ptr<Character> m_character;
 		std::shared_ptr<DisplayObject> m_parent;

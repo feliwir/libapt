@@ -9,7 +9,7 @@ namespace libapt
 	class Movie : public Container
 	{
 	public:
-		virtual void Parse(uint8_t*& iter);
+		virtual void Parse(uint8_t*& iter) override;
 
 		inline uint32_t GetWidth() { return m_screenwidth; }
 		inline uint32_t GetHeight() { return m_screenheight; }

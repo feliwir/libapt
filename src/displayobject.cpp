@@ -1,5 +1,6 @@
 #include "displayobject.hpp"
 #include "characters/container.hpp"
+#include <iostream>
 using namespace libapt;
 
 DisplayObject::DisplayObject() : m_character(nullptr), m_clipDepth(0), m_color(1.0),
@@ -18,8 +19,6 @@ void DisplayObject::Create(std::shared_ptr<Character> ch, const glm::vec2 & tran
 	m_ps = PLAYING;
 	m_isClipLayer = false;
 	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
-	if (m_name.size()>0)
-		m_character->GetOwner()->AddNamed(m_name, this_ptr);
 }
 
 void DisplayObject::CreateClipLayer(std::shared_ptr<Character> ch, const glm::vec2 & translate, 
@@ -36,8 +35,6 @@ void DisplayObject::CreateClipLayer(std::shared_ptr<Character> ch, const glm::ve
 	m_clipDepth = clipdepth;
 	m_mask = std::make_shared<ClipMask>(ch->GetOwner()->GetWidth(), ch->GetOwner()->GetHeight());
 	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
-	if(m_name.size()>0)
-		m_character->GetOwner()->AddNamed(m_name, this_ptr);
 }
 
 bool IsProblem(const std::string& bla)
@@ -71,6 +68,22 @@ void DisplayObject::Render(const Transformation& t)
 }
 
 
+const std::shared_ptr<DisplayObject> DisplayObject::GetChildren(const std::string & name)
+{
+	Character::Type type = m_character->GetType();
+	if ((type != Character::SPRITE) && (type != Character::MOVIE))
+		return nullptr;
+
+	auto container = std::dynamic_pointer_cast<Container>(m_character);
+	auto object = container->GetDisplaylist().GetObjectByName(name);
+	if (object == nullptr)
+	{
+		std::cout << "Can't find an object named: " << name << std::endl;
+	}
+
+	return object;
+}
+
 void DisplayObject::OnPropertyChanged(const std::string& property)
 {
 
@@ -80,16 +93,4 @@ void DisplayObject::OnPlayStateChanged()
 {
 	auto c = std::dynamic_pointer_cast<Container>(m_character);
 	c->SetPlaying((m_ps == PLAYING));
-}
-
-void DisplayObject::OnFrameChanged()
-{
-	auto c = std::dynamic_pointer_cast<Container>(m_character);
-	c->SetFrame(m_cf);
-}
-
-void DisplayObject::Delete()
-{
-	if (m_name.size()>0)
-		m_character->GetOwner()->RemoveNamed(m_name);
 }

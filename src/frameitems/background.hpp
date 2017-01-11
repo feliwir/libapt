@@ -7,7 +7,7 @@ namespace libapt
 	class Background : public FrameItem
 	{
 	public:
-		virtual void Parse(uint8_t *offset, const uint8_t *base);
+		virtual void Parse(uint8_t *offset, const uint8_t *base) override;
 		inline glm::u8vec4 GetColor() { return m_color; }
 	private:
 		glm::u8vec4 m_color;

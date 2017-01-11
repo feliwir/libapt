@@ -150,15 +150,13 @@ Error Apt::Load(const uint8_t *buffer, unsigned int size, std::shared_ptr<Manage
 	//set character of our display object
 	m_movieclip = std::make_shared<DisplayObject>();
 	m_movieclip->SetCharacter(ch);
+	m_movieclip->SetName("_root");
 
 	//compile all geometries
 	for (const auto& g : m_geometries)
 	{
 		g->Compile(shared_from_this());
 	}
-
-	//set root element
-	m_namedObjects["_root"] = m_movieclip;
 
 	return NO_ERROR;
 }

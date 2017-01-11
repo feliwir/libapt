@@ -3,6 +3,7 @@
 #include "stack.hpp"
 #include "function.hpp"
 #include "object.hpp"
+#include "extern.hpp"
 #include <memory>
 
 namespace libapt
@@ -45,22 +46,64 @@ namespace libapt
 					return m_scope;
 				}
 
-				inline void AddFunction(const std::string& name, const Function& f)
+				inline Value GetRegister(uint32_t id)
 				{
-					m_functions[name] = f;
+					return m_registers[id];
 				}
 
-				inline const Function GetFunction(const std::string& name)
+				inline void SetRegister(uint32_t id, const Value& v)
 				{
-					return m_functions[name];
+					m_registers[id] = v;
 				}
 
+				inline std::shared_ptr<Object> GetGlobal()
+				{
+					return s_global;
+				}
+
+				inline void ResizeRegisters(uint32_t size)
+				{
+					m_registers.resize(size);
+				}
+
+				inline std::shared_ptr<Object> GetExtern()
+				{
+					return m_extern;
+				}
+
+				inline bool CheckParam(const std::string& name)
+				{
+					return (m_params.find(name) != m_params.end());
+				}
+
+				inline Value GetParameter(const std::string& name)
+				{
+					return m_params[name];
+				}
+
+				inline void SetParameter(const std::string& name, Value v)
+				{
+					m_params[name] = v;
+				}
+
+				inline void ClearParams()
+				{
+					m_params.clear();
+				}
             private:
 				std::shared_ptr<Apt> m_owner;
 				Stack m_stack;
-				std::vector<Value> m_constants;
-				std::map<std::string, Function> m_functions;
+				std::vector<Value> m_constants;		
+				//function registers
+				std::vector<Value> m_registers;
+				//function parameters
+				std::map<std::string, Value> m_params;
+				//the local script object
 				std::shared_ptr<Object> m_scope;
+				//the global script object
+				static std::shared_ptr<Object> s_global;
+				//the script object used to access extern variables/functions
+				std::shared_ptr<Extern> m_extern;
         };
     }
 }

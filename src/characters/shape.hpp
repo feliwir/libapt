@@ -8,8 +8,9 @@ namespace libapt
     class Shape : public Character
     {
 	public:
-		virtual void Parse(uint8_t *&iter);
-		virtual void Update(const Transformation& t, std::shared_ptr<DisplayObject> instance);
+		virtual void Parse(uint8_t *&iter) override;
+		virtual void Update(const Transformation& t, std::shared_ptr<DisplayObject> instance) override;
+
 		inline uint32_t GetGeometryId() { return m_geometryId; }
 		inline void SetGeometry(std::shared_ptr<Geometry> geom) { m_geometry = geom; }
 	private:

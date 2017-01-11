@@ -8,8 +8,8 @@ namespace libapt
 	class Button : public Character
 	{
 	public:
-		virtual void Parse(uint8_t*& iter);
-		virtual void Update(const Transformation& t, std::shared_ptr<DisplayObject> instance);
+		virtual void Parse(uint8_t*& iter) override;
+		virtual void Update(const Transformation& t, std::shared_ptr<DisplayObject> instance) override;
 	private:
 		const char* m_name;
 		uint32_t m_glyphcount;

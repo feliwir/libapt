@@ -1,6 +1,7 @@
 #pragma once
 #include "character.hpp"
 #include "../frame.hpp"
+#include "../frameitems/action.hpp"
 #include "../displaylist.hpp"
 #include "../actionscript/engine.hpp"
 #include <glm/glm.hpp>
@@ -17,11 +18,12 @@ namespace libapt
     {
 	public:
 		Container();
-		void Update(const Transformation& trans, std::shared_ptr<DisplayObject> instance);
+		void Update(const Transformation& trans, std::shared_ptr<DisplayObject> instance) override;
 		virtual void Parse(uint8_t *&iter) = 0;
-		inline int GetCurrentFrame() 
-		{ 
-			return m_currentFrame; 
+
+		inline DisplayList& GetDisplaylist()
+		{
+			return m_dl;
 		}
 
 		inline void SetPlaying(const bool state)
@@ -29,25 +31,22 @@ namespace libapt
 			m_playing = state;
 		}
 
-		inline void SetFrame(const uint32_t frame)
-		{
-			m_currentFrame = frame;
-		}
-
 	protected:
 		uint32_t m_framecount;
 		std::vector<Frame> m_frames;
 	private:
-		void HandleAction(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance);
+		void HandleAction(std::shared_ptr<FrameItem> fi);
 		void HandleBackground(std::shared_ptr<FrameItem> fi);
 		void HandlePlaceObject(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance);
 		void HandleRemoveObject(std::shared_ptr<FrameItem> fi);
 		void HandleInitAction(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance);
     private:
 		DisplayList m_dl;
-		uint32_t m_currentFrame;
 		glm::vec4 m_bgColor;
 		bool m_playing;
+		//performed before displaying each frame
+		std::vector<std::shared_ptr<Action>> m_actionList;
+
 	private:
 		static as::Engine s_engine;
     };

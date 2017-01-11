@@ -8,7 +8,9 @@ void DisplayList::Insert(uint32_t depth, std::shared_ptr<Character> ch,
 {
 	std::shared_ptr<DisplayObject> obj = std::make_shared<DisplayObject>();
 	obj->Create(ch,translate,rotscale,name,parent);
+
 	m_objects[depth] = obj;
+
 	#ifndef  NDEBUG
 	std::cout << "Placed object at depth: " << depth << std::endl;
 	std::cout << "Name: " << name << std::endl;
@@ -35,7 +37,7 @@ void DisplayList::Erase(uint32_t depth)
 		std::cout << "Error: cannot remove at depth: " << depth << std::endl;
 		return;
 	}
-	m_objects[depth]->Delete();
+
 	m_objects.erase(depth);
 	#ifndef  NDEBUG
 	std::cout << "Removed object at depth: " << depth << std::endl;
@@ -69,7 +71,7 @@ void DisplayList::Colortransform(uint32_t depth, glm::u8vec4 color)
 #endif // !NDEBUG
 }
 
-void DisplayList::Render(const Transformation & t)
+void DisplayList::Render(const Transformation& t)
 {
 	std::shared_ptr<ClipMask> mask;
 	uint32_t clipdepth = 0;

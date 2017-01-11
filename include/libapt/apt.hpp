@@ -43,26 +43,10 @@ namespace libapt
 		}
 
 		const bool HasResized();
-
-		inline std::shared_ptr<DisplayObject> GetObject(const std::string& name)
-		{
-			return m_namedObjects[name];
-		}
-
-		inline void AddNamed(const std::string& name, std::shared_ptr<DisplayObject> obj)
-		{
-			m_namedObjects[name] = obj;
-		}
-
-		inline void RemoveNamed(const std::string& name)
-		{
-			m_namedObjects.erase(name);
-		}
 	private:
 		Error LoadConst(const std::string name, std::shared_ptr<IFileProvider> fp);
 		Error LoadDat(const std::string name, std::shared_ptr<IFileProvider> fp);
 	private:
-		std::map<std::string, std::shared_ptr<DisplayObject>> m_namedObjects;
 		std::shared_ptr<DisplayObject> m_movieclip;
 		std::shared_ptr<Manager> m_manager;
 		std::map<int, std::shared_ptr<Texture>> m_textures;
@@ -72,6 +56,5 @@ namespace libapt
 		Dat m_dat;
 		bool m_renderable;
 		const uint8_t* m_data;
-		
 	};
 }

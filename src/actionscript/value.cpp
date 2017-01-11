@@ -55,6 +55,17 @@ void Value::FromObject(std::shared_ptr<Object> obj)
 	m_object = obj;
 }
 
+void Value::FromFunction(const Function& f)
+{
+	m_type = FUNCTION;
+	m_function = f;
+}
+
+Function& Value::ToFunction()
+{
+	return m_function;
+}
+
 float Value::ToFloat()
 {
 	switch (m_type)
@@ -75,6 +86,9 @@ bool Value::ToBoolean()
 {
 	switch (m_type)
 	{
+	case BOOLEAN:
+		return m_boolean;
+		break;
 	case INTEGER:
 		return (m_number>=1);
 		break;
@@ -87,7 +101,17 @@ bool Value::ToBoolean()
 	}
 }
 
+uint32_t Value::ToInteger()
+{
+	return m_number;
+}
+
 std::string Value::ToString()
 {
 	return m_string;
+}
+
+std::shared_ptr<Object> Value::ToObject()
+{
+	return m_object;
 }

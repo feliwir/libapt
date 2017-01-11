@@ -14,10 +14,10 @@ Container::Container() : m_playing(true)
 {
 }
 
-void Container::HandleAction(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance)
+void Container::HandleAction(std::shared_ptr<FrameItem> fi)
 {
 	auto action = std::dynamic_pointer_cast<Action>(fi);
-	s_engine.Execute(instance,action->GetBytecode(),m_owner);
+	m_actionList.push_back(action);
 }
 
 void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance)
@@ -78,12 +78,13 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi, std::shared_ptr
 			if (po->HasClipActions())
 			{
 				auto action = po->GetClipActions();
+
 			}
 		}
 	}
 	else
 	{
-		int a = 0;
+		std::cout << "Invalid placeobject flags combination!" << std::endl;
 	}
 	if (po->HasColortransform())
 	{
@@ -108,9 +109,10 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 
 void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> instance)
 {
-	if (m_currentFrame < m_framecount && m_playing)
+	auto cf = instance->GetCurrentFrame();
+	if (cf < m_framecount && m_playing)
 	{
-		Frame& cFrame = m_frames[m_currentFrame];
+		Frame& cFrame = m_frames[cf];
 
 		for (const auto& fi : cFrame.GetFrameitems())
 		{
@@ -120,7 +122,7 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 			switch (fi->GetType())
 			{
 			case FrameItem::ACTION:
-				HandleAction(fi, instance);
+				HandleAction(fi);
 				break;
 			case FrameItem::FRAMELABEL:
 				break;
@@ -139,13 +141,20 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 			}
 		}
 
-		m_currentFrame++;
+		cf++;
 
-		if (m_currentFrame == m_frames.size())
+		if (cf == m_frames.size())
 		{
-			m_currentFrame = 0;
+			cf = 0;
 		}
 	}
+	
+	for (const auto& a : m_actionList)
+	{
+		s_engine.Execute(instance, a->GetBytecode(), m_owner);
+	}
+
+	instance->SetCurrentFrame(cf);
 
 	m_dl.Render(t);
 }

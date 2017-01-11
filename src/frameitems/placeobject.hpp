@@ -68,7 +68,7 @@ namespace libapt
 		};
 	public:
 		PlaceObject();
-		virtual void Parse(uint8_t *offset, const uint8_t *base);
+		virtual void Parse(uint8_t *offset, const uint8_t *base) override;
 
 		inline int32_t GetDepth()					{ return m_depth; }
 		inline uint32_t GetCharacter()				{ return m_character; }
