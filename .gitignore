@@ -1,5 +1,8 @@
+#IDE directories
+.idea/
 .vscode/
 .vs/
+cmake-build-debug
 build/
 gcc_build/
 CMakeSettings.json

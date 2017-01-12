@@ -37,6 +37,12 @@ void Value::FromByte(const uint8_t num)
 	m_number = num;
 }
 
+void Value::FromInteger(const uint32_t num)
+{
+	m_type = INTEGER;
+	m_number = num;
+}
+
 void Value::FromBoolean(const bool c)
 {
 	m_type = BOOLEAN;

@@ -4,6 +4,7 @@
 #include "../frameitems/background.hpp"
 #include "../frameitems/initaction.hpp"
 #include "../frameitems/placeobject.hpp"
+#include "../frameitems/framelabel.hpp"
 #include "../frameitems/removeobject.hpp"
 #include "../graphics/flextGL.h"
 #include <iostream>
@@ -93,6 +94,12 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi, std::shared_ptr
 
 }
 
+void Container::HandleFramelabel(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance)
+{
+	auto fl = std::dynamic_pointer_cast<Framelabel>(fi);
+	instance->SetFramelabel(fl->GetLabel(),fl->GetFrame());
+}
+
 void Container::HandleRemoveObject(std::shared_ptr<FrameItem> fi)
 {
 	auto ro = std::dynamic_pointer_cast<RemoveObject>(fi);
@@ -109,6 +116,10 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 
 void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> instance)
 {
+	if(instance->GetName()=="OptionsNav")
+	{
+		int a=0;
+	}
 	auto cf = instance->GetCurrentFrame();
 	if (cf < m_framecount && m_playing)
 	{
@@ -125,6 +136,7 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 				HandleAction(fi);
 				break;
 			case FrameItem::FRAMELABEL:
+				HandleFramelabel(fi,instance);
 				break;
 			case FrameItem::PLACEOBJECT:
 				HandlePlaceObject(fi,instance);
@@ -148,7 +160,9 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 			cf = 0;
 		}
 	}
-	
+
+	m_dl.Render(t);
+
 	for (const auto& a : m_actionList)
 	{
 		s_engine.Execute(instance, a->GetBytecode(), m_owner);
@@ -156,6 +170,5 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 
 	instance->SetCurrentFrame(cf);
 
-	m_dl.Render(t);
 }
 

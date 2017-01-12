@@ -463,10 +463,19 @@ void Engine::CallNamedMethodPop(Context& c, uint8_t *& bs)
 		args.push_back(s.Pop());
 	}
 
+    if(obj==nullptr)
+        return;
+
 	if (func == "stop")
 	{
 		obj->SetPlaystate(Object::STOPPED);
 	}
+    else if(func=="gotoAndPlay")
+    {
+		uint32_t frame = obj->GetProperty(args[0].ToString()).ToInteger();
+        obj->SetCurrentFrame(frame);
+        obj->SetPlaystate(Object::PLAYING);
+    }
 	else
 	{
 		v = obj->GetProperty(func);

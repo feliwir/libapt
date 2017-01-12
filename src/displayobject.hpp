@@ -91,6 +91,12 @@ namespace libapt
 			m_cf = cf;
 		}
 
+		inline void SetFramelabel(const std::string& lbl,uint32_t id)
+		{
+			as::Value v;
+			v.FromInteger(id);
+			SetProperty(lbl,v);
+		}
 		virtual void OnPropertyChanged(const std::string& property) override;
 		virtual void OnPlayStateChanged() override;
 	private:	

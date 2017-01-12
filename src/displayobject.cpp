@@ -37,11 +37,6 @@ void DisplayObject::CreateClipLayer(std::shared_ptr<Character> ch, const glm::ve
 	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
 }
 
-bool IsProblem(const std::string& bla)
-{
-	return (bla == "NavFrameFive");
-}
-
 void DisplayObject::Render(const Transformation& t)
 {
 	if (IsClippingLayer())

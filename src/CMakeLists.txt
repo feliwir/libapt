@@ -28,3 +28,5 @@ target_include_directories(libapt PRIVATE ${LIBAPT_ROOT}/deps/glm
 										  ${OPENGL_INCLUDE_DIR})
 
 target_link_libraries(libapt PUBLIC ${OPENGL_gl_LIBRARY})
+
+set_property(TARGET libapt PROPERTY POSITION_INDEPENDENT_CODE ON)
