@@ -62,23 +62,6 @@ void DisplayObject::Render(const Transformation& t)
 		m_mask->UnbindFb();
 }
 
-
-const std::shared_ptr<DisplayObject> DisplayObject::GetChildren(const std::string & name)
-{
-	Character::Type type = m_character->GetType();
-	if ((type != Character::SPRITE) && (type != Character::MOVIE))
-		return nullptr;
-
-	auto container = std::dynamic_pointer_cast<Container>(m_character);
-	auto object = container->GetDisplaylist().GetObjectByName(name);
-	if (object == nullptr)
-	{
-		std::cout << "Can't find an object named: " << name << std::endl;
-	}
-
-	return object;
-}
-
 void DisplayObject::OnPropertyChanged(const std::string& property)
 {
 

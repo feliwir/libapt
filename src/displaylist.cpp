@@ -9,6 +9,13 @@ void DisplayList::Insert(uint32_t depth, std::shared_ptr<Character> ch,
 	std::shared_ptr<DisplayObject> obj = std::make_shared<DisplayObject>();
 	obj->Create(ch,translate,rotscale,name,parent);
 
+	as::Value v;
+	//add to parent
+	if(parent!=nullptr && name.size()>0)
+	{
+		v.FromObject(obj);
+		parent->SetProperty(name,v);
+	}
 	m_objects[depth] = obj;
 
 	#ifndef  NDEBUG

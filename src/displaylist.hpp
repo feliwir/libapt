@@ -30,17 +30,6 @@ namespace libapt
 		{
 			return m_objects[depth];
 		}
-
-		inline const std::shared_ptr<DisplayObject> GetObjectByName(const std::string& name)
-		{
-			for (auto& pair : m_objects)
-			{
-				if (pair.second->GetName() == name)
-					return pair.second;
-			}
-
-			return nullptr;
-		}
 	private:
 		std::map<uint32_t, std::shared_ptr<DisplayObject>> m_objects;
 	};

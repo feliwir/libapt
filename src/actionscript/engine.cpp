@@ -30,7 +30,8 @@ void Engine::Execute(Context& context, Function& f, std::vector<Value>& args, st
 	uint8_t* bs = f.Code;
 	//create the execution context
 	context.ResizeRegisters(f.nRegisters);
-
+    if(f.Name=="ShowMainMenu")
+        int a=0;
 	for (int i=0;i<f.nParams;++i)
 	{
 		Value p;
@@ -75,6 +76,9 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	case STOP:
 		c.GetScope()->SetPlaystate(Object::STOPPED);
 		break;
+    case GETURL:
+        GetUrl(c,bs);
+        break;
 	case ADD:
 		Add(c);
 		break;
@@ -436,6 +440,15 @@ void Engine::CallNamedFunctionPop(Context& c, uint8_t *& bs)
 	Execute(c, f, args, c.GetOwner());
 }
 
+void Engine::GetUrl(Context& c,uint8_t*& bs)
+{
+    auto& s = c.GetStack();
+    auto& owner = c.GetOwner();
+    std::string s1 = readString(owner->GetBase()+read<uint32_t>(bs));
+    std::string s2 = readString(owner->GetBase()+read<uint32_t>(bs));
+    //TODO call some engine function
+}
+
 void Engine::GetUrl2(Context & c)
 {
 	auto& s = c.GetStack();
@@ -464,7 +477,7 @@ void Engine::CallNamedMethodPop(Context& c, uint8_t *& bs)
 	}
 
     if(obj==nullptr)
-        return;
+        assert(0);
 
 	if (func == "stop")
 	{
@@ -515,7 +528,7 @@ void Engine::GetStringVar(Context& c, uint8_t*& bs)
 	else
 	{
 		auto current = std::dynamic_pointer_cast<DisplayObject>(c.GetScope());
-		obj = current->GetChildren(str);
+		obj = current->GetProperty(str).ToObject();
 	}
 
 	v.FromObject(obj);
@@ -554,7 +567,7 @@ void Engine::PushValue(Context& c, uint8_t*& bs)
 	else
 	{
 		auto current = std::dynamic_pointer_cast<DisplayObject>(c.GetScope());
-		obj = current->GetChildren(str);
+		obj = current->GetProperty(str).ToObject();
 		v.FromObject(obj);
 	}
 

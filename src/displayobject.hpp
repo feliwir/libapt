@@ -59,8 +59,6 @@ namespace libapt
 			return m_parent;
 		}
 
-		const std::shared_ptr<DisplayObject> GetChildren(const std::string& name);
-
 		inline bool IsClippingLayer()
 		{
 			return m_isClipLayer;

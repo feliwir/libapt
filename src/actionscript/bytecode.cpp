@@ -13,6 +13,7 @@ bool libapt::as::RequireAlign(const Action a)
 	case CONSTANTPOOL:
 	case BRANCHIFTRUE:
 	case PUSHDATA:
+	case GETURL:
 	case SETREGISTER:
 	case EA_PUSHSTRING:
 	case EA_GETSTRINGVAR:

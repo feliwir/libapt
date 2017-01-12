@@ -23,6 +23,7 @@ namespace libapt
 			static void CallNamedMethodPop(Context& c, uint8_t*& bs);
 			static void CallNamedFunctionPop(Context& c, uint8_t*& bs);
 			//Geturl
+			static void GetUrl(Context& c, uint8_t*& bs);
 			static void GetUrl2(Context& c);
 			//Push
 			static void PushValue(Context& c, uint8_t*& bs);
