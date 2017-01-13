@@ -11,6 +11,7 @@
 
 namespace libapt
 {
+	class ScriptContext;
 	class Manager : public std::enable_shared_from_this<Manager>
 	{
 	public:
@@ -19,15 +20,15 @@ namespace libapt
 		Manager(std::shared_ptr<IFileProvider> fp);
 		Error AddApt(const std::string& name);
 		Error SetActive(const std::string& name);
-		//getters
+		//Getters
 		uint32_t GetFramebuffer();
 		inline std::shared_ptr<IFileProvider> GetFileprovider() { return m_fileprovider; }
 		std::shared_ptr<Apt> GetApt(const std::string& name);
 		uint32_t GetWidth();
 		uint32_t GetHeight();
-		//setters
-		void SetWidth(uint32_t width);
-		void SetHeight(uint32_t height);
+		//Setters
+		void SetWidth(const uint32_t width);
+		void SetHeight(const uint32_t height);
 		void SetFps(const uint32_t fps);
 
 		void Render(const bool window = true);
@@ -40,6 +41,10 @@ namespace libapt
 		{
 			return m_dimChanged;
 		}
+
+		void SetMousePosition(uint32_t x, uint32_t y);
+
+		void GetMousePosition(uint32_t& x, uint32_t& y);
 	private:
 		std::map<std::string, std::shared_ptr<Apt>> m_apts;
 		std::map<uint32_t, Texture> m_textures;
@@ -51,6 +56,8 @@ namespace libapt
 		uint32_t m_fps;
 		uint32_t m_width;
 		uint32_t m_height;
+		uint32_t m_x;
+		uint32_t m_y;
 		bool m_dimChanged;
 	};
 }

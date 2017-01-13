@@ -7,7 +7,7 @@ class FileProvider : public libapt::IFileProvider
 public:
 	FileProvider();
 
-	// Geerbt über IFileProvider
+	// Derived from IFileProvider
 	virtual const uint8_t * LoadBinary(const std::string & name, unsigned int & size) override;
 	virtual const std::string LoadText(const std::string & name, bool & fail) override;
 private:

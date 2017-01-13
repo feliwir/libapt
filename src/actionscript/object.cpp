@@ -1,4 +1,5 @@
 #include "object.hpp"
+#include <algorithm>
 using namespace libapt;
 using namespace libapt::as;
 
@@ -8,13 +9,21 @@ Object::Object() : m_ps(STOPPED), m_cf(0)
 
 Value Object::GetProperty(const std::string & property)
 {
-	return m_properties[property];
+
+	std::string p = property;
+	std::transform(p.begin(), p.end(), p.begin(), ::tolower);
+	if (m_properties.find(p) == m_properties.end())
+		return Value();
+
+	return m_properties[p];
 }
 
 void Object::SetProperty(const std::string& property, Value v)
 {
-	m_properties[property] = v;
-	OnPropertyChanged(property);
+	std::string p = property;
+	std::transform(p.begin(), p.end(), p.begin(), ::tolower);
+	m_properties[p] = v;
+	OnPropertyChanged(p);
 }
 
 std::map<std::string, Value>& Object::GetProperties()

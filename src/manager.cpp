@@ -180,3 +180,15 @@ void Manager::UpdateDimensions()
 {
 	m_target->SetDimension(m_width, m_height);
 }
+
+void Manager::SetMousePosition(uint32_t x, uint32_t y)
+{
+	m_x;
+	m_y;
+}
+
+void Manager::GetMousePosition(uint32_t & x, uint32_t & y)
+{
+	x = m_x;
+	y = m_y;
+}

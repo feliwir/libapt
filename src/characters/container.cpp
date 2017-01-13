@@ -121,7 +121,7 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 		int a=0;
 	}
 	auto cf = instance->GetCurrentFrame();
-	if (cf < m_framecount && m_playing)
+	if (m_playing)
 	{
 		Frame& cFrame = m_frames[cf];
 
@@ -160,6 +160,10 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 			cf = 0;
 		}
 	}
+	else
+	{
+		int a = 0;
+	}
 
 	m_dl.Render(t);
 
@@ -167,7 +171,7 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 	{
 		s_engine.Execute(instance, a->GetBytecode(), m_owner);
 	}
-
+	m_actionList.clear();
 	instance->SetCurrentFrame(cf);
 
 }
