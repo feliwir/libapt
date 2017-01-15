@@ -47,8 +47,5 @@ namespace libapt
 		bool m_playing;
 		//performed before displaying each frame
 		std::vector<std::shared_ptr<Action>> m_actionList;
-
-	private:
-		static as::Engine s_engine;
     };
 }

@@ -8,7 +8,7 @@ using namespace libapt;
 using namespace std::chrono_literals;
 
 Manager::Manager() : m_fileprovider(nullptr), m_fps(30),
-m_width(800),m_height(600), m_dimChanged(false)
+m_width(800),m_height(600), m_dimChanged(false), m_x(0),m_y(0)
 {
 	if (flextInit() == GL_FALSE)
 	{
@@ -29,7 +29,7 @@ m_width(800),m_height(600), m_dimChanged(false)
 }
 
 Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp),  m_fps(30),
-m_width(800), m_height(600)
+m_width(800), m_height(600), m_x(0), m_y(0)
 {
 	if (flextInit() == GL_FALSE)
 	{
@@ -181,13 +181,13 @@ void Manager::UpdateDimensions()
 	m_target->SetDimension(m_width, m_height);
 }
 
-void Manager::SetMousePosition(uint32_t x, uint32_t y)
+void Manager::SetMousePosition(double x, double y)
 {
-	m_x;
-	m_y;
+	m_x = x;
+	m_y = y;
 }
 
-void Manager::GetMousePosition(uint32_t & x, uint32_t & y)
+void Manager::GetMousePosition(double & x, double & y)
 {
 	x = m_x;
 	y = m_y;

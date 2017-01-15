@@ -6,6 +6,8 @@
 #include <iostream>
 using namespace libapt;
 using namespace libapt::as;
+as::Engine Engine::s_engine;
+
 
 inline void Align(uint8_t *&ptr)
 {

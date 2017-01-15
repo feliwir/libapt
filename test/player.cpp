@@ -14,6 +14,12 @@ void Player::Resize(GLFWwindow* win,int width, int height)
 	instance->SetHeight(height,false);
 }
 
+void Player::CursorMove(GLFWwindow * window, double xpos, double ypos)
+{
+	Player* instance = reinterpret_cast<Player*>(glfwGetWindowUserPointer(window));
+	instance->SetMousePosition(xpos, ypos);
+}
+
 Player::Player()
 {
 	glfwSetErrorCallback(Error);
@@ -35,6 +41,7 @@ Player::Player()
 		exit(EXIT_FAILURE);
 
 	glfwSetWindowSizeCallback(m_window, Resize);
+	glfwSetCursorPosCallback(m_window, CursorMove);
 	glfwSetWindowUserPointer(m_window,this);
 	glfwMakeContextCurrent(m_window);
 	glfwSwapInterval(0);
@@ -99,4 +106,9 @@ void Player::SetHeight(const unsigned int height, bool set)
 		glfwSetWindowSize(m_window, m_mngr->GetWidth(), height);
 
 	m_mngr->SetHeight(height);
+}
+
+void Player::SetMousePosition(const double x, const double y)
+{
+	m_mngr->SetMousePosition(x, y);
 }

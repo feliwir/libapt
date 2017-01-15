@@ -42,6 +42,11 @@ namespace libapt
 			return m_data; 
 		}
 
+		inline std::shared_ptr<Manager> GetManager()
+		{
+			return m_manager;
+		}
+
 		const bool HasResized();
 	private:
 		Error LoadConst(const std::string name, std::shared_ptr<IFileProvider> fp);

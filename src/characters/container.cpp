@@ -9,7 +9,6 @@
 #include "../graphics/flextGL.h"
 #include <iostream>
 using namespace libapt;
-as::Engine Container::s_engine;
 
 Container::Container() : m_playing(true)
 {
@@ -24,7 +23,7 @@ void Container::HandleAction(std::shared_ptr<FrameItem> fi)
 void  Container::HandleInitAction(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance)
 {
 	auto action = std::dynamic_pointer_cast<InitAction>(fi);
-	s_engine.Execute(instance, action->GetBytecode(), m_owner);
+	as::Engine::s_engine.Execute(instance, action->GetBytecode(), m_owner);
 }
 
 void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance)
@@ -169,7 +168,7 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 
 	for (const auto& a : m_actionList)
 	{
-		s_engine.Execute(instance, a->GetBytecode(), m_owner);
+		as::Engine::s_engine.Execute(instance, a->GetBytecode(), m_owner);
 	}
 	m_actionList.clear();
 	instance->SetCurrentFrame(cf);

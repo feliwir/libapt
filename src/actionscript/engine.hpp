@@ -50,6 +50,8 @@ namespace libapt
 			//Helper functions
 			static std::shared_ptr<Object> GetRoot(Context& c);
 			static std::shared_ptr<Object> GetParent(Context& c);
+		public:
+			static as::Engine s_engine;
 		};
 	}
 }

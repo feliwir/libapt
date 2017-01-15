@@ -7,7 +7,15 @@ namespace libapt
 {
 	class Button : public Character
 	{
-	private:		
+	private:
+		enum State
+		{
+			NONE	= 0,
+			HOVER	= 1,
+			CLICKED	= 2,
+			RELEASE = 3,
+		};
+
 		union ActionFlags
 		{
 			struct 
@@ -55,6 +63,7 @@ namespace libapt
 			glm::vec4	unknown; ///always zero as far as I can see
 		};
 	public:
+		Button();
 		virtual void Parse(uint8_t*& iter) override;
 		virtual void Update(const Transformation& t, std::shared_ptr<DisplayObject> instance) override;
 	private:
@@ -69,5 +78,6 @@ namespace libapt
 		uint32_t m_actioncount;
 		std::vector<Action> m_actions;
 		uint32_t m_unknown2;
+		State m_state;
 	};
 }

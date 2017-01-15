@@ -42,9 +42,9 @@ namespace libapt
 			return m_dimChanged;
 		}
 
-		void SetMousePosition(uint32_t x, uint32_t y);
+		void SetMousePosition(double x, double y);
 
-		void GetMousePosition(uint32_t& x, uint32_t& y);
+		void GetMousePosition(double& x, double& y);
 	private:
 		std::map<std::string, std::shared_ptr<Apt>> m_apts;
 		std::map<uint32_t, Texture> m_textures;
@@ -56,8 +56,8 @@ namespace libapt
 		uint32_t m_fps;
 		uint32_t m_width;
 		uint32_t m_height;
-		uint32_t m_x;
-		uint32_t m_y;
+		double m_x;
+		double m_y;
 		bool m_dimChanged;
 	};
 }
