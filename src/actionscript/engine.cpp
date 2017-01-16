@@ -35,7 +35,7 @@ void Engine::Execute(Context& context, Function& f, std::vector<Value>& args, st
 	//create the execution context
 	context.ResizeRegisters(f.nRegisters);
 	context.SetConstantpool(f.Owner->GetConstants());
-	for (int i=0;i<f.nParams;++i)
+	for (uint32_t i=0;i<f.nParams;++i)
 	{
 		Value p;
 		if (i < args.size())
