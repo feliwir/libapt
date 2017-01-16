@@ -14,6 +14,7 @@ namespace libapt
 	class Character;
 	class DisplayObject;
 	class Geometry;
+	class Buffer;
 
 	class Apt : public std::enable_shared_from_this<Apt>
 	{
@@ -57,6 +58,11 @@ namespace libapt
 			return m_manager;
 		}
 
+		inline std::shared_ptr<Buffer> GetGeometryBuffer()
+		{
+			return m_geomBuf;
+		}
+
 		const bool HasResized();
 	private:
 		Error LoadConst(const std::string name, std::shared_ptr<IFileProvider> fp);
@@ -65,6 +71,7 @@ namespace libapt
 		bool m_frameEvent;
 		std::shared_ptr<DisplayObject> m_movieclip;
 		std::shared_ptr<Manager> m_manager;
+		std::shared_ptr<Buffer> m_geomBuf;
 		std::map<int, std::shared_ptr<Texture>> m_textures;
 		std::map<int, int> m_imageMap;
 		std::vector<std::shared_ptr<Geometry>> m_geometries;

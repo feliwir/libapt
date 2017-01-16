@@ -5,6 +5,7 @@
 #include "characters/movie.hpp"
 #include "characters/image.hpp"
 #include "characters/shape.hpp"
+#include "graphics/buffer.hpp"
 #include "util.hpp"
 #include "geometry.hpp"
 #include <iostream>
@@ -12,6 +13,7 @@ using namespace libapt;
 
 Apt::Apt() : m_frameEvent(false)
 {
+	m_geomBuf = std::make_shared<Buffer>();
 }
 
 Error Apt::LoadConst(const std::string name, std::shared_ptr<IFileProvider> fp)
@@ -157,7 +159,7 @@ Error Apt::Load(const uint8_t *buffer, unsigned int size, std::shared_ptr<Manage
 	{
 		g->Compile(shared_from_this());
 	}
-
+	m_geomBuf->Finalize();
 	return NO_ERROR;
 }
 

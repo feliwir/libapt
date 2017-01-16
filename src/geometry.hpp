@@ -69,7 +69,7 @@ namespace libapt
 		Geometry(uint32_t width,uint32_t height);
 		Error Load(const std::string& data);
 		void Compile(std::shared_ptr<Apt> apt);
-		void Draw(Transformation trans);
+		void Draw(const Transformation& trans, std::shared_ptr<Apt> apt);
 	private:
 		void AddLines(std::vector<Line>& lines, glm::u8vec4 color, int thickness);
 		void AddSolidTriangles(std::vector<Triangle>& tris, glm::u8vec4 color);
@@ -77,11 +77,8 @@ namespace libapt
 			glm::mat2 rotscale, glm::vec2 translate);
 		
 		std::vector<Triangle> TriangulateLine(Line l, uint32_t thickness);
-
-		uint32_t CreateVbo(const std::vector<Triangle>& triangles);
 	private:
 		std::vector<Entry> m_entries;
-		uint32_t m_vbo;
 		std::vector<Object> m_objects;
 		glm::mat4 m_ortho;
 		//Shader stuff

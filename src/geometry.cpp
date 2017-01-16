@@ -2,6 +2,7 @@
 #include <libapt/apt.hpp>
 #include "graphics/flextGL.h"
 #include "graphics/clipmask.hpp"
+#include "graphics/buffer.hpp"
 #include "util.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -279,8 +280,8 @@ Geometry::Entry::Entry() : thickness(0), image(0),style(UNDEFINED)
 //compile to OpenGL buffer objects
 void Geometry::Compile(std::shared_ptr<Apt> apt)
 {
-	std::vector<Triangle> tris;
-
+	auto buffer = apt->GetGeometryBuffer();
+	
 	for (auto& e : m_entries)
 	{
 		Object obj;
@@ -309,15 +310,22 @@ void Geometry::Compile(std::shared_ptr<Apt> apt)
 			std::cout << "Can't compile undefined geometry" << std::endl;
 			break;
 		}
+
+		std::vector<glm::vec2> verts;
+		for (auto& t : e.triangles)
+		{
+			verts.push_back(t.v1);
+			verts.push_back(t.v2);
+			verts.push_back(t.v3);
+		}
+
 		//store offset in the vbo
-		obj.start = tris.size() *3;
+		obj.start = buffer->Append(verts);
 		//add triangles of this object to the vbo
-		tris.insert(tris.end(), e.triangles.begin(), e.triangles.end());
-		obj.numVerts = e.triangles.size() * 3;
+		obj.numVerts = verts.size();
 		m_objects.push_back(obj);
 	}
-
-	m_vbo = CreateVbo(tris);
+	m_entries.clear();
 }
 
 std::vector<Geometry::Triangle> Geometry::TriangulateLine(Line l, uint32_t thickness)
@@ -338,19 +346,12 @@ std::vector<Geometry::Triangle> Geometry::TriangulateLine(Line l, uint32_t thick
 	return tris;
 }
 
-uint32_t Geometry::CreateVbo(const std::vector<Triangle>& triangles)
-{
-	uint32_t vbo;
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle)*triangles.size(), triangles.data(), GL_STATIC_DRAW);
-	return vbo;
-}
 
-void Geometry::Draw(Transformation t)
+void Geometry::Draw(const Transformation& t, std::shared_ptr<Apt> apt)
 {
 	s_shader.Use();
 	glBindVertexArray(s_vao);
+	apt->GetGeometryBuffer()->Bind();
 	glUniformMatrix2fv(s_shader.uniform("protscale"), 1, GL_FALSE, glm::value_ptr(t.rotscale));
 	glUniform2fv(s_shader.uniform("ptranslate"), 1, glm::value_ptr(t.translate));
 	glUniformMatrix4fv(s_shader.uniform("ortho"), 1, GL_FALSE, glm::value_ptr(m_ortho));
@@ -368,7 +369,6 @@ void Geometry::Draw(Transformation t)
 		glUniform1i(s_shader.uniform("masked"), false);
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	for (const auto& obj : m_objects)
 	{	
 		glVertexAttribPointer(
