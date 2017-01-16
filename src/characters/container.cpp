@@ -93,11 +93,6 @@ void Container::HandlePlaceObject(std::shared_ptr<FrameItem> fi, std::shared_ptr
 
 }
 
-void Container::HandleFramelabel(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance)
-{
-	auto fl = std::dynamic_pointer_cast<Framelabel>(fi);
-	instance->SetFramelabel(fl->GetLabel(),fl->GetFrame());
-}
 
 void Container::HandleRemoveObject(std::shared_ptr<FrameItem> fi)
 {
@@ -115,10 +110,6 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 
 void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> instance)
 {
-	if(instance->GetName()=="OptionsNav")
-	{
-		int a=0;
-	}
 	auto cf = instance->GetCurrentFrame();
 	if (m_playing)
 	{
@@ -133,9 +124,6 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 			{
 			case FrameItem::ACTION:
 				HandleAction(fi);
-				break;
-			case FrameItem::FRAMELABEL:
-				HandleFramelabel(fi,instance);
 				break;
 			case FrameItem::PLACEOBJECT:
 				HandlePlaceObject(fi,instance);
@@ -173,5 +161,21 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 	m_actionList.clear();
 	instance->SetCurrentFrame(cf);
 
+}
+
+void Container::Prepare(std::shared_ptr<DisplayObject> instance)
+{
+	//add all framelabels
+	for (auto& frame : m_frames)
+	{
+		for (auto& fi : frame.GetFrameitems())
+		{
+			if (fi->GetType() == FrameItem::FRAMELABEL)
+			{
+				auto fl = std::dynamic_pointer_cast<Framelabel>(fi);
+				instance->SetFramelabel(fl->GetLabel(), fl->GetFrame());
+			}		
+		}		
+	}	
 }
 

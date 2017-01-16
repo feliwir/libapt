@@ -10,7 +10,7 @@
 #include <iostream>
 using namespace libapt;
 
-Apt::Apt() 
+Apt::Apt() : m_frameEvent(false)
 {
 }
 
@@ -178,6 +178,7 @@ std::shared_ptr<Character> Apt::GetExport(const std::string& name)
 
 void Apt::Render()
 {
+	m_frameEvent = false;
 	m_movieclip->Render(Transformation());
 }
 
@@ -200,12 +201,14 @@ std::shared_ptr<Texture> Apt::GetTexture(int id)
 
 uint32_t Apt::GetWidth()
 {
-	return m_manager->GetWidth();
+	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
+	return m->GetWidth();
 }
 
 uint32_t Apt::GetHeight()
 {
-	return m_manager->GetHeight();
+	auto m = std::dynamic_pointer_cast<Movie>(m_movieclip->GetCharacter());
+	return m->GetHeight();
 }
 
 Const::Entry Apt::GetConstant(uint32_t index)

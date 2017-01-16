@@ -16,6 +16,11 @@ namespace libapt
 				Context();
 				void Create(std::shared_ptr<Object> scope, std::shared_ptr<Apt> owner);
 
+				inline std::vector<Value>& GetConstants()
+				{
+					return m_constants;
+				}
+
 				Value GetVariable(const std::string& name)
 				{
 					return m_scope->GetVariable(name);
@@ -29,11 +34,6 @@ namespace libapt
 				inline Stack& GetStack()
 				{
 					return m_stack;
-				}
-
-				inline std::vector<Value>& GetConstants()
-				{
-					return m_constants;
 				}
 
 				inline const std::shared_ptr<Apt> GetOwner()
@@ -90,10 +90,15 @@ namespace libapt
 				{
 					m_params.clear();
 				}
+
+				inline void SetConstantpool(const std::vector<Value>& cp)
+				{
+					m_constants = cp;
+				}
             private:
 				std::shared_ptr<Apt> m_owner;
 				Stack m_stack;
-				std::vector<Value> m_constants;		
+				std::vector<Value> m_constants;
 				//function registers
 				std::vector<Value> m_registers;
 				//function parameters

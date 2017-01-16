@@ -1,5 +1,6 @@
 #include "displayobject.hpp"
 #include "characters/container.hpp"
+#include <libapt/manager.hpp>
 #include <iostream>
 using namespace libapt;
 
@@ -11,21 +12,25 @@ m_isClipLayer(false)
 void DisplayObject::Create(std::shared_ptr<Character> ch, const glm::vec2 & translate,
 	const glm::mat2& rotscale, const std::string & name, std::shared_ptr<DisplayObject> parent)
 {
+	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
 	m_character = ch->MakeInstance();
+	m_character->Prepare(this_ptr);
 	m_rotscale = rotscale;
 	m_translate = translate;
 	m_name = name;
 	m_parent = parent;
 	m_ps = PLAYING;
 	m_isClipLayer = false;
-	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
+
 }
 
 void DisplayObject::CreateClipLayer(std::shared_ptr<Character> ch, const glm::vec2 & translate, 
 	const glm::mat2 & rotscale, const std::string & name, 
 	std::shared_ptr<DisplayObject> parent, uint32_t clipdepth)
 {
+	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
 	m_character = ch->MakeInstance();
+	m_character->Prepare(this_ptr);
 	m_rotscale = rotscale;
 	m_translate = translate;
 	m_name = name;
@@ -33,8 +38,10 @@ void DisplayObject::CreateClipLayer(std::shared_ptr<Character> ch, const glm::ve
 	m_ps = PLAYING;
 	m_isClipLayer = true;
 	m_clipDepth = clipdepth;
-	m_mask = std::make_shared<ClipMask>(ch->GetOwner()->GetWidth(), ch->GetOwner()->GetHeight());
-	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
+	m_mask = std::make_shared<ClipMask>(
+		m_character->GetOwner()->GetManager()->GetWidth(),
+		m_character->GetOwner()->GetManager()->GetHeight());
+
 }
 
 void DisplayObject::Render(const Transformation& t)
@@ -43,8 +50,9 @@ void DisplayObject::Render(const Transformation& t)
 	{
 		if (m_character->GetOwner()->HasResized())
 		{
-			m_mask->ResizeFb(m_character->GetOwner()->GetWidth(),
-				m_character->GetOwner()->GetHeight());
+			m_mask->ResizeFb(
+				m_character->GetOwner()->GetManager()->GetWidth(),
+				m_character->GetOwner()->GetManager()->GetHeight());
 		}
 		m_mask->BindFb();
 		m_mask->Clear();

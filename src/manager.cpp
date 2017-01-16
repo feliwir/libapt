@@ -1,7 +1,7 @@
 #include <libapt/manager.hpp>
 #include "graphics/flextGL.h"
 #include "default_fp.hpp"
-#include "debug.hpp"
+#include "graphics/debug.hpp"
 #include <vector>
 #include <iostream>
 using namespace libapt;

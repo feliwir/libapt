@@ -9,7 +9,6 @@ Object::Object() : m_ps(STOPPED), m_cf(0)
 
 Value Object::GetProperty(const std::string & property)
 {
-
 	std::string p = property;
 	std::transform(p.begin(), p.end(), p.begin(), ::tolower);
 	if (m_properties.find(p) == m_properties.end())

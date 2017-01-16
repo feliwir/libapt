@@ -12,6 +12,10 @@
 #include <iostream>
 using namespace libapt;
 
+void Character::Prepare(std::shared_ptr<DisplayObject> instance)
+{
+}
+
 std::shared_ptr<Character> Character::Create(uint8_t*& iter,
 	std::shared_ptr<Apt> owner)
 {

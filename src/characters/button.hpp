@@ -20,16 +20,16 @@ namespace libapt
 		{
 			struct 
 			{
-				bool CondOverDownToIdle : 1;
-				char KeyPress : 7;
-				bool CondIdleToOverUp : 1;
-				bool CondOverUpToIdle : 1;
-				bool CondOverUpToOverDown : 1;
-				bool CondOverDownToOverUp : 1;
-				bool CondOverDownToOutDown : 1;
-				bool CondOutDownToOverDown : 1;
-				bool CondOutDownToIdle : 1;
-				bool CondIdleToOverDown : 1;
+				bool IdleToOverDown : 1;
+				bool OutDownToIdle : 1;
+				bool OutDownToOverDown : 1;
+				bool OverDownToOutDown : 1;
+				bool OverDownToOverUp : 1;
+				bool OverUpToOverDown : 1;
+				bool OverUpToIdle : 1;
+				bool IdleToOverUp : 1;
+				unsigned char KeyPress : 7;
+				bool OverDownToIdle : 1;
 			};
 			uint32_t value;
 		};

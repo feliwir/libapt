@@ -25,6 +25,8 @@ void Engine::Execute(std::shared_ptr<Object> scope, const uint8_t* bc, std::shar
 	while (!Opcode(context, bs))
 	{
 	}
+
+	scope->GetConstants() = context.GetConstants();
 }
 
 void Engine::Execute(Context& context, Function& f, std::vector<Value>& args, std::shared_ptr<Apt> owner)
@@ -32,8 +34,7 @@ void Engine::Execute(Context& context, Function& f, std::vector<Value>& args, st
 	uint8_t* bs = f.Code;
 	//create the execution context
 	context.ResizeRegisters(f.nRegisters);
-    if(f.Name=="ShowMainMenu")
-        int a=0;
+	context.SetConstantpool(f.Owner->GetConstants());
 	for (int i=0;i<f.nParams;++i)
 	{
 		Value p;
@@ -49,6 +50,7 @@ void Engine::Execute(Context& context, Function& f, std::vector<Value>& args, st
 	{
 		location = (bs - f.Code);
 	}
+
 	context.ClearParams();
 }
 
@@ -154,6 +156,9 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	case CONSTANTPOOL:
 		Constantpool(c,bs);
 		break;
+	case GOTOLABEL:
+		GotoLabel(c, bs);
+		break;
 	case DEFINEFUNCTION2:
 		DefineFunction2(c, bs);
 		break;
@@ -195,6 +200,9 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		break;
 	case EA_CALLNAMEDMETHODPOP:
 		CallNamedMethodPop(c, bs);
+		break;
+	case EA_CALLMETHODPOP:
+		CallMethodPop(c, bs);
 		break;
 	case END:
 		return true;
@@ -337,12 +345,31 @@ void Engine::Constantpool(Context& c, uint8_t*& bs)
 		v.FromConstant(c);
 		cp.push_back(v);
 	}
+	c.GetScope()->GetConstants() = cp;
+}
+
+void Engine::GotoLabel(Context & c, uint8_t *& bs)
+{
+	auto scope = c.GetScope();
+	auto& owner = c.GetOwner();
+	std::string lblName;
+
+	uint32_t strOffset = read<uint32_t>(bs);
+	if (strOffset)
+		lblName = readString(owner->GetBase() + strOffset);
+
+	if (lblName == "_close")
+		int a = 0;
+
+	uint32_t frame = scope->GetProperty(lblName).ToInteger();
+	scope->SetCurrentFrame(frame);
 }
 
 void Engine::DefineFunction(Context& c, uint8_t*& bs)
 {
 	auto owner = c.GetOwner();
 	Function f;
+	f.Owner = c.GetScope();
 	f.nRegisters = 4;
 	uint32_t strOffset = read<uint32_t>(bs);
 	if (strOffset)
@@ -378,6 +405,7 @@ void Engine::DefineFunction2(Context& c, uint8_t*& bs)
 {
 	auto owner = c.GetOwner();
 	Function f;
+	f.Owner = c.GetScope();
 	uint32_t strOffset = read<uint32_t>(bs);
 	if (strOffset)
 		f.Name = readString(owner->GetBase() + strOffset);
@@ -442,6 +470,54 @@ void Engine::CallNamedFunctionPop(Context& c, uint8_t *& bs)
 	Execute(c, f, args, c.GetOwner());
 }
 
+void Engine::CallMethodPop(Context & c, uint8_t *& bs)
+{
+	auto& s = c.GetStack();
+	std::shared_ptr<Object> obj;
+	std::string func;
+	uint32_t argCount;
+	Value v = s.Pop();
+	func = v.ToString();
+	v = s.Pop();
+	obj = v.ToObject();
+	v = s.Pop();
+	argCount = v.ToInteger();
+	std::vector<Value> args;
+	for (int i = 0; i < argCount; ++i)
+	{
+		args.push_back(s.Pop());
+	}
+
+	if (obj == nullptr)
+		assert(0);
+
+	if (func == "stop")
+	{
+		obj->SetPlaystate(Object::STOPPED);
+	}
+	else if (func == "gotoAndPlay")
+	{
+		uint32_t frame = obj->GetProperty(args[0].ToString()).ToInteger();
+		obj->SetCurrentFrame(frame);
+		obj->SetPlaystate(Object::PLAYING);
+	}
+	else if (func == "gotoAndStop")
+	{
+		uint32_t frame = obj->GetProperty(args[0].ToString()).ToInteger();
+		obj->SetCurrentFrame(frame);
+		obj->SetPlaystate(Object::STOPPED);
+	}
+	else
+	{
+		v = obj->GetVariable(func);
+		if (v.GetType() == Value::UNDEFINED)
+			assert(0);
+
+		Function f = v.ToFunction();
+		Execute(c, f, args, c.GetOwner());
+	}
+}
+
 void Engine::GetUrl(Context& c,uint8_t*& bs)
 {
     auto& s = c.GetStack();
@@ -491,6 +567,12 @@ void Engine::CallNamedMethodPop(Context& c, uint8_t *& bs)
         obj->SetCurrentFrame(frame);
         obj->SetPlaystate(Object::PLAYING);
     }
+	else if (func == "gotoAndStop")
+	{
+		uint32_t frame = obj->GetProperty(args[0].ToString()).ToInteger();
+		obj->SetCurrentFrame(frame);
+		obj->SetPlaystate(Object::STOPPED);
+	}
 	else
 	{
 		v = obj->GetProperty(func);

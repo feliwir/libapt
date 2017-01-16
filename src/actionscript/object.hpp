@@ -31,6 +31,11 @@ namespace libapt
 			virtual void SetVariable(const std::string& name, Value v);
 			std::map<std::string, Value>& GetVariables();
 
+			inline std::vector<Value>& GetConstants()
+			{
+				return m_constants;
+			}
+
 			void SetPlaystate(const PlayState ps);
 			void SetCurrentFrame(const uint32_t cf);
 			void NextFrame();
@@ -39,8 +44,8 @@ namespace libapt
 			virtual void OnPlayStateChanged();
 		protected:
 			std::map<std::string, Value> m_properties;
-			std::vector<Value> m_constants;
 			std::map<std::string, Value> m_variables;
+			std::vector<Value> m_constants;
 			PlayState m_ps;
 			uint32_t m_cf;
         };

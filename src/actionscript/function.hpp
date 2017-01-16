@@ -1,11 +1,13 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <memory>
 
 namespace libapt
 {
     namespace as
     {
+		class Object;
+
         struct Function
         {
 			std::string Name;
@@ -14,6 +16,7 @@ namespace libapt
 			uint32_t Size;
 			uint8_t* Code;
 			uint32_t nRegisters;
+			std::shared_ptr<Object> Owner;
         };
 
 		struct Argument

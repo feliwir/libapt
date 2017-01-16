@@ -42,6 +42,16 @@ namespace libapt
 			return m_data; 
 		}
 
+		inline const bool GetFrameevent()
+		{
+			return m_frameEvent;
+		}
+
+		inline void HadFrameevent()
+		{
+			m_frameEvent = true;
+		}
+
 		inline std::shared_ptr<Manager> GetManager()
 		{
 			return m_manager;
@@ -52,6 +62,7 @@ namespace libapt
 		Error LoadConst(const std::string name, std::shared_ptr<IFileProvider> fp);
 		Error LoadDat(const std::string name, std::shared_ptr<IFileProvider> fp);
 	private:
+		bool m_frameEvent;
 		std::shared_ptr<DisplayObject> m_movieclip;
 		std::shared_ptr<Manager> m_manager;
 		std::map<int, std::shared_ptr<Texture>> m_textures;

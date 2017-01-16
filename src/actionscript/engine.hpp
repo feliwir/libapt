@@ -17,11 +17,14 @@ namespace libapt
 			static bool Opcode(Context& c, uint8_t*& bs);
 			///--Opcodes
 			static void Constantpool(Context& c,uint8_t*& bs);
+			//Movie control
+			static void GotoLabel(Context& c, uint8_t*& bs);
 			//Functions			
 			static void DefineFunction(Context& c, uint8_t*& bs);
 			static void DefineFunction2(Context& c, uint8_t*& bs);
 			static void CallNamedMethodPop(Context& c, uint8_t*& bs);
 			static void CallNamedFunctionPop(Context& c, uint8_t*& bs);
+			static void CallMethodPop(Context& c, uint8_t*& bs);
 			//Geturl
 			static void GetUrl(Context& c, uint8_t*& bs);
 			static void GetUrl2(Context& c);

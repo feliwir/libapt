@@ -44,6 +44,7 @@ void Button::Parse(uint8_t *& iter)
 	for (int i = 0; i < m_actioncount; ++i)
 	{
 		Action a = read<Action>(actionOffset);
+		a.actiondata += reinterpret_cast<uintptr_t>(m_owner->GetBase());
 		m_actions.push_back(a);
 	}
 	m_unknown2 = read<uint32_t>(iter);
@@ -51,11 +52,23 @@ void Button::Parse(uint8_t *& iter)
 
 void Button::Update(const Transformation& t, std::shared_ptr<DisplayObject> instance)
 {
+	if (m_owner->GetFrameevent())
+		return;
+
 	auto mngr = m_owner->GetManager();
 	double x, y;
 	mngr->GetMousePosition(x, y);
 	State last = m_state;
+	m_state = NONE;
 	glm::vec2 p(x, y);
+
+	if (x == 0 && y == 0)
+		return;
+
+	double xratio = static_cast<double>(m_owner->GetManager()->GetWidth())
+		/ m_owner->GetWidth();
+	double yratio = static_cast<double>(m_owner->GetManager()->GetHeight())
+		/ m_owner->GetHeight();
 
 	for (const auto& tri : m_triangles)
 	{
@@ -69,22 +82,33 @@ void Button::Update(const Transformation& t, std::shared_ptr<DisplayObject> inst
 		v2 += t.translate;
 		v3 += t.translate;
 
+		v1.x *= xratio;
+		v2.x *= xratio;
+		v3.x *= xratio;
+
+		v1.y *= yratio;
+		v2.y *= yratio;
+		v3.y *= yratio;
+
 		//barycentric coordinates
-		const float a = ((v2.y - v3.y)*(p.x - v3.x) + (v3.x - v2.x)*(p.y - v3.y)) /
-			((v2.y - v3.y)*(v1.x - v3.x) + (v3.x - v2.x)*(v1.y - v3.y));
-		const float b = ((v2.y - v3.y)*(p.x - v3.x) + (v1.x - v3.x)*(p.y - v3.y)) /
-			((v2.y - v3.y)*(v1.x - v3.x) + (v3.x - v2.x)*(v1.y - v3.y));
-		const float c = 1 - a - b;
+		const double denom = ((v2.y - v3.y)*(v1.x - v3.x) + (v3.x - v2.x)*(v1.y - v3.y));
+
+		const double a = ((v2.y - v3.y)*(p.x - v3.x) + (v3.x - v2.x)*(p.y - v3.y)) / denom;
+			
+		const double b = ((v3.y - v1.y)*(p.x - v3.x) + (v1.x - v3.x)*(p.y - v3.y)) / denom;
+
+		const double c = 1 - a - b;
 
 		if ((0 <= a) && (0 <= b) && (0 <= c) &&
 			(a <= 1) && (b <= 1) && (c <= 1))
 		{
 			//p is inside the triangle
-			if (instance->GetName().size() > 0)
-			{
+			if(instance->GetName().size()>0)
 				std::cout << "Mouse over: " << instance->GetName() << std::endl;
-			}
+
 			m_state = HOVER;
+			m_owner->HadFrameevent();
+			break;
 		}
 	}
 
@@ -93,7 +117,14 @@ void Button::Update(const Transformation& t, std::shared_ptr<DisplayObject> inst
 		ActionFlags flag = a.flags;
 		if (last == NONE && m_state == HOVER)
 		{
-			if (flag.CondOverDownToIdle)
+			if (flag.IdleToOverDown)
+			{
+				as::Engine::s_engine.Execute(instance->GetParent(), a.actiondata, m_owner);
+			}
+		}
+		if (last == HOVER && m_state == NONE)
+		{
+			if (flag.OutDownToIdle)
 			{
 				as::Engine::s_engine.Execute(instance->GetParent(), a.actiondata, m_owner);
 			}

@@ -19,6 +19,8 @@ namespace libapt
 	public:
 		Container();
 		void Update(const Transformation& trans, std::shared_ptr<DisplayObject> instance) override;
+		void Prepare(std::shared_ptr<DisplayObject> instance) override;
+
 		virtual void Parse(uint8_t *&iter) = 0;
 
 		inline DisplayList& GetDisplaylist()
@@ -36,7 +38,6 @@ namespace libapt
 		std::vector<Frame> m_frames;
 	private:
 		void HandleAction(std::shared_ptr<FrameItem> fi);
-		void HandleFramelabel(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance);
 		void HandleBackground(std::shared_ptr<FrameItem> fi);
 		void HandlePlaceObject(std::shared_ptr<FrameItem> fi, std::shared_ptr<DisplayObject> instance);
 		void HandleRemoveObject(std::shared_ptr<FrameItem> fi);

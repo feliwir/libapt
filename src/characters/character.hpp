@@ -12,6 +12,8 @@ namespace libapt
 
 	class Character : public std::enable_shared_from_this<Character>
 	{
+	private:
+		static const uint32_t SIGNATURE = 0x09876543;
 	public:
 		enum Type
 		{
@@ -29,8 +31,9 @@ namespace libapt
 		virtual void Parse(uint8_t *&iter) = 0;
 		//Update all placed objects 
 		virtual void Update(const Transformation& trans, std::shared_ptr<DisplayObject> instance) = 0;
-		static const uint32_t SIGNATURE = 0x09876543;
 		
+		virtual void Prepare(std::shared_ptr<DisplayObject> instance);
+
 		inline void SetOffset(const uint32_t offset)
 		{
 			m_thisOffset = offset;
