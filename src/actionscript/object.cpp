@@ -3,7 +3,7 @@
 using namespace libapt;
 using namespace libapt::as;
 
-Object::Object() : m_ps(STOPPED), m_cf(0)
+Object::Object() : m_ps(PLAYING), m_cf(0)
 {
 }
 
@@ -48,7 +48,6 @@ std::map<std::string, Value>& Object::GetVariables()
 void Object::SetPlaystate(const PlayState ps)
 {
 	m_ps = ps;
-	OnPlayStateChanged();
 }
 
 void Object::SetCurrentFrame(const uint32_t frame)
@@ -62,9 +61,5 @@ void Object::NextFrame()
 }
 
 void Object::OnPropertyChanged(const std::string & property)
-{
-}
-
-void Object::OnPlayStateChanged()
 {
 }

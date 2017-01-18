@@ -45,7 +45,6 @@ namespace libapt
 			void NextFrame();
 		protected:
 			virtual void OnPropertyChanged(const std::string& property);
-			virtual void OnPlayStateChanged();
 		protected:
 			std::map<std::string, Value> m_properties;
 			std::map<std::string, Value> m_variables;

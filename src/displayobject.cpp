@@ -75,8 +75,3 @@ void DisplayObject::OnPropertyChanged(const std::string& property)
 
 }
 
-void DisplayObject::OnPlayStateChanged()
-{
-	auto c = std::dynamic_pointer_cast<Container>(m_character);
-	c->SetPlaying((m_ps == PLAYING));
-}

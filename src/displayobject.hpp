@@ -96,7 +96,6 @@ namespace libapt
 			SetProperty(lbl,v);
 		}
 		virtual void OnPropertyChanged(const std::string& property) override;
-		virtual void OnPlayStateChanged() override;
 	private:	
 		std::shared_ptr<Character> m_character;
 		std::shared_ptr<DisplayObject> m_parent;

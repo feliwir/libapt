@@ -80,6 +80,8 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	case PLAY:
 		c.GetScope()->SetPlaystate(Object::PLAYING);
 		break;
+	case PREVFRAME:
+		break;
 	case STOP:
 		c.GetScope()->SetPlaystate(Object::STOPPED);
 		break;
