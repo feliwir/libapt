@@ -57,6 +57,7 @@ namespace libapt
 		{
 			return m_btnDown;
 		}
+
 	private:
 		std::map<std::string, std::shared_ptr<Apt>> m_apts;
 		std::map<uint32_t, Texture> m_textures;
