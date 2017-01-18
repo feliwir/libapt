@@ -14,9 +14,15 @@ namespace libapt
 		uint32_t Append(const std::vector<glm::vec2>& verts);
 		void Finalize();
 
-		void Bind();
+		void Bind() const;
+
+		inline uint32_t GetSize() const
+		{
+			return m_size;
+		}
 	private:
 		uint32_t m_vbo;
 		std::vector<glm::vec2> m_vertices;
+		uint32_t m_size;
 	};
 }

@@ -16,8 +16,8 @@ namespace libapt
 	{
 	public:
 		Manager();
-
 		Manager(std::shared_ptr<IFileProvider> fp);
+
 		Error AddApt(const std::string& name);
 		Error SetActive(const std::string& name);
 		//Getters
@@ -26,10 +26,12 @@ namespace libapt
 		std::shared_ptr<Apt> GetApt(const std::string& name);
 		uint32_t GetWidth();
 		uint32_t GetHeight();
+		inline const bool GetDebug() { return m_debug; }
 		//Setters
 		void SetWidth(const uint32_t width);
 		void SetHeight(const uint32_t height);
 		void SetFps(const uint32_t fps);
+		void SetDebug(const bool debug);
 
 		void Render(const bool window = true);
 
@@ -45,6 +47,16 @@ namespace libapt
 		void SetMousePosition(double x, double y);
 
 		void GetMousePosition(double& x, double& y);
+
+		inline void SetButtonDown(uintptr_t ptr)
+		{
+			m_btnDown = ptr;
+		}
+
+		inline uintptr_t GetButtonDown()
+		{
+			return m_btnDown;
+		}
 	private:
 		std::map<std::string, std::shared_ptr<Apt>> m_apts;
 		std::map<uint32_t, Texture> m_textures;
@@ -59,5 +71,7 @@ namespace libapt
 		double m_x;
 		double m_y;
 		bool m_dimChanged;
+		bool m_debug;
+		uintptr_t m_btnDown;
 	};
 }

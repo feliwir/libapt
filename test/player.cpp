@@ -20,7 +20,7 @@ void Player::CursorMove(GLFWwindow * window, double xpos, double ypos)
 	instance->SetMousePosition(xpos, ypos);
 }
 
-Player::Player()
+Player::Player() : m_debug(false)
 {
 	glfwSetErrorCallback(Error);
 	if (glfwInit() == GLFW_FALSE)
@@ -47,6 +47,7 @@ Player::Player()
 	glfwSwapInterval(0);
 	
 	m_mngr = std::make_shared<libapt::Manager>(std::make_shared<FileProvider>());
+	m_mngr->SetDebug(m_debug);
 }
 
 void Player::Run()
@@ -111,4 +112,10 @@ void Player::SetHeight(const unsigned int height, bool set)
 void Player::SetMousePosition(const double x, const double y)
 {
 	m_mngr->SetMousePosition(x, y);
+}
+
+void Player::SetDebug(const bool debug)
+{
+	m_debug = debug;
+	m_mngr->SetDebug(m_debug);
 }

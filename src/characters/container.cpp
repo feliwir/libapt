@@ -7,10 +7,11 @@
 #include "../frameitems/framelabel.hpp"
 #include "../frameitems/removeobject.hpp"
 #include "../graphics/flextGL.h"
+#include "../actionscript/object.hpp"
 #include <iostream>
 using namespace libapt;
 
-Container::Container() : m_playing(true)
+Container::Container()
 {
 }
 
@@ -111,7 +112,7 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> instance)
 {
 	auto cf = instance->GetCurrentFrame();
-	if (m_playing)
+	if (instance->GetPlaystate()==as::Object::PLAYING)
 	{
 		Frame& cFrame = m_frames[cf];
 

@@ -26,3 +26,7 @@ The apt player using libapt:
 Notice that the background is not actually part of the Apt file.
 Most differences are due to missing actionscript support. Text support is on my TODO
 list aswell.
+
+# Contributors
+Stephan Vedder - Main tool 
+Tomsons26 - Helped with enums 

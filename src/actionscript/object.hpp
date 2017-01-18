@@ -36,6 +36,10 @@ namespace libapt
 				return m_constants;
 			}
 
+			inline PlayState GetPlaystate()
+			{
+				return m_ps;
+			}
 			void SetPlaystate(const PlayState ps);
 			void SetCurrentFrame(const uint32_t cf);
 			void NextFrame();

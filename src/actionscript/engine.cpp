@@ -8,6 +8,7 @@ using namespace libapt;
 using namespace libapt::as;
 as::Engine Engine::s_engine;
 
+std::vector<Action> backtrace;
 
 inline void Align(uint8_t *&ptr)
 {
@@ -16,14 +17,16 @@ inline void Align(uint8_t *&ptr)
 
 void Engine::Execute(std::shared_ptr<Object> scope, const uint8_t* bc, std::shared_ptr<Apt> owner)
 {
+	backtrace.clear();
 	uint8_t* bs = const_cast<uint8_t*>(bc);
 	//create the execution context
 	Context context;
 	context.Create(scope, owner);
 
-
+	uint32_t location = 0;
 	while (!Opcode(context, bs))
 	{
+		location = (bs - bc);
 	}
 
 	scope->GetConstants() = context.GetConstants();
@@ -86,7 +89,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	case ADD:
 		Add(c);
 		break;
-	case LOGICALNOT:
+	case NOT:
 		LogicalNot(c);
 		break;
 	case POP:
@@ -105,13 +108,13 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		v = s.Pop();
 		std::cout << "TRACE: " << v.ToString() << std::endl;
 		break;
-	case NEWADD:
+	case ADD2:
 		NewAdd(c);
 		break;
-	case NEWEQUALS:
+	case EQUALS2:
 		NewEquals(c);
 		break;
-	case DUP:
+	case PUSHDUPLICATE:
 		v = s.Pop();
 		s.Push(v);
 		s.Push(v);
@@ -127,11 +130,11 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		v.FromByte(1);
 		s.Push(v);
 		break;
-	case EA_PUSHTHIS:
+	case EA_PUSHTHISVAR:
 		v.FromObject(c.GetScope());
 		s.Push(v);
 		break;
-	case EA_PUSHGLOBAL:
+	case EA_PUSHGLOBALVAR:
 		v.FromObject(c.GetGlobal());
 		s.Push(v);
 		break;
@@ -179,7 +182,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		v.FromString(str);
 		s.Push(v);
 		break;
-	case EA_PUSHCONSTANT:
+	case EA_PUSHCONSTANTBYTE:
 		v = GetConstant(c, read<uint8_t>(bs));
 		s.Push(v);
 		break;
@@ -195,7 +198,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	case EA_GETSTRINGMEMBER:
 		str = readString(c.GetOwner()->GetBase() + read<uint32_t>(bs));
 		break;
-	case EA_CALLNAMEDFUNCTIONPOP:
+	case EA_CALLNAMEDFUNCPOP:
 		CallNamedFunctionPop(c, bs);
 		break;
 	case EA_CALLNAMEDMETHODPOP:
@@ -211,6 +214,8 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		std::cout << "Unimplemented opcode: " << static_cast<int>(a) << std::endl;
 		break;
 	}
+
+	backtrace.push_back(a);
 	return false;
 }
 

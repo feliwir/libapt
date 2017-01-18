@@ -16,6 +16,7 @@ public:
 	void SetWidth(const unsigned int width,bool set = true);
 	void SetHeight(const unsigned int width, bool set = true);
 	void SetMousePosition(const double x, const double y);
+	void SetDebug(const bool debug);
 	//Run
 	void Run();
 private:
@@ -23,6 +24,7 @@ private:
 	static void Resize(GLFWwindow* win, int width, int height);
 	static void CursorMove(GLFWwindow* window, double xpos, double ypos);
 private:
+	bool m_debug;
 	GLFWwindow* m_window;
 	std::shared_ptr<libapt::Manager> m_mngr;
 	std::string m_input;

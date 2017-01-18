@@ -17,15 +17,18 @@ namespace libapt
 	public:
 		enum Type
 		{
-			SHAPE = 1,
-			EDITTEXT = 2,
-			FONT = 3,
-			BUTTON = 4,
-			SPRITE = 5,
-			IMAGE = 7,
-			MORPH = 8,
-			MOVIE = 9,
-			TEXT = 10
+			SHAPE		= 1,
+			TEXT		= 2,
+			FONT		= 3,
+			BUTTON		= 4,
+			SPRITE		= 5,
+			SOUND		= 6,
+			IMAGE		= 7,
+			MORPH		= 8,
+			MOVIE		= 9,
+			STATICTEXT	= 10,
+			NONE		= 11,
+			VIDEO		= 12
 		};
 
 		virtual void Parse(uint8_t *&iter) = 0;

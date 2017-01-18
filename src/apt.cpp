@@ -11,7 +11,7 @@
 #include <iostream>
 using namespace libapt;
 
-Apt::Apt() : m_frameEvent(false)
+Apt::Apt()
 {
 	m_geomBuf = std::make_shared<Buffer>();
 }
@@ -180,7 +180,6 @@ std::shared_ptr<Character> Apt::GetExport(const std::string& name)
 
 void Apt::Render()
 {
-	m_frameEvent = false;
 	m_movieclip->Render(Transformation());
 }
 

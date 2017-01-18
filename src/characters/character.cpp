@@ -37,7 +37,7 @@ std::shared_ptr<Character> Character::Create(uint8_t*& iter,
 	case Character::SHAPE:
 		ch = std::make_shared<Shape>();
 		break;
-	case Character::EDITTEXT:
+	case Character::TEXT:
 		ch = std::make_shared<Edittext>();
 		break;
 	case Character::FONT:
@@ -78,7 +78,7 @@ std::shared_ptr<Character> Character::MakeInstance()
 	case Character::SHAPE:
 		result = Copy<Shape>();
 		break;
-	case Character::EDITTEXT:
+	case Character::TEXT:
 		result = Copy<Edittext>();
 		break;
 	case Character::BUTTON:

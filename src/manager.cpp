@@ -7,18 +7,19 @@
 using namespace libapt;
 using namespace std::chrono_literals;
 
-Manager::Manager() : m_fileprovider(nullptr), m_fps(30),
-m_width(800),m_height(600), m_dimChanged(false), m_x(0),m_y(0)
+Manager::Manager() : m_fileprovider(nullptr), m_fps(30), m_debug(false),
+m_width(800),m_height(600), m_dimChanged(false), m_x(0),m_y(0), m_btnDown(0)
 {
 	if (flextInit() == GL_FALSE)
 	{
 		std::cout << "Unable to initialize flextGL! Check for OGL Context" << std::endl;
 	}
+	Debug::Initialize();
 	if (FLEXT_KHR_debug)
 	{
 		#ifndef NDEBUG
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(debugCallback, nullptr);
+		glDebugMessageCallback(Debug::Callback, nullptr);
 		#endif
 	}
 
@@ -29,17 +30,18 @@ m_width(800),m_height(600), m_dimChanged(false), m_x(0),m_y(0)
 }
 
 Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp),  m_fps(30),
-m_width(800), m_height(600), m_x(0), m_y(0)
+m_width(800), m_height(600), m_x(0), m_y(0), m_debug(false), m_btnDown(0)
 {
 	if (flextInit() == GL_FALSE)
 	{
 		std::cout << "Unable to initialize flextGL! Check for OGL Context" << std::endl;
 	}
+	Debug::Initialize();
 	if (FLEXT_KHR_debug)
 	{
 		#ifndef NDEBUG
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(debugCallback, nullptr);
+		glDebugMessageCallback(Debug::Callback, nullptr);
 		#endif
 	}
 
@@ -152,6 +154,11 @@ void Manager::Render(const bool window)
 void Manager::SetFps(const uint32_t fps)
 {
 	m_fps = fps;
+}
+
+void Manager::SetDebug(const bool debug)
+{
+	m_debug = debug;
 }
 
 void Manager::SetWidth(const uint32_t width)

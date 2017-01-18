@@ -9,6 +9,7 @@ int main(int argc, char** argv)
 	cxxopts::Options options("Apt player", "A program to playback EA apt files");
 	options.add_options()
 		("s,speed", "Set the speed in fps", cxxopts::value<unsigned int>())
+		("d,debug", "Enable debug components", cxxopts::value<bool>())
 		("f,file", "File name", cxxopts::value<std::string>())
 		("w,width","Width of the window", cxxopts::value<unsigned int>())
 		("h,height","Height of the window", cxxopts::value<unsigned int>());
@@ -30,7 +31,8 @@ int main(int argc, char** argv)
 		p.SetWidth(options["width"].as<unsigned int>());
 	if (options.count("height") > 0)
 		p.SetHeight(options["height"].as<unsigned int>());
-
+	if (options.count("debug") > 0)
+		p.SetDebug(options["debug"].as<bool>());
 	p.Run();
 	return 0;
 }

@@ -24,10 +24,11 @@ void Buffer::Finalize()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2)*m_vertices.size(), m_vertices.data(), GL_STATIC_DRAW);
+	m_size = m_vertices.size();
 	m_vertices.clear();
 }
 
-void Buffer::Bind()
+void Buffer::Bind() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 }

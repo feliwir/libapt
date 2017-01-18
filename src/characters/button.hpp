@@ -1,8 +1,9 @@
 #pragma once
 #include "character.hpp"
+#include "../input.hpp"
 #include <libapt/texture.hpp>
 #include <vector>
-
+#include "../graphics/buffer.hpp"
 namespace libapt
 {
 	class Button : public Character
@@ -10,33 +11,33 @@ namespace libapt
 	private:
 		enum State
 		{
-			NONE	= 0,
-			HOVER	= 1,
-			CLICKED	= 2,
-			RELEASE = 3,
+			IDLE	= 0,
+			OUTUP	= 1,
+			OVERUP	= 2,
+			OUTDOWN	= 3,
+			OVERDOWN= 4,
 		};
 
 		union ActionFlags
 		{
 			struct 
 			{
-				bool IdleToOverDown : 1;
-				bool OutDownToIdle : 1;
-				bool OutDownToOverDown : 1;
-				bool OverDownToOutDown : 1;
-				bool OverDownToOverUp : 1;
-				bool OverUpToOverDown : 1;
-				bool OverUpToIdle : 1;
-				bool IdleToOverUp : 1;
-				unsigned char KeyPress : 7;
-				bool OverDownToIdle : 1;
+				bool IdleToOverUp		: 1;
+				bool OverUpToIdle		: 1;
+				bool OverUpToOverDown	: 1;
+				bool OverDownToOverUp	: 1;
+				bool OverDownToOutDown  : 1;
+				bool OutDownToOverDown	: 1;
+				bool IdleToOverDown		: 1;
+				bool OverDownToIdle		: 1;
+				Input ConditionFlag_KeyPress : 7;
 			};
 			uint32_t value;
 		};
 
 		struct Action {
 			ActionFlags flags; //matches with ButtonActionFlags;
-			uint8_t *actiondata;
+			uint8_t *bytecode;
 		};
 
 		union RecordFlags
@@ -67,6 +68,10 @@ namespace libapt
 		virtual void Parse(uint8_t*& iter) override;
 		virtual void Update(const Transformation& t, std::shared_ptr<DisplayObject> instance) override;
 	private:
+		void CreateDebugBuffer();
+	private:
+		glm::vec4 m_color;
+		Buffer m_buffer;
 		uint32_t m_unknown;
 		glm::vec4 m_bounds;
 		uint32_t m_trianglecount;

@@ -28,11 +28,6 @@ namespace libapt
 			return m_dl;
 		}
 
-		inline void SetPlaying(const bool state)
-		{
-			m_playing = state;
-		}
-
 	protected:
 		uint32_t m_framecount;
 		std::vector<Frame> m_frames;
@@ -45,7 +40,6 @@ namespace libapt
     private:
 		DisplayList m_dl;
 		glm::vec4 m_bgColor;
-		bool m_playing;
 		//performed before displaying each frame
 		std::vector<std::shared_ptr<Action>> m_actionList;
     };
