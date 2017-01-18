@@ -68,7 +68,8 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	Value v;
 	Action a = static_cast<Action>(read<uint8_t>(bs));
 	bool align = RequireAlign(a);
-	
+	bool finish = false;
+
 	if(align)
 		Align(bs);
 
@@ -210,7 +211,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 		CallMethodPop(c, bs);
 		break;
 	case END:
-		return true;
+		finish = true;
 		break;
 	default:
 		std::cout << "Unimplemented opcode: " << static_cast<int>(a) << std::endl;
@@ -218,7 +219,7 @@ bool Engine::Opcode(Context& c, uint8_t*& bs)
 	}
 
 	backtrace.push_back(a);
-	return false;
+	return finish;
 }
 
 void Engine::SetMember(Context& c)

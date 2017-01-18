@@ -37,7 +37,7 @@ namespace libapt
 
 		struct Action {
 			ActionFlags flags; //matches with ButtonActionFlags;
-			uint8_t *bytecode;
+			const uint8_t* bytecode;
 		};
 
 		union RecordFlags
