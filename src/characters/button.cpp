@@ -77,6 +77,8 @@ void Button::Update(const Transformation &t, std::shared_ptr<DisplayObject> inst
 
 	double x, y;
 	mngr->GetMousePosition(x, y);
+	if(x == 0 && y==0)
+	return;
 	glm::vec2 p(x, y);
 
 	double xratio = static_cast<double>(mngr->GetWidth()) / m_owner->GetWidth();
@@ -123,6 +125,18 @@ void Button::Update(const Transformation &t, std::shared_ptr<DisplayObject> inst
 		}
 	}
 
+	for (auto &a : m_actions)
+	{
+		ActionFlags flag = a.flags;
+		if (m_last == OVERUP && m_state == IDLE)
+		{
+			if (flag.OverUpToIdle)
+			{
+				as::Engine::s_engine.Execute(instance->GetParent(), a.bytecode, m_owner);
+			}
+		}
+	}
+
 	switch (m_state)
 	{
 	case IDLE:
@@ -143,13 +157,6 @@ void Button::OnFocus(std::shared_ptr<DisplayObject> instance)
 		if (m_last == IDLE && m_state == OVERUP)
 		{
 			if (flag.IdleToOverUp)
-			{
-				as::Engine::s_engine.Execute(instance->GetParent(), a.bytecode, m_owner);
-			}
-		}
-		if (m_last == OVERUP && m_state == IDLE)
-		{
-			if (flag.OverUpToIdle)
 			{
 				as::Engine::s_engine.Execute(instance->GetParent(), a.bytecode, m_owner);
 			}

@@ -621,7 +621,10 @@ void Engine::GetStringVar(Context& c, uint8_t*& bs)
 	{
 		auto current = std::dynamic_pointer_cast<DisplayObject>(c.GetScope());
 		obj = current->GetProperty(str).ToObject();
-
+		if(obj==nullptr)
+		{
+			std::cout << "Can't find object: "<< str << std::endl;
+		}
 	}
 
 	v.FromObject(obj);
