@@ -1,4 +1,5 @@
 #include "displaylist.hpp"
+#include <libapt/manager.hpp>
 #include <iostream>
 using namespace libapt;
 
@@ -39,13 +40,24 @@ void DisplayList::AddClipLayer(uint32_t depth, uint32_t clipdepth, std::shared_p
 
 void DisplayList::Erase(uint32_t depth)
 {
+	auto it = m_objects.find(depth);
 	if (m_objects.find(depth) == m_objects.end())
 	{
 		std::cout << "Error: cannot remove at depth: " << depth << std::endl;
 		return;
 	}
 
-	m_objects.erase(depth);
+	if (it->second->GetCharacter()->GetType() == Character::BUTTON)
+	{
+		auto ch = it->second->GetCharacter();
+		if (ch->GetOwner()->GetManager()->GetButtonDown() 
+			== reinterpret_cast<uintptr_t>(it->second.get()))
+		{
+			ch->GetOwner()->GetManager()->SetButtonDown(0);
+		}
+	}
+
+	m_objects.erase(it);
 	#ifndef  NDEBUG
 	std::cout << "Removed object at depth: " << depth << std::endl;
 	#endif // ! NDEBUG

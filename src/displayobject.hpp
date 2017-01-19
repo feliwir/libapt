@@ -79,15 +79,6 @@ namespace libapt
 			return m_clipDepth;
 		}
 		
-		inline uint32_t GetCurrentFrame()
-		{
-			return m_cf;
-		}
-
-		inline void SetCurrentFrame(uint32_t cf)
-		{
-			m_cf = cf;
-		}
 
 		inline void SetFramelabel(const std::string& lbl,uint32_t id)
 		{

@@ -42,6 +42,11 @@ namespace libapt
 			}
 			void SetPlaystate(const PlayState ps);
 			void SetCurrentFrame(const uint32_t cf);
+			inline uint32_t GetCurrentFrame()
+			{
+				return m_cf;
+			}
+
 			void NextFrame();
 		protected:
 			virtual void OnPropertyChanged(const std::string& property);

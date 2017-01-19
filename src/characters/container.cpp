@@ -112,6 +112,7 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> instance)
 {
 	auto cf = instance->GetCurrentFrame();
+
 	if (instance->GetPlaystate()==as::Object::PLAYING)
 	{
 		Frame& cFrame = m_frames[cf];
@@ -148,20 +149,19 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 			cf = 0;
 		}
 	}
-	else
-	{
-		int a = 0;
-	}
 
 	m_dl.Render(t);
-
+	
 	for (const auto& a : m_actionList)
 	{
 		as::Engine::s_engine.Execute(instance, a->GetBytecode(), m_owner);
 	}
+	
 	m_actionList.clear();
-	instance->SetCurrentFrame(cf);
-
+	//if (instance->GetCurrentFrame() == (cf - 1))
+		instance->SetCurrentFrame(cf);
+	//else
+	//	int a = 0;
 }
 
 void Container::Prepare(std::shared_ptr<DisplayObject> instance)
