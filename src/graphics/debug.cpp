@@ -74,3 +74,10 @@ void Debug::Draw(const Buffer& b,const Transformation& t,const glm::vec4& color)
 	glUniform2fv(s_shader.uniform("translate"), 1, glm::value_ptr(t.translate));
 	glDrawArrays(GL_TRIANGLES, 0, b.GetSize());
 }
+
+
+void APIENTRY Debug::Callback(GLenum source, GLenum type, GLuint id,
+			GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+{
+	std::cout << message << std::endl;
+}

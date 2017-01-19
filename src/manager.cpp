@@ -132,11 +132,13 @@ void Manager::Render(const bool window)
 	m_target->Bind();
 	
 	auto now = std::chrono::system_clock::now();
-	if ((now - m_last) > (1000ms/m_fps))
-	{
+	auto timePassed = (now - m_last);
+	if (timePassed > (1000ms/m_fps))
+	{	
+		auto rest = timePassed - (1000ms/m_fps);
 		glClear(GL_COLOR_BUFFER_BIT);
 		m_active->Render();
-		m_last = now;
+		m_last = now+rest;
 
 		if (m_dimChanged)
 			m_dimChanged = false;
