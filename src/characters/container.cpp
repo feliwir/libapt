@@ -158,10 +158,9 @@ void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> i
 	}
 	
 	m_actionList.clear();
-	//if (instance->GetCurrentFrame() == (cf - 1))
+	//if the cf has been altered by action don't set the frame automatically
+	if (instance->GetCurrentFrame() == (cf - 1))
 		instance->SetCurrentFrame(cf);
-	//else
-	//	int a = 0;
 }
 
 void Container::Prepare(std::shared_ptr<DisplayObject> instance)

@@ -77,7 +77,7 @@ void Debug::Draw(const Buffer& b,const Transformation& t,const glm::vec4& color)
 
 
 void APIENTRY Debug::Callback(GLenum source, GLenum type, GLuint id,
-			GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+			GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	std::cout << message << std::endl;
 }

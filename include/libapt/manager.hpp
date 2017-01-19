@@ -47,17 +47,6 @@ namespace libapt
 		void SetMousePosition(double x, double y);
 
 		void GetMousePosition(double& x, double& y);
-
-		inline void SetButtonDown(uintptr_t ptr)
-		{
-			m_btnDown = ptr;
-		}
-
-		inline uintptr_t GetButtonDown()
-		{
-			return m_btnDown;
-		}
-
 	private:
 		std::map<std::string, std::shared_ptr<Apt>> m_apts;
 		std::map<uint32_t, Texture> m_textures;
@@ -73,6 +62,5 @@ namespace libapt
 		double m_y;
 		bool m_dimChanged;
 		bool m_debug;
-		uintptr_t m_btnDown;
 	};
 }

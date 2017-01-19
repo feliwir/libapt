@@ -47,16 +47,6 @@ void DisplayList::Erase(uint32_t depth)
 		return;
 	}
 
-	if (it->second->GetCharacter()->GetType() == Character::BUTTON)
-	{
-		auto ch = it->second->GetCharacter();
-		if (ch->GetOwner()->GetManager()->GetButtonDown() 
-			== reinterpret_cast<uintptr_t>(it->second.get()))
-		{
-			ch->GetOwner()->GetManager()->SetButtonDown(0);
-		}
-	}
-
 	m_objects.erase(it);
 	#ifndef  NDEBUG
 	std::cout << "Removed object at depth: " << depth << std::endl;

@@ -8,7 +8,7 @@ using namespace libapt;
 using namespace std::chrono_literals;
 
 Manager::Manager() : m_fileprovider(nullptr), m_fps(30), m_debug(false),
-m_width(800),m_height(600), m_dimChanged(false), m_x(0),m_y(0), m_btnDown(0)
+m_width(800),m_height(600), m_dimChanged(false), m_x(0),m_y(0)
 {
 	if (flextInit() == GL_FALSE)
 	{
@@ -30,7 +30,7 @@ m_width(800),m_height(600), m_dimChanged(false), m_x(0),m_y(0), m_btnDown(0)
 }
 
 Manager::Manager(std::shared_ptr<IFileProvider> fp) : m_fileprovider(fp),  m_fps(30),
-m_width(800), m_height(600), m_x(0), m_y(0), m_debug(false), m_btnDown(0)
+m_width(800), m_height(600), m_x(0), m_y(0), m_debug(false)
 {
 	if (flextInit() == GL_FALSE)
 	{

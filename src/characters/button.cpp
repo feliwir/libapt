@@ -68,20 +68,16 @@ void Button::CreateDebugBuffer()
 
 void Button::Update(const Transformation &t, std::shared_ptr<DisplayObject> instance)
 {
+	m_last = m_state;
+	m_state = IDLE;
+	auto root = instance->GetRoot();
 	auto mngr = m_owner->GetManager();
 	if (mngr->GetDebug())
 		Debug::Draw(m_buffer, t, m_color);
 
 	double x, y;
 	mngr->GetMousePosition(x, y);
-	if (x == 0 && y == 0)
-		return;
-	State last = m_state;
-	m_state = IDLE;
 	glm::vec2 p(x, y);
-
-	if (instance->GetName().size() > 0 && instance->GetName() != "bttn")
-		int a = 0;
 
 	double xratio = static_cast<double>(mngr->GetWidth()) / m_owner->GetWidth();
 	double yratio = static_cast<double>(mngr->GetHeight()) / m_owner->GetHeight();
@@ -127,35 +123,36 @@ void Button::Update(const Transformation &t, std::shared_ptr<DisplayObject> inst
 		}
 	}
 
+	switch (m_state)
+	{
+	case IDLE:
+		m_color = glm::vec4(1.0, 0.0, 0.0, 0.3);
+		break;
+	case OVERUP:
+		m_color = glm::vec4(0.0, 1.0, 0.0, 0.3);
+		root->SetFocus(instance);
+		break;
+	}
+}
+
+void Button::OnFocus(std::shared_ptr<DisplayObject> instance)
+{
 	for (auto &a : m_actions)
 	{
 		ActionFlags flag = a.flags;
-		if (last == IDLE && m_state == OVERUP)
+		if (m_last == IDLE && m_state == OVERUP)
 		{
 			if (flag.IdleToOverUp)
 			{
 				as::Engine::s_engine.Execute(instance->GetParent(), a.bytecode, m_owner);
 			}
 		}
-		if (last == OVERUP && m_state == IDLE)
+		if (m_last == OVERUP && m_state == IDLE)
 		{
 			if (flag.OverUpToIdle)
 			{
 				as::Engine::s_engine.Execute(instance->GetParent(), a.bytecode, m_owner);
 			}
 		}
-	}
-
-	switch (m_state)
-	{
-	case IDLE:
-		if(mngr->GetButtonDown()==reinterpret_cast<uintptr_t>(instance.get()))
-			mngr->SetButtonDown(0);
-		m_color = glm::vec4(1.0, 0.0, 0.0, 0.3);
-		break;
-	case OVERUP:
-		mngr->SetButtonDown(reinterpret_cast<uintptr_t>(instance.get()));
-		m_color = glm::vec4(0.0, 1.0, 0.0, 0.3);
-		break;
 	}
 }

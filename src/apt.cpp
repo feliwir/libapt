@@ -180,6 +180,7 @@ std::shared_ptr<Character> Apt::GetExport(const std::string& name)
 
 void Apt::Render()
 {
+	m_movieclip->SetFocus(nullptr);
 	m_movieclip->Render(Transformation());
 }
 
