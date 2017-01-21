@@ -1,4 +1,5 @@
 #include "displayobject.hpp"
+#include "characters/button.hpp"
 #include "characters/container.hpp"
 #include <libapt/manager.hpp>
 #include <iostream>
@@ -68,6 +69,13 @@ void DisplayObject::Render(const Transformation& t)
 
 	if (IsClippingLayer())
 		m_mask->UnbindFb();
+
+	//only the case for the root object
+	if(m_focus!=nullptr)
+	{
+		auto button = std::dynamic_pointer_cast<Button>(m_focus->GetCharacter());
+		button->OnFocus(m_focus);
+	}
 }
 
 void DisplayObject::OnPropertyChanged(const std::string& property)

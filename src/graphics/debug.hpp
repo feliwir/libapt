@@ -11,10 +11,7 @@ namespace libapt
 	{
 	public:
 		static void APIENTRY Callback(GLenum source, GLenum type, GLuint id,
-			GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
-		{
-			std::cout << message << std::endl;
-		}
+			GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
 		static void Initialize();
 

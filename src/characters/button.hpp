@@ -30,7 +30,7 @@ namespace libapt
 				bool OutDownToOverDown	: 1;
 				bool IdleToOverDown		: 1;
 				bool OverDownToIdle		: 1;
-				Input ConditionFlag_KeyPress : 7;
+				Input ConditionFlag_KeyPress;
 			};
 			uint32_t value;
 		};
@@ -67,6 +67,8 @@ namespace libapt
 		Button();
 		virtual void Parse(uint8_t*& iter) override;
 		virtual void Update(const Transformation& t, std::shared_ptr<DisplayObject> instance) override;
+
+		void OnFocus(std::shared_ptr<DisplayObject> instance);
 	private:
 		void CreateDebugBuffer();
 	private:
@@ -84,5 +86,6 @@ namespace libapt
 		std::vector<Action> m_actions;
 		uint32_t m_unknown2;
 		State m_state;
+		State m_last;
 	};
 }

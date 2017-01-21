@@ -621,7 +621,10 @@ void Engine::GetStringVar(Context& c, uint8_t*& bs)
 	{
 		auto current = std::dynamic_pointer_cast<DisplayObject>(c.GetScope());
 		obj = current->GetProperty(str).ToObject();
-
+		if(obj==nullptr)
+		{
+			std::cout << "Can't find object: "<< str << std::endl;
+		}
 	}
 
 	v.FromObject(obj);
@@ -688,15 +691,8 @@ void Engine::PushData(Context & c, uint8_t *& bs)
 
 std::shared_ptr<Object> Engine::GetRoot(Context& c)
 {
-	std::shared_ptr<Object> root = nullptr;
 	auto current = std::dynamic_pointer_cast<DisplayObject>(c.GetScope());
-	while (current->GetParent() != nullptr)
-	{
-		current = current->GetParent();
-	}
-
-	root = current;
-	return root;
+	return current->GetRoot();
 }
 
 std::shared_ptr<Object> Engine::GetParent(Context& c)

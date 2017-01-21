@@ -31,7 +31,6 @@ Player::Player() : m_debug(false)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	#ifdef NDEBUG
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_FALSE);
-	glfwWindowHint(GLFW_CONTEXT_NO_ERROR, GL_TRUE);
 	#else
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 	#endif	

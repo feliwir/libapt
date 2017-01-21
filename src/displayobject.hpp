@@ -79,6 +79,10 @@ namespace libapt
 			return m_clipDepth;
 		}
 		
+		inline void SetFocus(std::shared_ptr<DisplayObject> instance)
+		{
+			m_focus = instance;
+		}
 
 		inline void SetFramelabel(const std::string& lbl,uint32_t id)
 		{
@@ -86,10 +90,23 @@ namespace libapt
 			v.FromInteger(id);
 			SetProperty(lbl,v);
 		}
+
+		inline std::shared_ptr<DisplayObject> GetRoot()
+		{
+			auto current = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
+			while (current->GetParent() != nullptr)
+			{
+				current = current->GetParent();
+			}
+
+			return current;
+		}
+
 		virtual void OnPropertyChanged(const std::string& property) override;
 	private:	
 		std::shared_ptr<Character> m_character;
 		std::shared_ptr<DisplayObject> m_parent;
+		std::shared_ptr<DisplayObject> m_focus;
 		glm::vec4 m_color;
 		glm::vec2 m_translate;
 		glm::mat2 m_rotscale;
