@@ -1,7 +1,7 @@
 #include <libapt/texture.hpp>
 #include "targa.hpp"
 #include "../util.hpp"
-#include "flextGL.h"
+#include "flextGL.hpp"
 #include <gli/gli.hpp>
 using namespace libapt;
 

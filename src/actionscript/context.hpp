@@ -23,12 +23,12 @@ namespace libapt
 
 				Value GetVariable(const std::string& name)
 				{
-					return m_scope->GetVariable(name);
+					return m_scope->GetProperty(name);
 				}
 
 				void SetVariable(const std::string& name, Value v)
 				{
-					m_scope->SetVariable(name, v);
+					m_scope->SetProperty(name, v);
 				}
 
 				inline Stack& GetStack()

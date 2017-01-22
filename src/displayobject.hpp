@@ -114,5 +114,6 @@ namespace libapt
 		bool m_isClipLayer;
 		uint32_t m_clipDepth;
 		std::shared_ptr<ClipMask> m_mask;
+		bool m_visible;
 	};
 }

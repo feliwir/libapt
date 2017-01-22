@@ -6,7 +6,6 @@
 #include "../frameitems/placeobject.hpp"
 #include "../frameitems/framelabel.hpp"
 #include "../frameitems/removeobject.hpp"
-#include "../graphics/flextGL.h"
 #include "../actionscript/object.hpp"
 #include <iostream>
 using namespace libapt;
@@ -106,7 +105,6 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 	auto bg = std::dynamic_pointer_cast<Background>(fi);
 	m_bgColor = glm::vec4(bg->GetColor());
 	m_bgColor /= 255.0;
-	glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, m_bgColor.a);
 }
 
 void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> instance)

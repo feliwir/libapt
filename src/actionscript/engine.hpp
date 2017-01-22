@@ -23,6 +23,7 @@ namespace libapt
 			static void DefineFunction(Context& c, uint8_t*& bs);
 			static void DefineFunction2(Context& c, uint8_t*& bs);
 			static void CallNamedMethodPop(Context& c, uint8_t*& bs);
+			static void CallNamedFunction(Context& c, uint8_t*& bs);
 			static void CallNamedFunctionPop(Context& c, uint8_t*& bs);
 			static void CallMethodPop(Context& c, uint8_t*& bs);
 			//Geturl
@@ -31,6 +32,8 @@ namespace libapt
 			//Push
 			static void PushValue(Context& c, uint8_t*& bs);
 			static void PushData(Context& c, uint8_t*& bs);
+			//Object stuff
+			static void New(Context& c);
 			//Setters
 			static void SetMember(Context& c);
 			static void SetVariable(Context& c);

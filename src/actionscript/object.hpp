@@ -27,10 +27,6 @@ namespace libapt
 			virtual void SetProperty(const std::string& property,Value v);
 			std::map<std::string, Value>& GetProperties();
 
-			virtual Value GetVariable(const std::string& name);
-			virtual void SetVariable(const std::string& name, Value v);
-			std::map<std::string, Value>& GetVariables();
-
 			inline std::vector<Value>& GetConstants()
 			{
 				return m_constants;
@@ -52,7 +48,6 @@ namespace libapt
 			virtual void OnPropertyChanged(const std::string& property);
 		protected:
 			std::map<std::string, Value> m_properties;
-			std::map<std::string, Value> m_variables;
 			std::vector<Value> m_constants;
 			PlayState m_ps;
 			uint32_t m_cf;

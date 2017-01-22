@@ -6,7 +6,7 @@
 using namespace libapt;
 
 DisplayObject::DisplayObject() : m_character(nullptr), m_clipDepth(0), m_color(1.0),
-m_isClipLayer(false)
+m_isClipLayer(false), m_visible(true)
 {
 }
 
@@ -47,6 +47,9 @@ void DisplayObject::CreateClipLayer(std::shared_ptr<Character> ch, const glm::ve
 
 void DisplayObject::Render(const Transformation& t)
 {
+	if (m_name == "SoloPlayNav")
+		int a = 0;
+
 	if (IsClippingLayer())
 	{
 		if (m_character->GetOwner()->HasResized())
@@ -64,6 +67,7 @@ void DisplayObject::Render(const Transformation& t)
 	cTransform.translate = t.translate + m_translate;
 	cTransform.color = t.color * m_color;
 	cTransform.mask = t.mask;
+	cTransform.visible = (t.visible) ? m_visible : false;
 	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
 	m_character->Update(cTransform, this_ptr);
 
@@ -80,6 +84,14 @@ void DisplayObject::Render(const Transformation& t)
 
 void DisplayObject::OnPropertyChanged(const std::string& property)
 {
-
+	//check if any builtin property was changed
+	if (property == "_visible")
+	{
+		m_visible = m_properties[property].ToBoolean();
+	}
+	if (property == "_alpha")
+	{
+		m_color.a = m_properties[property].ToInteger() / 255.0;
+	}
 }
 

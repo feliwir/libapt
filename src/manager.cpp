@@ -1,5 +1,5 @@
 #include <libapt/manager.hpp>
-#include "graphics/flextGL.h"
+#include "graphics/flextGL.hpp"
 #include "default_fp.hpp"
 #include "graphics/debug.hpp"
 #include <vector>

@@ -12,6 +12,7 @@ namespace libapt
 			glm::mat2 rotscale;
 			glm::vec4 color;
 			std::shared_ptr<ClipMask> mask;
+			bool visible;
 			Transformation();
 		};
 }

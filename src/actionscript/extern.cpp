@@ -10,12 +10,3 @@ Value Extern::GetProperty(const std::string & property)
 void Extern::SetProperty(const std::string & property, Value v)
 {
 }
-
-Value Extern::GetVariable(const std::string & name)
-{
-	return Value();
-}
-
-void Extern::SetVariable(const std::string & name, Value v)
-{
-}

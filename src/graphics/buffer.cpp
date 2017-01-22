@@ -1,5 +1,5 @@
 #include "buffer.hpp"
-#include "flextGL.h"
+#include "flextGL.hpp"
 using namespace libapt;
 
 Buffer::Buffer() : m_vbo(0)

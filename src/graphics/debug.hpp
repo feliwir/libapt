@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "flextGL.h"
+#include "flextGL.hpp"
 #include "shader.hpp"
 #include "buffer.hpp"
 #include "../characters/transformation.hpp"

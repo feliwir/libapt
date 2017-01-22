@@ -30,21 +30,6 @@ std::map<std::string, Value>& Object::GetProperties()
 	return m_properties;
 }
 
-Value Object::GetVariable(const std::string & name)
-{
-	return m_variables[name];
-}
-
-void Object::SetVariable(const std::string & name, Value v)
-{
-	m_variables[name] = v;
-}
-
-std::map<std::string, Value>& Object::GetVariables()
-{
-	return m_variables;
-}
-
 void Object::SetPlaystate(const PlayState ps)
 {
 	m_ps = ps;

@@ -2,7 +2,7 @@
 #include "shader.hpp"
 #include <iostream>
 #include <glm/glm.hpp>
-#include "flextGL.h"
+#include "flextGL.hpp"
 using namespace libapt;
 
 static Shader quad_shader;

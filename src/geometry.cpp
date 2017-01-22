@@ -1,6 +1,6 @@
 #include "geometry.hpp"
 #include <libapt/apt.hpp>
-#include "graphics/flextGL.h"
+#include "graphics/flextGL.hpp"
 #include "graphics/clipmask.hpp"
 #include "graphics/buffer.hpp"
 #include "util.hpp"

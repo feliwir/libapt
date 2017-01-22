@@ -1,5 +1,5 @@
 #include "clipmask.hpp"
-#include "flextGL.h"
+#include "flextGL.hpp"
 #include <iostream>
 using namespace libapt;
 

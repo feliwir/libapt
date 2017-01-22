@@ -1,5 +1,5 @@
 ﻿#include "shader.hpp"
-#include "flextGL.h"
+#include "flextGL.hpp"
 #include <vector>
 #include <iostream>
 using namespace libapt;

@@ -11,7 +11,9 @@ void Shape::Parse(uint8_t *& iter)
 
 void Shape::Update(const Transformation& t, std::shared_ptr<DisplayObject> dObj)
 {
-	if (m_geometry)
+	assert(m_geometry);
+
+	if (t.visible)
 	{
 		m_geometry->Draw(t,m_owner);
 	}
