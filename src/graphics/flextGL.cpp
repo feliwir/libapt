@@ -863,7 +863,7 @@ static GLPROC get_proc(const char *proc)
 
     res = glXGetProcAddress((const GLubyte *) proc);
     if (!res) {
-        FLEXT_C_EXTENSION(res = dlsym(libgl, proc));
+        FLEXT_C_EXTENSION(res = (GLPROC)dlsym(libgl, proc));
     }
     return res;
 }

@@ -21,7 +21,7 @@ namespace libapt
 		void Update(const Transformation& trans, std::shared_ptr<DisplayObject> instance) override;
 		void Prepare(std::shared_ptr<DisplayObject> instance) override;
 
-		virtual void Parse(uint8_t *&iter) = 0;
+		virtual void Parse(uint8_t *&iter) override  = 0;
 
 		inline DisplayList& GetDisplaylist()
 		{
