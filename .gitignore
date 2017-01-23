@@ -6,4 +6,4 @@ cmake-build-debug
 build/
 gcc_build/
 CMakeSettings.json
-test/apt
+tools/player/apt
