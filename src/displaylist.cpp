@@ -18,11 +18,6 @@ void DisplayList::Insert(uint32_t depth, std::shared_ptr<Character> ch,
 		parent->SetProperty(name,v);
 	}
 	m_objects[depth] = obj;
-
-	#ifndef  NDEBUG
-	std::cout << "Placed object at depth: " << depth << std::endl;
-	std::cout << "Name: " << name << std::endl;
-	#endif // ! NDEBUG
 }
 
 void DisplayList::AddClipLayer(uint32_t depth, uint32_t clipdepth, std::shared_ptr<Character> ch, 
@@ -32,10 +27,7 @@ void DisplayList::AddClipLayer(uint32_t depth, uint32_t clipdepth, std::shared_p
 	std::shared_ptr<DisplayObject> obj = std::make_shared<DisplayObject>();
 	obj->CreateClipLayer(ch, translate, rotscale, name, parent,clipdepth);
 	m_objects[depth] = obj;
-#ifndef  NDEBUG
-	std::cout << "Placed clipping layer at depth: " << depth << " with clipdepth: "<< clipdepth << std::endl;
-	std::cout << "Name: " << name << std::endl;
-#endif // ! NDEBUG
+
 }
 
 void DisplayList::Erase(uint32_t depth)
@@ -48,9 +40,6 @@ void DisplayList::Erase(uint32_t depth)
 	}
 
 	m_objects.erase(it);
-	#ifndef  NDEBUG
-	std::cout << "Removed object at depth: " << depth << std::endl;
-	#endif // ! NDEBUG
 }
 
 void DisplayList::Move(uint32_t depth, const glm::vec2 & translate, const glm::mat2 & rotscale)
@@ -58,10 +47,6 @@ void DisplayList::Move(uint32_t depth, const glm::vec2 & translate, const glm::m
 	auto& obj = m_objects[depth];
 	obj->SetRotscale(rotscale);
 	obj->SetTranslate(translate);
-	#ifndef NDEBUG
-	std::cout << "Moved object at depth: " << depth <<
-		" Translate: (" << translate.x << "-" << translate.y << ")" << std::endl;
-	#endif // !NDEBUG
 }
 
 void DisplayList::Colortransform(uint32_t depth, glm::u8vec4 color)
@@ -74,10 +59,6 @@ void DisplayList::Colortransform(uint32_t depth, glm::u8vec4 color)
 
 	auto& obj = m_objects[depth];
 	obj->SetColor(color);
-#ifndef NDEBUG
-	std::cout << "Colortransform at depth: " << depth <<
-		" Color: (" << color.r << "-" << color.g << "-" << color.b << "-" << color.a<< ")" << std::endl;
-#endif // !NDEBUG
 }
 
 void DisplayList::Render(const Transformation& t)

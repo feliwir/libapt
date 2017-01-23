@@ -11,8 +11,6 @@ set(PUBLIC_HEADERS  ${HEADER_DIR}/apt.hpp
 					${HEADER_DIR}/texture.hpp)
 
 file(GLOB_RECURSE SRC_FILES
-	"*.c"
-	"*.h"
     "*.hpp"
     "*.cpp"
 )

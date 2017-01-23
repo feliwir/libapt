@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(libapt CXX C)
+project(libapt CXX)
 
 set(LIBAPT_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 

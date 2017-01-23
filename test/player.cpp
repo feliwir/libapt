@@ -54,7 +54,7 @@ void Player::Run()
 	libapt::Error result = libapt::NO_ERROR;
 	m_mngr->UpdateDimensions();
 	result = m_mngr->SetActive(m_input);
-
+	glClearColor(0.0, 0.0, 0.0, 0.0);
 	if (result != libapt::NO_ERROR)
 	{
 		std::cout << "Could not run apt player! Error code: " << result << std::endl;

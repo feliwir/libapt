@@ -110,8 +110,7 @@ void Container::HandleBackground(std::shared_ptr<FrameItem> fi)
 void Container::Update(const Transformation& t, std::shared_ptr<DisplayObject> instance)
 {
 	auto cf = instance->GetCurrentFrame();
-
-	if (instance->GetPlaystate()==as::Object::PLAYING)
+	if (t.playing)
 	{
 		Frame& cFrame = m_frames[cf];
 
