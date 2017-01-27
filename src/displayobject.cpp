@@ -65,7 +65,6 @@ void DisplayObject::Render(const Transformation& t)
 	cTransform.color = t.color * m_color;
 	cTransform.mask = t.mask;
 	cTransform.visible = (t.visible) ? m_visible : false;
-	cTransform.playing = (t.playing) ? (m_ps==as::Object::PLAYING) : false;
 	auto this_ptr = std::dynamic_pointer_cast<DisplayObject>(shared_from_this());
 	m_character->Update(cTransform, this_ptr);
 

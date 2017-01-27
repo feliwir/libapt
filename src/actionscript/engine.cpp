@@ -516,7 +516,7 @@ void Engine::CallMethodPop(Context & c, uint8_t *& bs)
 	}
 
 	if (obj == nullptr)
-		assert(0);
+		return;
 
 	if (func == "stop")
 	{

@@ -1,1 +1,1 @@
-add_subdirectory(player)
+add_subdirectory(apt_player)
